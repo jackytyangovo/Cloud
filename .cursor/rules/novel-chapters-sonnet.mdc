@@ -16,6 +16,7 @@ alwaysApply: false
 
 ## 文风（遵守 style-guide.md）
 
+- **第一人称「我」为主**；偶尔短段**第三人称限知**旁白（设定、场面、他人限知），见 style-guide 叙事视角节
 - **平直简单**：直接清楚，不堆辞藻
 - 每章兼顾：**人物动作**、**神态与语言**、**环境变化**、**主角心理**
 - 设定融入场景，避免大段说明文
@@ -33,7 +34,7 @@ alwaysApply: false
 2. `bible/style-guide.md` — 文风与战力约束
 3. `bible/style-reference.md` — 语感与节奏参考（样章分析）
 4. 必要时 `characters.md`、`worldbuilding.md`
-4. 上一章正文（保持衔接）
+4. 上一章正文（保持衔接；注意视角切换标记一致）
 
 ## 硬约束
 
