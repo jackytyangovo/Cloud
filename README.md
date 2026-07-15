@@ -26,6 +26,7 @@ novel-project/
 | [characters.md](novel-project/bible/characters.md) | 莉莉娅、莱恩菲尔家、人物关系 |
 | [timeline.md](novel-project/bible/timeline.md) | 前史与卷一时间轴 |
 | [style-guide.md](novel-project/bible/style-guide.md) | 视角、文风、战力约束 |
+| [style-reference.md](novel-project/bible/style-reference.md) | **文风样章分析**（语感与节奏参考） |
 
 ## 核心设定摘要
 

@@ -31,7 +31,8 @@ alwaysApply: false
 
 1. `bible/outline.md` — 当前章节拍
 2. `bible/style-guide.md` — 文风与战力约束
-3. 必要时 `characters.md`、`worldbuilding.md`
+3. `bible/style-reference.md` — 语感与节奏参考（样章分析）
+4. 必要时 `characters.md`、`worldbuilding.md`
 4. 上一章正文（保持衔接）
 
 ## 硬约束
