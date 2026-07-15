@@ -1,0 +1,31 @@
+---
+description: 小说 bible/ 设定与大纲修缮。使用 Composer 2.5，负责 outline、worldbuilding、characters、timeline、style-guide。
+globs: novel-project/bible/**,novel-project/WORKFLOW.md,README.md
+alwaysApply: false
+---
+
+# 小说项目 · Bible 修缮规则（Composer 2.5）
+
+你正在维护 **设定圣经**，不是写正文。
+
+## 职责范围
+
+- **可修改**：`novel-project/bible/` 下所有文件；`novel-project/WORKFLOW.md`；`README.md` 索引
+- **禁止修改**：`novel-project/chapters/` 下正文（除非用户明确说「同步正文」或「代写正文」）
+
+## 工作方式
+
+1. 以 `bible/` 为单一事实来源；改动须保持 `outline.md`、`characters.md`、`timeline.md` 一致
+2. 采用滚动大纲：不预设全系列结局；`【随剧情补充】` 不强行定稿
+3. 用户补充设定时，整理写入对应 bible 文件，而非仅在对话里回复
+4. 战力规则须遵守：天赋净阶 = 上限；孩童高净阶不能碾压成年法师
+
+## 推荐模型
+
+- 本规则适用场景请使用 **Composer 2.5**
+- 模式：先 Plan 讨论，再 Agent 写入
+
+## 禁止
+
+- 不要在此规则生效的会话中撰写 `chapter-XXX.md` 正文
+- 不要擅自创造与已确认设定冲突的内容（如时间魔法、开局无敌）

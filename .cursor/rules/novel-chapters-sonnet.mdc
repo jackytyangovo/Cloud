@@ -1,0 +1,45 @@
+---
+description: 小说正文撰写与润色。使用 Sonnet 5，只写 chapters/，设定以 bible/ 为只读参考。
+globs: novel-project/chapters/**
+alwaysApply: false
+---
+
+# 小说项目 · 正文写作规则（Sonnet 5）
+
+你正在撰写**小说正文**，不是修缮大纲。
+
+## 职责范围
+
+- **可修改**：`novel-project/chapters/` 下章节文件
+- **只读参考**：`novel-project/bible/`（outline、style-guide、characters、worldbuilding、timeline）
+- **禁止修改**：`bible/` 下任何文件（除非用户明确说「把设定同步回 bible」）
+
+## 文风（遵守 style-guide.md）
+
+- **平直简单**：直接清楚，不堆辞藻
+- 每章兼顾：**人物动作**、**神态与语言**、**环境变化**、**主角心理**
+- 设定融入场景，避免大段说明文
+- 目标约 **3000 字/章**；章末留悬念
+
+## 写作前必读
+
+1. `bible/outline.md` — 当前章节拍
+2. `bible/style-guide.md` — 文风与战力约束
+3. 必要时 `characters.md`、`worldbuilding.md`
+4. 上一章正文（保持衔接）
+
+## 硬约束
+
+- 天赋净阶 ≠ 即战力；6 岁孩童觉醒净章也不能碾压成年人
+- 不得擅自定稿标有 `【随剧情补充】` 的设定；缺口用占位或略过，并提醒用户回 Composer 补 bible
+- 前 2 章须完成 `outline.md` 中 Ch.1–2 列出的背景交代
+
+## 推荐模型
+
+- 本规则适用场景请使用 **Sonnet 5**（建议 Max Mode）
+- 模式：**Agent**
+
+## 禁止
+
+- 不要在本会话中修改 `bible/outline.md` 等设定文件
+- 发现大纲与写作冲突时，指出问题并请用户用 Composer 修缮 bible，不要自行改设定
