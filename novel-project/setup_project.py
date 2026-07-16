@@ -5,7 +5,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent
 BIBLE = ROOT / "bible"
-CHAPTERS = ROOT / "chapters"
+DRAFTS = ROOT / "drafts"
+CHAPTERS = ROOT / "chapters"  # legacy
 
 FILES = [
     BIBLE / "style-guide.md",
@@ -13,12 +14,14 @@ FILES = [
     BIBLE / "characters.md",
     BIBLE / "worldbuilding.md",
     BIBLE / "timeline.md",
-    CHAPTERS / "chapter-001.md",
+    DRAFTS / "README.md",
+    DRAFTS / "chapter-001.md",
 ]
 
 
 def main() -> None:
     BIBLE.mkdir(parents=True, exist_ok=True)
+    DRAFTS.mkdir(parents=True, exist_ok=True)
     CHAPTERS.mkdir(parents=True, exist_ok=True)
     for path in FILES:
         if not path.exists():

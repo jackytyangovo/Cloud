@@ -9,7 +9,8 @@
 | 任务 | 模型 | Cursor 模式 | 可改动的目录 |
 |------|------|-------------|--------------|
 | 大纲、设定、人物、时间线 | **Composer 2.5** | Plan → Agent | `novel-project/bible/` |
-| 正文撰写、文风润色 | **Sonnet 5** | Agent | `novel-project/chapters/` |
+| 正文撰写、文风润色 | **Sonnet 5** | Agent | `novel-project/drafts/` |
+| 预览 / 审阅正文 | 任意 | Ask / Agent | **只读** `novel-project/drafts/` |
 | 快速查设定、讨论剧情 | 任意 | Ask | 只读，不改文件 |
 
 **单一事实来源**：所有设定以 `bible/` 为准。正文不得擅自新增或改写世界观；发现设定缺口应停下，回到 Composer 补 bible。
@@ -67,7 +68,7 @@
 请根据我的补充更新 bible：
 - [你的设定条目]
 
-只修改 novel-project/bible/ 下相关文件，不要动 chapters/。
+只修改 novel-project/bible/ 下相关文件，不要动 drafts/。
 ```
 
 **建议 @ 文件**：
@@ -90,7 +91,7 @@
 
 ```
 请根据 @novel-project/bible/outline.md 的 Ch.N 撰写正文，
-写入 @novel-project/chapters/chapter-00N.md。
+写入 @novel-project/drafts/chapter-00N.md。
 
 严格遵守 @novel-project/bible/style-guide.md：
 - 第一人称「我」（莉莉娅）为主；必要时短段第三人称旁白补设定
@@ -116,7 +117,7 @@
 ```
 Composer 2.5 更新 bible
         ↓
-Sonnet 5 写 / 改 chapters
+Sonnet 5 写 / 改 drafts/
         ↓
 你审阅
         ↓
@@ -142,12 +143,14 @@ novel-project/
 │   ├── characters.md
 │   ├── style-guide.md
 │   └── timeline.md
-└── chapters/       ← Sonnet 5 专属
-    └── chapter-XXX.md
+├── drafts/         ← 正文（Sonnet 5 撰写；预览某章读此目录）
+│   └── chapter-NNN.md
+└── chapters/       ← 遗留目录（如有旧稿；以 drafts/ 为准）
 ```
 
 - **Composer** 默认可写：`bible/`、`README.md`（索引）、`WORKFLOW.md`
-- **Sonnet** 默认可写：`chapters/`
+- **Sonnet** 默认可写：`drafts/`
+- **预览正文**：用户说「预览 Ch.N」→ 读 `drafts/chapter-NNN.md`（不存在则告知未撰写）
 - 跨目录修改需你**明确指示**
 
 ---
@@ -176,7 +179,7 @@ novel-project/
 ## 开写顺序建议
 
 1. 用 **Composer** 确认卷一 Ch.1–2 大纲无误
-2. 新建 **Sonnet** 对话，写 `chapter-001.md`
+2. 新建 **Sonnet** 对话，写 `drafts/chapter-001.md`
 3. 你审阅 → 文风问题留 Sonnet，设定问题回 Composer
 4. Ch.1 满意后，Sonnet 继续 Ch.2（@ 上一章正文）
 
@@ -187,6 +190,7 @@ novel-project/
 | 误操作 | 后果 | 正确做法 |
 |--------|------|----------|
 | 在 Sonnet 对话里改 outline | bible 与正文两套版本 | 回 Composer 改 bible，再让 Sonnet 对齐 |
-| 在 Composer 对话里写正文 | 文风/节奏不如 Sonnet | 新开 Sonnet 对话写 chapters |
+| 在 Composer 对话里写正文 | 文风/节奏不如 Sonnet | 新开 Sonnet 对话写 drafts/ |
+| 预览正文去 chapters/ 找 | 目录已迁 | **优先** `drafts/chapter-NNN.md` |
 | 同一对话混用两个模型 | 上下文混乱 | 大纲对话、正文对话分开 |
 | 正文时未 @ style-guide | 文风漂移 | 每次写章都 @ style-guide |
