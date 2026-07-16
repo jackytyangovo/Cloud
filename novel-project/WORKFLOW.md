@@ -57,6 +57,7 @@
 写入 @novel-project/drafts/chapter-00N.md。
 
 严格遵守 @novel-project/bible/style-guide.md：
+- 第一人称「我」（莉莉娅）为主；必要时短段第三人称旁白补设定
 - 平直简单语言
 - 兼顾动作、神态、语言、环境变化、主角心理
 - 设定以 bible 为准，不擅自新增世界观

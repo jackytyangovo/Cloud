@@ -26,10 +26,12 @@ novel-project/
 | [characters.md](novel-project/bible/characters.md) | 莉莉娅、莱恩菲尔家、人物关系 |
 | [timeline.md](novel-project/bible/timeline.md) | 前史与卷一时间轴 |
 | [style-guide.md](novel-project/bible/style-guide.md) | 视角、文风、战力约束 |
+| [style-reference.md](novel-project/bible/style-reference.md) | **文风样章分析**（语感与节奏参考） |
 
 ## 核心设定摘要
 
 - **主角**：莉莉娅·莱恩菲尔（Lilia Lenfiel），6 岁女，前世 25 岁男性记忆，男转女
+- **分级**：**R18**（可出现成人向内容）
 - **天赋**：光系·净章（表）+ 生命（隐，中期）
 - **开局**：灰谷王国小贵族；觉醒前一月记忆觉醒
 - **模式**：土著觉醒前世记忆，非肉体穿越
