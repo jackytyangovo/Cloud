@@ -1,6 +1,6 @@
 ---
-description: 小说正文撰写与润色。使用 Sonnet 5，只写 chapters/，设定以 bible/ 为只读参考。
-globs: novel-project/chapters/**
+description: 小说正文撰写与润色。使用 Sonnet 5，只写 drafts/，设定以 bible/ 为只读参考。
+globs: novel-project/drafts/**
 alwaysApply: false
 ---
 
@@ -10,7 +10,7 @@ alwaysApply: false
 
 ## 职责范围
 
-- **可修改**：`novel-project/chapters/` 下章节文件
+- **可修改**：`novel-project/drafts/` 下章节文件（存放完成的正文草稿）
 - **只读参考**：`novel-project/bible/`（outline、style-guide、characters、worldbuilding、timeline）
 - **禁止修改**：`bible/` 下任何文件（除非用户明确说「把设定同步回 bible」）
 
@@ -20,7 +20,7 @@ alwaysApply: false
 - **平直简单**：直接清楚，不堆辞藻
 - 每章兼顾：**人物动作**、**神态与语言**、**环境变化**、**主角心理**
 - 设定融入场景，避免大段说明文
-- 目标约 **3000 字/章**；章末留悬念
+- 目标约 **4000–5000 字/章**；章末留悬念
 
 ## 内容分级（R18 · 用户确认）
 
@@ -41,6 +41,8 @@ alwaysApply: false
 - 天赋净阶 ≠ 即战力；6 岁孩童觉醒净章也不能碾压成年人
 - 不得擅自定稿标有 `【随剧情补充】` 的设定；缺口用占位或略过，并提醒用户回 Composer 补 bible
 - 前 2 章须完成 `outline.md` 中 Ch.1–2 列出的背景交代
+- **主角心理绝不允许用第三人称呈现**：`※` 旁白只能写设定/世界观、环境场面、他人限知，不能写「我」的心理活动、情绪或判断，哪怕只有一句；见 `style-guide.md`「视角硬性边界」
+- **心理描写须给新信息，不得复述已知客观事实**：不要把刚发生的情节套上「我知道」「我看着」之类的壳子再讲一遍；见 `style-reference.md`「DO/DON'T」
 
 ## 推荐模型
 

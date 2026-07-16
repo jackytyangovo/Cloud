@@ -11,7 +11,7 @@ alwaysApply: false
 ## 职责范围
 
 - **可修改**：`novel-project/bible/` 下所有文件；`novel-project/WORKFLOW.md`；`README.md` 索引
-- **禁止修改**：`novel-project/chapters/` 下正文（除非用户明确说「同步正文」或「代写正文」）
+- **禁止修改**：`novel-project/drafts/` 下正文（除非用户明确说「同步正文」或「代写正文」）
 
 ## 工作方式
 
@@ -33,5 +33,5 @@ alwaysApply: false
 
 ## 禁止
 
-- 不要在此规则生效的会话中撰写 `chapter-XXX.md` 正文
+- 不要在此规则生效的会话中撰写 `drafts/chapter-XXX.md` 正文
 - 不要擅自创造与已确认设定冲突的内容（如时间魔法、开局无敌）
