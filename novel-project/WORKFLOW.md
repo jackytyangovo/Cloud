@@ -90,8 +90,8 @@
 **典型开场**：
 
 ```
-请根据 @novel-project/bible/outline.md 的 Ch.N 撰写正文，
-写入 @novel-project/drafts/chapter-NNN.md 或 prologue.md。
+请根据 @novel-project/bible/outline.md 的 **序章 / 第N章** 撰写正文，
+写入 @novel-project/drafts/prologue.md（序章）或 @novel-project/drafts/chapter-NNN.md（第N章）。
 
 严格遵守 @novel-project/bible/style-guide.md：
 - 第一人称「我」（莉莉娅）为主；必要时短段第三人称旁白补设定
@@ -150,7 +150,7 @@ novel-project/
 
 - **Composer** 默认可写：`bible/`、`README.md`（索引）、`WORKFLOW.md`
 - **Sonnet** 默认可写：`drafts/`
-- **预览正文**：用户说「预览 Ch.N」→ 读 `drafts/chapter-NNN.md`（不存在则告知未撰写）
+- **预览正文**：用户说「预览序章 / 预览第N章 / 预览第二章」等 → 读 `drafts/prologue.md` 或 `drafts/chapter-NNN.md`（**第N章** ↔ `chapter-NNN.md`；不存在则告知未撰写）
 - 跨目录修改需你**明确指示**
 
 ---
