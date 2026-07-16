@@ -15,7 +15,7 @@ FILES = [
     BIBLE / "worldbuilding.md",
     BIBLE / "timeline.md",
     DRAFTS / "README.md",
-    DRAFTS / "chapter-001.md",
+DRAFTS / "prologue.md",
 ]
 
 

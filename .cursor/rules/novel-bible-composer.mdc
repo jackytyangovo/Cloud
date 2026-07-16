@@ -12,7 +12,7 @@ alwaysApply: false
 
 - **可修改**：`novel-project/bible/` 下所有文件；`novel-project/WORKFLOW.md`；`README.md` 索引
 - **禁止修改**：`novel-project/chapters/` 下正文（除非用户明确说「同步正文」或「代写正文」）
-- **预览正文**：用户要求预览某章 → 读 `novel-project/drafts/chapter-NNN.md`（章号三位数，如 Ch.3 → `chapter-003.md`）
+- **预览正文**：用户要求预览某章 → **序章**读 `novel-project/drafts/prologue.md`；**第N章**读 `novel-project/drafts/chapter-NNN.md`（如第二章→`chapter-002.md`）
 
 ## 工作方式
 

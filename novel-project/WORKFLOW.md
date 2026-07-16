@@ -84,14 +84,14 @@
 ### 对话 B：正文写作（Sonnet 5）
 
 - **用途**：按大纲写章、改文风、润色对话与心理描写
-- **建议标题**：`正文 Ch.XXX`（一章一对话，或按卷开对话）
+- **建议标题**：`正文 序章` / `正文 第X章`（一章一对话，或按卷开对话）
 - **不要**在此对话里改 `bible/`（除非我明确说「同步回 bible」）
 
 **典型开场**：
 
 ```
 请根据 @novel-project/bible/outline.md 的 Ch.N 撰写正文，
-写入 @novel-project/drafts/chapter-00N.md。
+写入 @novel-project/drafts/chapter-NNN.md 或 prologue.md。
 
 严格遵守 @novel-project/bible/style-guide.md：
 - 第一人称「我」（莉莉娅）为主；必要时短段第三人称旁白补设定
@@ -178,10 +178,10 @@ novel-project/
 
 ## 开写顺序建议
 
-1. 用 **Composer** 确认卷一 Ch.1–2 大纲无误
-2. 新建 **Sonnet** 对话，写 `drafts/chapter-001.md`
+1. 用 **Composer** 确认卷一 序章–第一章 大纲无误
+2. 新建 **Sonnet** 对话，写 `drafts/prologue.md`（序章）或 `drafts/chapter-001.md`（第一章）
 3. 你审阅 → 文风问题留 Sonnet，设定问题回 Composer
-4. Ch.1 满意后，Sonnet 继续 Ch.2（@ 上一章正文）
+4. 序章满意后，Sonnet 继续第一章（`chapter-001.md`）（@ 上一章正文）
 
 ---
 
