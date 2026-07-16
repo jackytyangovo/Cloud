@@ -12,7 +12,7 @@ novel-project/
 │   ├── characters.md
 │   ├── worldbuilding.md
 │   └── timeline.md
-├── chapters/        # 正文（待开写）
+├── drafts/          # 完成的正文草稿（按章节存放，方便查找）
 └── setup_project.py
 ```
 

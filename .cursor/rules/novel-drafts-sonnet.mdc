@@ -1,6 +1,6 @@
 ---
-description: 小说正文撰写与润色。使用 Sonnet 5，只写 chapters/，设定以 bible/ 为只读参考。
-globs: novel-project/chapters/**
+description: 小说正文撰写与润色。使用 Sonnet 5，只写 drafts/，设定以 bible/ 为只读参考。
+globs: novel-project/drafts/**
 alwaysApply: false
 ---
 
@@ -10,7 +10,7 @@ alwaysApply: false
 
 ## 职责范围
 
-- **可修改**：`novel-project/chapters/` 下章节文件
+- **可修改**：`novel-project/drafts/` 下章节文件（存放完成的正文草稿）
 - **只读参考**：`novel-project/bible/`（outline、style-guide、characters、worldbuilding、timeline）
 - **禁止修改**：`bible/` 下任何文件（除非用户明确说「把设定同步回 bible」）
 
