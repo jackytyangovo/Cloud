@@ -8,9 +8,14 @@
 
 **预览地址（push 后可用）：**
 
-https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html
+- **推荐（按 commit 固定，避免 CDN 缓存旧稿）：**  
+  `https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<commit>/novel-project/preview/standalone.html`  
+  将 `<commit>` 换为页眉显示的短 SHA（如 `028f0bf`）。
 
-也可在 GitHub 仓库中直接打开：`novel-project/preview/standalone.html` → **Raw** 或 **View file**。
+- **分支最新（可能需等 1–2 分钟或强制刷新）：**  
+  https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html
+
+也可在 GitHub 仓库中直接打开：`novel-project/preview/standalone.html` → **View file**（看页眉 **构建于 … UTC · commit …** 是否最新）。
 
 ### 更新流程（硬规则 · 每次改稿必做）
 
@@ -20,8 +25,8 @@ git add novel-project/preview/standalone.html novel-project/drafts/
 git commit && git push -u origin <branch>
 ```
 
-- **一次改稿 = 一次 rebuild + 一次 push**（与正文 commit 同批提交 `standalone.html`）
-- 页眉 **构建于 … UTC** 可核对是否已拉到最新
+- **一次改稿 = 一次 rebuild + 一次 push**（**必须**与 `drafts/` 同批提交 `standalone.html`，禁止只 push md 不 rebuild）
+- 页眉 **构建于 … UTC · commit …** 可核对；看不到新稿时用 **带 commit 的链接** 或浏览器 **强制刷新**
 
 ---
 

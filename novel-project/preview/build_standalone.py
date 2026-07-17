@@ -142,8 +142,24 @@ def build_toc(chapters: list[tuple[str, str]]) -> str:
   </nav>"""
 
 
+def git_short_sha() -> str:
+    import subprocess
+
+    try:
+        out = subprocess.check_output(
+            ["git", "rev-parse", "--short", "HEAD"],
+            cwd=ROOT.parent,
+            stderr=subprocess.DEVNULL,
+            text=True,
+        )
+        return out.strip()
+    except Exception:
+        return "unknown"
+
+
 def main() -> None:
     built = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    sha = git_short_sha()
     chapters = discover_chapters()
     sections = []
     for rel, label in chapters:
@@ -279,7 +295,7 @@ def main() -> None:
 <body>
   <header>
     <h1>异世界重生 · 正文预览</h1>
-    <div class="meta">构建于 {built} · 改稿后须重新运行 build 并 push，再手动刷新本页</div>
+    <div class="meta">构建于 {built} · commit {sha} · 改稿 push 后请强制刷新本页（或换下方带 commit 的链接）</div>
   </header>
 {toc}
   <main><article>{body}</article></main>
