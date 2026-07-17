@@ -14,6 +14,7 @@ OUT = PREVIEW / "standalone.html"
 
 CHAPTERS = [
     ("drafts/prologue.md", "序章 · 错位的清晨"),
+    ("drafts/chapter-001.md", "第一章 · 两家莱恩菲尔"),
 ]
 
 
