@@ -125,16 +125,19 @@ def md_to_html(md: str) -> str:
 
 def build_toc(chapters: list[tuple[str, str]]) -> str:
     items = "\n".join(
-        f'      <li><a href="#{html.escape(chapter_anchor(label), quote=True)}">{html.escape(label)}</a></li>'
+        f'        <li><a href="#{html.escape(chapter_anchor(label), quote=True)}">{html.escape(label)}</a></li>'
         for _, label in chapters
     )
-    return f"""  <nav class="toc" aria-label="目录">
-    <details class="toc-panel" open>
-      <summary class="toc-summary">目录</summary>
-      <ol class="toc-list">
+    return f"""  <button type="button" class="toc-toggle" id="toc-toggle" aria-expanded="false" aria-controls="toc-drawer">目录</button>
+  <div class="toc-backdrop" id="toc-backdrop" hidden></div>
+  <nav class="toc-drawer" id="toc-drawer" aria-label="目录" hidden>
+    <div class="toc-header">
+      <span class="toc-title">目录</span>
+      <button type="button" class="toc-close" id="toc-close" aria-label="关闭目录">×</button>
+    </div>
+    <ol class="toc-list">
 {items}
-      </ol>
-    </details>
+    </ol>
   </nav>"""
 
 
@@ -170,7 +173,6 @@ def main() -> None:
     :root {{
       --bg: #faf8f5; --text: #2c2825; --muted: #7a7268;
       --card: #fff; --border: #e8e2d9; --scene: #c4b8a8; --accent: #8b6914;
-      --toc-width: 13.5rem;
     }}
     @media (prefers-color-scheme: dark) {{
       :root {{
@@ -192,53 +194,50 @@ def main() -> None:
     }}
     header h1 {{ margin: 0 0 6px; font-size: 1.1rem; }}
     .meta {{ font-size: .78rem; color: var(--muted); }}
-    .layout {{
-      display: flex; align-items: flex-start;
-      max-width: 56rem; margin: 0 auto;
-      padding: 0 12px 48px; gap: 0;
+    .toc-toggle {{
+      position: fixed; top: 4.6rem; right: 14px; z-index: 30;
+      padding: 8px 14px; border: 1px solid var(--border);
+      border-radius: 999px; background: var(--card);
+      color: var(--text); font: inherit; font-size: .82rem;
+      cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,.08);
     }}
-    .toc {{
-      flex: 0 0 var(--toc-width);
-      position: sticky; top: 4.5rem;
-      align-self: flex-start;
-      padding: 16px 8px 16px 4px;
-      max-height: calc(100vh - 5rem);
-      overflow-y: auto;
+    .toc-toggle:hover, .toc-toggle:focus {{
+      border-color: var(--accent); outline: none;
     }}
-    .toc-panel {{
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0;
-      margin: 0;
+    .toc-backdrop {{
+      position: fixed; inset: 0; z-index: 40;
+      background: rgba(0,0,0,.35);
     }}
-    .toc-summary {{
-      list-style: none;
-      cursor: pointer;
-      font-size: .92rem;
-      font-weight: 600;
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
-      user-select: none;
+    .toc-drawer {{
+      position: fixed; top: 0; right: 0; z-index: 50;
+      width: min(18rem, 88vw); height: 100%;
+      background: var(--card); border-left: 1px solid var(--border);
+      box-shadow: -4px 0 24px rgba(0,0,0,.12);
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform .22s ease;
     }}
-    .toc-summary::-webkit-details-marker {{ display: none; }}
-    .toc-summary::before {{
-      content: "▾ "; color: var(--accent); font-size: .85em;
+    .toc-drawer.is-open {{ transform: translateX(0); }}
+    .toc-header {{
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 14px 10px; border-bottom: 1px solid var(--border);
+      flex-shrink: 0;
     }}
-    .toc-panel:not([open]) .toc-summary::before {{ content: "▸ "; }}
+    .toc-title {{ font-size: .95rem; font-weight: 600; }}
+    .toc-close {{
+      border: none; background: transparent; color: var(--muted);
+      font-size: 1.4rem; line-height: 1; cursor: pointer; padding: 0 4px;
+    }}
+    .toc-close:hover, .toc-close:focus {{ color: var(--text); outline: none; }}
     .toc-list {{
-      margin: 0; padding: 8px 0 10px;
-      list-style: none;
-      counter-reset: toc;
+      margin: 0; padding: 8px 0 16px;
+      list-style: none; overflow-y: auto; flex: 1;
     }}
-    .toc-list li {{
-      counter-increment: toc;
-      margin: 0;
-    }}
+    .toc-list li {{ margin: 0; }}
     .toc-list a {{
       display: block;
-      padding: 7px 12px 7px 10px;
-      font-size: .86rem;
+      padding: 10px 16px;
+      font-size: .88rem;
       line-height: 1.45;
       color: var(--text);
       text-decoration: none;
@@ -251,9 +250,8 @@ def main() -> None:
       outline: none;
     }}
     main {{
-      flex: 1; min-width: 0;
-      max-width: 42rem;
-      padding: 16px 6px 0;
+      max-width: 42rem; margin: 0 auto;
+      padding: 16px 18px 48px;
     }}
     section.chapter-section {{ margin-bottom: 2.5em; scroll-margin-top: 5rem; }}
     h2.chapter {{ font-size: 1.25rem; text-align: center; margin: 0 0 1em; }}
@@ -271,24 +269,10 @@ def main() -> None:
     hr.scene::before {{ content: "· · ·"; }}
     footer {{
       text-align: center; font-size: .75rem; color: var(--muted);
-      padding: 16px; max-width: 56rem; margin: 0 auto;
+      padding: 16px; max-width: 42rem; margin: 0 auto;
     }}
     @media (max-width: 720px) {{
-      .layout {{ display: block; padding: 0 0 48px; }}
-      .toc {{
-        position: sticky; top: 3.8rem; z-index: 15;
-        flex: none; width: 100%; max-height: none;
-        padding: 0; background: var(--bg);
-        border-bottom: 1px solid var(--border);
-      }}
-      .toc-panel {{ border: none; border-radius: 0; }}
-      .toc-panel:not([open]) .toc-list {{ display: none; }}
-      main {{ padding: 16px 18px 0; max-width: none; }}
-    }}
-    @media (min-width: 721px) {{
-      .toc-panel {{ pointer-events: none; }}
-      .toc-summary {{ pointer-events: none; cursor: default; }}
-      .toc-list a {{ pointer-events: auto; }}
+      .toc-toggle {{ top: auto; bottom: 18px; right: 16px; }}
     }}
   </style>
 </head>
@@ -297,11 +281,48 @@ def main() -> None:
     <h1>异世界重生 · 正文预览</h1>
     <div class="meta">构建于 {built} · 每 300 秒自动刷新页面以同步最新稿</div>
   </header>
-  <div class="layout">
 {toc}
-    <main><article>{body}</article></main>
-  </div>
+  <main><article>{body}</article></main>
   <footer>手机阅读：下拉刷新或等待自动刷新（5 分钟）· 改稿推送后更新</footer>
+  <script>
+    (function () {{
+      var toggle = document.getElementById("toc-toggle");
+      var closeBtn = document.getElementById("toc-close");
+      var drawer = document.getElementById("toc-drawer");
+      var backdrop = document.getElementById("toc-backdrop");
+      if (!toggle || !drawer || !backdrop) return;
+
+      function openToc() {{
+        drawer.hidden = false;
+        backdrop.hidden = false;
+        requestAnimationFrame(function () {{ drawer.classList.add("is-open"); }});
+        toggle.setAttribute("aria-expanded", "true");
+        document.body.style.overflow = "hidden";
+      }}
+
+      function closeToc() {{
+        drawer.classList.remove("is-open");
+        toggle.setAttribute("aria-expanded", "false");
+        document.body.style.overflow = "";
+        window.setTimeout(function () {{
+          if (!drawer.classList.contains("is-open")) {{
+            drawer.hidden = true;
+            backdrop.hidden = true;
+          }}
+        }}, 220);
+      }}
+
+      toggle.addEventListener("click", openToc);
+      if (closeBtn) closeBtn.addEventListener("click", closeToc);
+      backdrop.addEventListener("click", closeToc);
+      drawer.querySelectorAll("a").forEach(function (link) {{
+        link.addEventListener("click", closeToc);
+      }});
+      document.addEventListener("keydown", function (e) {{
+        if (e.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") closeToc();
+      }});
+    }})();
+  </script>
 </body>
 </html>
 """
