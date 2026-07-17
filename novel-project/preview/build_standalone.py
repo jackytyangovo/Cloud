@@ -21,24 +21,67 @@ def md_to_html(md: str) -> str:
     lines = md.replace("\r\n", "\n").split("\n")
     out: list[str] = []
     in_para = False
-    for raw in lines:
-        line = raw.rstrip()
+    in_setting = False
+    setting_para_open = False
+    i = 0
+    while i < len(lines):
+        line = lines[i].rstrip()
+
+        if line.strip() == "【附】":
+            if in_para:
+                out.append("</p>")
+                in_para = False
+            in_setting = True
+            setting_para_open = False
+            out.append('<aside class="setting-note">')
+            i += 1
+            continue
+
+        if line.strip() == "【/附】":
+            if in_setting and setting_para_open:
+                out.append("</p>")
+                setting_para_open = False
+            if in_setting:
+                out.append("</aside>")
+                in_setting = False
+            i += 1
+            continue
+
+        if in_setting:
+            if not line.strip():
+                if setting_para_open:
+                    out.append("</p>")
+                    setting_para_open = False
+            else:
+                if not setting_para_open:
+                    cls = ' class="setting-label"' if line.strip().startswith("附：") else ""
+                    out.append(f"<p{cls}>")
+                    setting_para_open = True
+                else:
+                    out.append("<br/>")
+                out.append(html.escape(line))
+            i += 1
+            continue
+
         if line.startswith("# "):
             if in_para:
                 out.append("</p>")
                 in_para = False
             out.append(f"<h2>{html.escape(line[2:])}</h2>")
+            i += 1
             continue
         if line in ("*", "---"):
             if in_para:
                 out.append("</p>")
                 in_para = False
             out.append('<hr class="scene" />')
+            i += 1
             continue
         if not line.strip():
             if in_para:
                 out.append("</p>")
                 in_para = False
+            i += 1
             continue
         if not in_para:
             no_indent = line.strip().startswith("「") or line.strip().startswith("觉醒前")
@@ -48,8 +91,14 @@ def md_to_html(md: str) -> str:
         else:
             out.append("<br/>")
         out.append(html.escape(line))
+        i += 1
+
     if in_para:
         out.append("</p>")
+    if in_setting:
+        if setting_para_open:
+            out.append("</p>")
+        out.append("</aside>")
     return "".join(out)
 
 
@@ -102,6 +151,14 @@ def main() -> None:
     h2.chapter {{ font-size: 1.25rem; text-align: center; margin: 0 0 1em; }}
     article p {{ margin: 0 0 1.1em; text-indent: 2em; text-align: justify; }}
     article p.no-indent {{ text-indent: 0; }}
+    aside.setting-note {{
+      margin: 0.6em 0 1.2em; padding: 10px 14px;
+      background: var(--border); border-left: 3px solid var(--accent);
+      font-size: 0.88rem; line-height: 1.7; color: var(--muted);
+    }}
+    aside.setting-note p {{ text-indent: 0; margin: 0 0 0.5em; }}
+    aside.setting-note p.setting-label {{ font-weight: 600; color: var(--text); margin-bottom: 0.6em; }}
+    aside.setting-note p:last-child {{ margin-bottom: 0; }}
     hr.scene {{ border: none; text-align: center; margin: 1.6em 0; color: var(--scene); letter-spacing: .5em; }}
     hr.scene::before {{ content: "· · ·"; }}
     footer {{ text-align: center; font-size: .75rem; color: var(--muted); padding: 16px; }}
