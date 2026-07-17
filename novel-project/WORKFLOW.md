@@ -10,7 +10,7 @@
 |------|------|-------------|--------------|
 | 大纲、设定、人物、时间线 | **Composer 2.5** | Plan → Agent | `novel-project/bible/` |
 | 正文撰写、文风润色 | **Sonnet 5** | Agent | `novel-project/drafts/` |
-| 预览 / 审阅正文 | 任意 | Ask / Agent | **只读** `novel-project/drafts/` |
+| 正文预览 / 审阅 | 任意 | Ask / Agent | **只读** `novel-project/drafts/` · 手机见 `preview/standalone.html` |
 | 快速查设定、讨论剧情 | 任意 | Ask | 只读，不改文件 |
 
 **单一事实来源**：所有设定以 `bible/` 为准。正文不得擅自新增或改写世界观；发现设定缺口应停下，回到 Composer 补 bible。

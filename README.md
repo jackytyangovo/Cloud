@@ -20,6 +20,7 @@ novel-project/
 
 | 文档 | 内容 |
 |------|------|
+| [**正文预览（手机）**](https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html) | **序章实时预览** · 30 秒自动刷新（见 `preview/README.md`） |
 | [**WORKFLOW.md**](novel-project/WORKFLOW.md) | **模型分工**：Composer 2.5 修 bible / Sonnet 5 写正文 |
 | [outline.md](novel-project/bible/outline.md) | **完整大纲** · 卷一关键章节拍 + 伏笔 |
 | [worldbuilding.md](novel-project/bible/worldbuilding.md) | 魔法/剑术、种族、地理、势力 |
