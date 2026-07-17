@@ -20,6 +20,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 |------|------|
 | `bible/outline.md` | 当前章节拍、卷一边界 |
 | `bible/narrative-structure.md` | **宏观三阶段**（日常·冒险·危机）、1–3–9 埋线、两拐点避坑 |
+| `bible/daily-growth-writing.md` | **日常成长期** 4要4不要、章自查三问、卷一映射 |
 | `bible/style-guide.md` | 文风、视角、R18、附块 |
 | `bible/style-reference.md` | 样章语感与节奏参考 |
 | `bible/worldbuilding.md` | 世界观、维洛教、魔法制度 |
@@ -34,10 +35,11 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 1. 读 `outline.md` 中**当前章**场景与「不写」列表
 2. 若规划**新幕/新卷/大转折**，读 `narrative-structure.md`（日常·冒险·危机衔接、1–3–9 埋线）
-3. 读上一章正文，保持衔接与视角标记一致
-4. 确认本章时间标注（如「觉醒前第二十九天」）
-5. 列出本章会出现的**新专名** → 规划【附】插入点
-6. 写完后自检：文风、附块、剧透、单字、维洛教、卷一边界
+3. 写**日常成长章**（尤其卷一），读 `daily-growth-writing.md`，写完后过 **章自查三问**
+4. 读上一章正文，保持衔接与视角标记一致
+5. 确认本章时间标注（如「觉醒前第二十九天」）
+6. 列出本章会出现的**新专名** → 规划【附】插入点
+7. 写完后自检：文风、附块、剧透、单字、维洛教、卷一边界
 
 ---
 
@@ -354,6 +356,7 @@ python3 novel-project/preview/build_standalone.py
 - [ ] 卷一边界：未写禁止项
 - [ ] 净阶 ≠ 即战力；幼童未碾压成人
 - [ ] 四层（动作/神态/环境/心理）均有覆盖
+- [ ] **日常章三问**（变强/变熟、情绪价值、主动或生活麻烦）— 见 `daily-growth-writing.md`
 - [ ] 章内约 **每 1000 字** 有小高潮；人物描写占比够，无流水账
 - [ ] 改稿后已重建 standalone.html（若用户需要预览）
 
@@ -387,6 +390,7 @@ python3 novel-project/preview/build_standalone.py
 ## 延伸阅读（按需深入）
 
 - **宏观三阶段（日常·冒险·危机）**：`bible/narrative-structure.md`
+- **日常成长期 4要4不要**：`bible/daily-growth-writing.md`
 - 样章节奏与 montage：`bible/style-reference.md`
 - 章节细拍与八线脉络：`bible/outline.md`「全文叙事脉络」
 - 模型分工：Composer 改 bible，Sonnet 写正文 → `WORKFLOW.md`

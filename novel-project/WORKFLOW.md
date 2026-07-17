@@ -110,6 +110,7 @@
 
 - `novel-project/bible/outline.md`
 - `novel-project/bible/narrative-structure.md`
+- `novel-project/bible/daily-growth-writing.md`
 - `novel-project/bible/worldbuilding.md`
 - `novel-project/bible/characters.md`
 - `novel-project/bible/style-guide.md`
@@ -175,9 +176,12 @@ Sonnet 5 写 / 改 drafts/
 novel-project/
 ├── bible/          ← Composer 2.5 专属
 │   ├── outline.md
+│   ├── narrative-structure.md   ← 日常·冒险·危机、1–3–9 埋线
+│   ├── daily-growth-writing.md ← 日常成长期 4要4不要、章自查
 │   ├── worldbuilding.md
 │   ├── characters.md
 │   ├── style-guide.md
+│   ├── style-reference.md
 │   └── timeline.md
 ├── drafts/         ← 正文撰写与改稿（Sonnet 5）
 │   └── chapter-NNN.md
