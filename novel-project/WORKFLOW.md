@@ -176,15 +176,17 @@ novel-project/
 │   ├── characters.md
 │   ├── style-guide.md
 │   └── timeline.md
-├── drafts/         ← 正文（Sonnet 5 撰写；预览某章读此目录）
+├── drafts/         ← 正文撰写与改稿（Sonnet 5）
 │   └── chapter-NNN.md
-└── chapters/       ← 遗留目录（如有旧稿；以 drafts/ 为准）
+├── finalized/      ← 定稿快照（只读；仅用户说「章节定稿」时可写入）
+│   └── prologue.md …
+└── chapters/       ← 遗留目录（旧稿；以 drafts/ 为准）
 ```
 
 - **Composer** 默认可写：`bible/`、`README.md`（索引）、`WORKFLOW.md`
 - **Sonnet** 默认可写：`drafts/`
-- **预览正文**：用户说「预览序章 / 预览第N章 / 预览第二章」等 → 读 `drafts/prologue.md` 或 `drafts/chapter-NNN.md`（**第N章** ↔ `chapter-NNN.md`；不存在则告知未撰写）
-- 跨目录修改需你**明确指示**
+- **`finalized/`**：**禁止**日常修改；**仅**用户说 **「章节定稿」** 时复制 `drafts/` 快照入库
+- **预览正文**：读 `drafts/`；**不读** `finalized/`
 
 ---
 
@@ -224,6 +226,7 @@ novel-project/
 | 误操作 | 后果 | 正确做法 |
 |--------|------|----------|
 | 在 Sonnet 对话里改 outline | bible 与正文两套版本 | 回 Composer 改 bible，再让 Sonnet 对齐 |
+| 自动改 `finalized/` | 定稿被覆盖 | **仅**用户说「章节定稿」时才复制入库 |
 | 在 Composer 对话里写正文 | 文风/节奏不如 Sonnet | 新开 Sonnet 对话写 drafts/ |
 | 预览正文去 chapters/ 找 | 目录已迁 | **优先** `drafts/chapter-NNN.md` |
 | 同一对话混用两个模型 | 上下文混乱 | 大纲对话、正文对话分开 |
