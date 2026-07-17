@@ -1,10 +1,10 @@
 ---
-description: 小说正文撰写与润色。使用 Sonnet 5，只写 drafts/，设定以 bible/ 为只读参考。
+description: 小说正文撰写与润色。任意 Agent，只写 drafts/，设定以 bible/ 为只读参考。
 globs: novel-project/drafts/**,novel-project/chapters/**
 alwaysApply: false
 ---
 
-# 小说项目 · 正文写作规则（Sonnet 5）
+# 小说项目 · 正文写作规则
 
 你正在撰写**小说正文**，不是修缮大纲。
 
@@ -21,6 +21,7 @@ alwaysApply: false
 - 每章兼顾：**人物动作**、**神态与语言**、**环境变化**、**主角心理**
 - 设定融入场景，避免大段说明文
 - 目标约 **3000 字/章**；章末留悬念
+- **「全文」默认当前章**；未点名不改其他 `drafts/` 章节
 
 ## 内容分级（R18 · 用户确认）
 
@@ -30,24 +31,33 @@ alwaysApply: false
 
 ## 写作前必读
 
-1. `bible/outline.md` — 当前章节拍
-2. `bible/style-guide.md` — 文风与战力约束
-3. `bible/style-reference.md` — 语感与节奏参考（样章分析）
-4. 必要时 `characters.md`、`worldbuilding.md`
-4. 上一章正文（保持衔接；注意视角切换标记一致）
+1. `novel-project/WORKFLOW.md` — 流程与目录边界
+2. `.cursor/skills/isekai-novel-writing/SKILL.md` — 写前/交稿自检
+3. `bible/outline.md` — 当前章情节边界（**严禁照办纲要**）
+4. `bible/style-guide.md` — 文风与战力约束
+5. `bible/style-reference.md` — 语感与节奏参考
+6. 必要时 `characters.md`、`worldbuilding.md`
+7. 上一章正文（保持衔接）
+
+## 改稿后
+
+```bash
+python3 novel-project/preview/build_standalone.py
+```
+
+与 `drafts/` 同批 commit/push `preview/standalone.html`。
 
 ## 硬约束
 
 - 天赋净阶 ≠ 即战力；6 岁孩童觉醒净章也不能碾压成年人
-- 不得擅自定稿标有 `【随剧情补充】` 的设定；缺口用占位或略过，并提醒用户回 Composer 补 bible
+- 不得擅自定稿标有 `【随剧情补充】` 的设定；缺口用占位或略过，并提醒用户补 bible
 - 前 2 章须完成 `outline.md` 中 序章–第一章 列出的背景交代
 
-## 推荐模型
+## 模式
 
-- 本规则适用场景请使用 **Sonnet 5**（建议 Max Mode）
-- 模式：**Agent**
+- **Agent**（**不限定 Sonnet**；见 `WORKFLOW.md`）
 
 ## 禁止
 
-- 不要在本会话中修改 `bible/outline.md` 等设定文件
-- 发现大纲与写作冲突时，指出问题并请用户用 Composer 修缮 bible，不要自行改设定
+- 不要在本会话中修改 `bible/outline.md` 等设定文件（除非用户明确要求）
+- 发现大纲与写作冲突时，指出问题并请用户修缮 bible，不要自行改设定

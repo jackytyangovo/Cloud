@@ -403,4 +403,4 @@ python3 novel-project/preview/build_standalone.py
 - **日常成长期 4要4不要**：`bible/daily-growth-writing.md`
 - 样章节奏与 montage：`bible/style-reference.md`
 - 章节细拍与八线脉络：`bible/outline.md`「全文叙事脉络」
-- 模型分工：Composer 改 bible，Sonnet 写正文 → `WORKFLOW.md`
+- 模型分工：bible 设定修缮 / 正文写 `drafts/`（**不限定模型**）→ `WORKFLOW.md`

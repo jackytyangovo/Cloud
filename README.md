@@ -21,7 +21,7 @@ novel-project/
 | 文档 | 内容 |
 |------|------|
 | [**正文预览（手机）**](https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html) | **序章 + 第一章工作稿** · 改稿后 rebuild 并 push，**手动刷新**（见 `preview/README.md`） |
-| [**WORKFLOW.md**](novel-project/WORKFLOW.md) | **模型分工**：Composer 2.5 修 bible / Sonnet 5 写正文 |
+| [**WORKFLOW.md**](novel-project/WORKFLOW.md) | **流程分工**：bible 设定修缮 / 正文写 `drafts/`（**不限定模型**） |
 | [outline.md](novel-project/bible/outline.md) | **完整大纲** · 卷一关键章节拍 + 伏笔 |
 | [worldbuilding.md](novel-project/bible/worldbuilding.md) | 魔法/剑术、种族、地理、势力 |
 | [characters.md](novel-project/bible/characters.md) | 莉莉娅、莱恩菲尔家、人物关系 |
