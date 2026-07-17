@@ -161,6 +161,8 @@ git commit && git push
 - **一次改稿 = rebuild + push** `standalone.html`（与正文同批）
 - 读者看预览页：`preview/README.md` 中带 commit 的链接
 
+**「全文」范围**（✓ 用户确认）：用户说 **「全文」** 默认指 **当前章节**（当次任务正在写的 `drafts/chapter-NNN.md` 或指定那一章）。**未点名其他章节时，不得改其他章初稿**；序章/定稿同步须用户 **明确点名**。
+
 ---
 
 ## 迭代循环
