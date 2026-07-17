@@ -18,6 +18,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 | 路径 | 用途 |
 |------|------|
+| [`WORKFLOW.md`](../novel-project/WORKFLOW.md) | **流程总纲**：目录边界、分工、定稿/预览、迭代循环 |
 | `bible/outline.md` | 当前章节拍、卷一边界 |
 | `bible/narrative-structure.md` | **宏观三阶段**（日常·冒险·危机）、1–3–9 埋线、两拐点避坑 |
 | `bible/daily-growth-writing.md` | **日常成长期** 4要4不要、章自查三问、卷一映射 |
@@ -33,6 +34,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 ## 写前清单（按顺序）
 
+0. 读 [`WORKFLOW.md`](../novel-project/WORKFLOW.md)：**目录边界**、模型分工、**定稿/预览**流程、误操作禁忌
 1. 读 `outline.md` 中**当前章**场景与「不写」列表——**只取情节边界与时间线**，**严禁**把场次表/技法行照译进正文
 2. 若规划**新幕/新卷/大转折**，读 `narrative-structure.md`（日常·冒险·危机衔接、1–3–9 埋线）
 3. 写**日常成长章**（尤其卷一），读 `daily-growth-writing.md`，写完后过 **章自查三问**

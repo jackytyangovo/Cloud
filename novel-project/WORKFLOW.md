@@ -15,12 +15,12 @@
 
 **单一事实来源**：所有设定以 `bible/` 为准。正文不得擅自新增或改写世界观；发现设定缺口应停下，回到 Composer 补 bible。
 
-### 当前优先（用户确认）
+### 当前优先（用户确认 · 2026-07-17 更新）
 
-1. **大纲与设定补充**（`bible/`、`outline.md` 章节细写、世界观/人物同步）——**进行中**（世界观阶段性暂停，待用户新指示）
-2. **样文文风分析**（用户发样章 → Composer 分析 → 写入/更新 `style-reference.md`，必要时微调 `style-guide.md`）——**接下来重点**
-3. 正文预览 / 撰写（`drafts/`）——**暂缓**，待大纲/文风定稿后再推进
-4. 用户已确认内容（如 **第四章** 分场景 + 灵感备选）**保留在 `outline.md`**，不删
+1. **正文撰写与润色**（`drafts/`）——**序章已定稿**（`finalized/prologue.md`）；**第一章工作稿**迭代中
+2. **样文文风分析**（用户发样章 → 更新 `style-reference.md` / `style-guide.md`）
+3. **大纲与设定补充**（`bible/`）——随正文审阅 **同步回 bible**（用户明确要求时）
+4. 用户已确认章节拍 **保留在 `outline.md`**，不删
 5. **补充入口**：见 `outline.md` → **「大纲补充 · 待填清单」**
 
 ### 样文入库流程（用户确认）
@@ -143,10 +143,23 @@
 
 **建议 @ 文件**：
 
-- 当前章对应 `outline.md` 节拍
-- `style-guide.md`
+- [`WORKFLOW.md`](WORKFLOW.md)（流程与目录边界）
+- 当前章对应 `outline.md` 节拍（**只读情节边界，严禁照译**）
+- `style-guide.md`、`style-reference.md`
+- [`.cursor/skills/isekai-novel-writing/SKILL.md`](../.cursor/skills/isekai-novel-writing/SKILL.md)（写前/交稿自检）
 - 必要时 `characters.md`、`worldbuilding.md`（只读参考）
 - 上一章正文（保持衔接）
+
+**改稿后必做**（预览）：
+
+```bash
+python3 novel-project/preview/build_standalone.py
+git add novel-project/drafts/ novel-project/preview/standalone.html
+git commit && git push
+```
+
+- **一次改稿 = rebuild + push** `standalone.html`（与正文同批）
+- 读者看预览页：`preview/README.md` 中带 commit 的链接
 
 ---
 
@@ -200,11 +213,17 @@ novel-project/
 
 ## Sonnet 5 写作检查清单（每章）
 
-- [ ] 与 `outline.md` 当前章节拍一致
-- [ ] 文风符合 `style-guide.md`（平直、四层兼顾）
+写前读：`WORKFLOW.md` · `style-guide.md` · `style-reference.md` · 写作 skill 自检表。
+
+- [ ] **WORKFLOW 目录边界**：只改 `drafts/`；`finalized/` 仅用户说「章节定稿」；预览读 `drafts/`
+- [ ] **初稿即正文**：**严禁照办纲要**（不照译场次表、技法行、bible 缩略语）
+- [ ] 与 `outline.md` **情节边界**一致（非照抄纲要句式）
+- [ ] 文风符合 `style-guide.md`（平直、长短句、分段透气、对话口语化、四层兼顾）
+- [ ] 交稿前 **陌生读者视角** 通读一遍
 - [ ] 战力未膨胀（孩童高净阶不碾压成人）
 - [ ] 未擅自定稿标有 `【随剧情补充】` 的设定
 - [ ] 章末有悬念或情绪落点
+- [ ] 已 **rebuild + push** `preview/standalone.html`（改稿同批）
 
 ---
 
