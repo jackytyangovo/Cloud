@@ -115,7 +115,7 @@
 <body>
   <header>
     <h1>异世界重生 · 正文预览</h1>
-    <div class="meta">构建于 2026-07-17 19:32 UTC · commit b3cdb45 · 分支 cursor/isekai-novel-outline-1688 · 每 5 分钟自动刷新</div>
+    <div class="meta">构建于 2026-07-17 19:35 UTC · commit 370a034 · 分支 cursor/isekai-novel-outline-1688 · 每 5 分钟自动刷新</div>
   </header>
   <button type="button" class="toc-toggle" id="toc-toggle" aria-expanded="false" aria-controls="toc-drawer">目录</button>
   <div class="toc-backdrop" id="toc-backdrop" hidden></div>
@@ -135,8 +135,52 @@
   <script>
     (function () {
       var REFRESH_MS = 300000;
+      var SCROLL_KEY = "novel-preview-scroll";
+
+      function saveScrollPosition() {
+        try {
+          sessionStorage.setItem(
+            SCROLL_KEY,
+            JSON.stringify({
+              y: window.scrollY || document.documentElement.scrollTop || 0,
+              hash: window.location.hash || ""
+            })
+          );
+        } catch (e) {}
+      }
+
+      function restoreScrollPosition() {
+        try {
+          var raw = sessionStorage.getItem(SCROLL_KEY);
+          if (!raw) return;
+          var saved = JSON.parse(raw);
+          if (saved.hash && saved.hash !== window.location.hash) {
+            window.location.hash = saved.hash;
+          }
+          if (typeof saved.y !== "number") return;
+          function apply() {
+            window.scrollTo(0, saved.y);
+          }
+          apply();
+          requestAnimationFrame(apply);
+          window.setTimeout(apply, 80);
+        } catch (e) {}
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", restoreScrollPosition);
+      } else {
+        restoreScrollPosition();
+      }
+
+      var scrollTimer = null;
+      window.addEventListener("scroll", function () {
+        if (scrollTimer) window.clearTimeout(scrollTimer);
+        scrollTimer = window.setTimeout(saveScrollPosition, 200);
+      }, { passive: true });
 
       function reloadWithCacheBust() {
+        saveScrollPosition();
         try {
           var u = new URL(window.location.href);
           u.searchParams.set("_r", String(Date.now()));

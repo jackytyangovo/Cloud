@@ -36,7 +36,8 @@ git commit && git push -u origin <branch>
 
 - **仍建议改稿同批 rebuild + push**（读者不必等最多 5 分钟）  
 - 若只 push 了 `drafts/*.md` 忘了 rebuild，**5 分钟内** Actions 会补推 `standalone.html`  
-- 强制重建（drafts 未变也更新页眉时间）：`python3 novel-project/preview/build_standalone.py --force`
+- 强制重建（drafts 未变也更新页眉时间）：`python3 novel-project/preview/build_standalone.py --force`  
+- 自动刷新会 **记住滚动位置**（`sessionStorage`），刷新后回到原阅读处
 
 ---
 

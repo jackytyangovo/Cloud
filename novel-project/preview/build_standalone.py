@@ -210,8 +210,6 @@ def main() -> None:
     config = load_preview_config()
     refresh_min = int(config.get("refresh_interval_minutes", 5))
     refresh_ms = refresh_min * 60 * 1000
-    github_repo = config["github_repo"]
-    preview_branch = config.get("preview_branch") or git_branch()
 
     chapters = discover_chapters()
     drafts_sha = drafts_content_hash(chapters)
@@ -368,8 +366,52 @@ def main() -> None:
   <script>
     (function () {{
       var REFRESH_MS = {refresh_ms};
+      var SCROLL_KEY = "novel-preview-scroll";
+
+      function saveScrollPosition() {{
+        try {{
+          sessionStorage.setItem(
+            SCROLL_KEY,
+            JSON.stringify({{
+              y: window.scrollY || document.documentElement.scrollTop || 0,
+              hash: window.location.hash || ""
+            }})
+          );
+        }} catch (e) {{}}
+      }}
+
+      function restoreScrollPosition() {{
+        try {{
+          var raw = sessionStorage.getItem(SCROLL_KEY);
+          if (!raw) return;
+          var saved = JSON.parse(raw);
+          if (saved.hash && saved.hash !== window.location.hash) {{
+            window.location.hash = saved.hash;
+          }}
+          if (typeof saved.y !== "number") return;
+          function apply() {{
+            window.scrollTo(0, saved.y);
+          }}
+          apply();
+          requestAnimationFrame(apply);
+          window.setTimeout(apply, 80);
+        }} catch (e) {{}}
+      }}
+
+      if (document.readyState === "loading") {{
+        document.addEventListener("DOMContentLoaded", restoreScrollPosition);
+      }} else {{
+        restoreScrollPosition();
+      }}
+
+      var scrollTimer = null;
+      window.addEventListener("scroll", function () {{
+        if (scrollTimer) window.clearTimeout(scrollTimer);
+        scrollTimer = window.setTimeout(saveScrollPosition, 200);
+      }}, {{ passive: true }});
 
       function reloadWithCacheBust() {{
+        saveScrollPosition();
         try {{
           var u = new URL(window.location.href);
           u.searchParams.set("_r", String(Date.now()));
