@@ -1,0 +1,45 @@
+name: Preview auto-rebuild
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  push:
+    paths:
+      - "novel-project/drafts/**"
+      - "novel-project/preview/build_standalone.py"
+      - "novel-project/preview/preview-config.json"
+  workflow_dispatch:
+
+env:
+  PREVIEW_BRANCH: cursor/isekai-novel-outline-1688
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild-standalone:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'push' && github.ref || env.PREVIEW_BRANCH }}
+
+      - name: Resolve push branch name
+        id: branch
+        run: echo "name=${{ github.event_name == 'push' && github.ref_name || env.PREVIEW_BRANCH }}" >> "$GITHUB_OUTPUT"
+
+      - name: Rebuild standalone.html
+        run: python3 novel-project/preview/build_standalone.py
+
+      - name: Commit and push if drafts changed
+        run: |
+          if git diff --quiet -- novel-project/preview/standalone.html; then
+            echo "standalone.html unchanged (drafts hash matches), skip push"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add novel-project/preview/standalone.html
+          git commit -m "preview: auto-rebuild standalone.html [skip ci]"
+          git push origin "HEAD:${{ steps.branch.outputs.name }}"

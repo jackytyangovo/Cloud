@@ -363,7 +363,7 @@ python3 novel-project/preview/build_standalone.py
 
 - 输出 `novel-project/preview/standalone.html`
 - **只读 `drafts/`**，不读 `finalized/`
-- **无页面定时刷新**；须 push 后读者 **手动刷新** 预览页
+- 预览页 **每 5 分钟自动刷新**；GitHub Actions **每 5 分钟**检查 drafts 并 push `standalone.html`（见 `preview/README.md`）
 - 页眉 **构建于 … UTC** 可核对版本
 
 ---

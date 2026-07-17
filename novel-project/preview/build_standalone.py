@@ -2,8 +2,12 @@
 """从 drafts/*.md 生成可离线/手机浏览的 standalone.html"""
 from __future__ import annotations
 
+import argparse
+import hashlib
 import html
+import json
 import re
+import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -11,6 +15,12 @@ PREVIEW = Path(__file__).resolve().parent
 ROOT = PREVIEW.parent
 DRAFTS = ROOT / "drafts"
 OUT = PREVIEW / "standalone.html"
+CONFIG_PATH = PREVIEW / "preview-config.json"
+DEFAULT_CONFIG = {
+    "github_repo": "jackytyangovo/Cloud",
+    "preview_branch": "cursor/isekai-novel-outline-1688",
+    "refresh_interval_minutes": 5,
+}
 
 CHAPTERS = [
     ("drafts/prologue.md", "序章 · 错位的清晨"),
@@ -142,9 +152,40 @@ def build_toc(chapters: list[tuple[str, str]]) -> str:
   </nav>"""
 
 
-def git_short_sha() -> str:
-    import subprocess
+def load_preview_config() -> dict:
+    if CONFIG_PATH.is_file():
+        data = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
+        return {**DEFAULT_CONFIG, **data}
+    return dict(DEFAULT_CONFIG)
 
+
+def drafts_content_hash(chapters: list[tuple[str, str]]) -> str:
+    h = hashlib.sha256()
+    for rel, _ in chapters:
+        path = ROOT / rel.replace("drafts/", "drafts/")
+        h.update(path.read_bytes())
+    return h.hexdigest()[:12]
+
+
+def read_embedded_drafts_sha(html_text: str) -> str | None:
+    m = re.search(r'<meta name="drafts-sha" content="([^"]+)"', html_text)
+    return m.group(1) if m else None
+
+
+def git_branch() -> str:
+    try:
+        out = subprocess.check_output(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=ROOT.parent,
+            stderr=subprocess.DEVNULL,
+            text=True,
+        )
+        return out.strip()
+    except Exception:
+        return load_preview_config()["preview_branch"]
+
+
+def git_short_sha() -> str:
     try:
         out = subprocess.check_output(
             ["git", "rev-parse", "--short", "HEAD"],
@@ -158,9 +199,32 @@ def git_short_sha() -> str:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="Build standalone.html from drafts/")
+    parser.add_argument(
+        "--force",
+        action="store_true",
+        help="Rebuild even when drafts content hash is unchanged",
+    )
+    args = parser.parse_args()
+
+    config = load_preview_config()
+    refresh_min = int(config.get("refresh_interval_minutes", 5))
+    refresh_ms = refresh_min * 60 * 1000
+    github_repo = config["github_repo"]
+    preview_branch = config.get("preview_branch") or git_branch()
+
+    chapters = discover_chapters()
+    drafts_sha = drafts_content_hash(chapters)
+
+    if OUT.is_file() and not args.force:
+        existing = OUT.read_text(encoding="utf-8")
+        if read_embedded_drafts_sha(existing) == drafts_sha:
+            print(f"Drafts unchanged (sha {drafts_sha}), skip rebuild. Use --force to refresh.")
+            return
+
     built = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     sha = git_short_sha()
-    chapters = discover_chapters()
+    branch = git_branch()
     sections = []
     for rel, label in chapters:
         path = ROOT / rel.replace("drafts/", "drafts/")
@@ -184,6 +248,7 @@ def main() -> None:
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="drafts-sha" content="{drafts_sha}" />
   <title>小说正文预览 · {html.escape(title_suffix)}</title>
   <style>
     :root {{
@@ -295,11 +360,28 @@ def main() -> None:
 <body>
   <header>
     <h1>异世界重生 · 正文预览</h1>
-    <div class="meta">构建于 {built} · commit {sha} · 改稿 push 后请强制刷新本页（或换下方带 commit 的链接）</div>
+    <div class="meta">构建于 {built} · commit {sha} · 分支 {html.escape(branch)} · 每 {refresh_min} 分钟自动刷新</div>
   </header>
 {toc}
   <main><article>{body}</article></main>
-  <footer>手机阅读：改稿推送后请手动刷新本页 · 构建时间见页眉</footer>
+  <footer>手机阅读：页面每 {refresh_min} 分钟自动刷新 · GitHub 每 {refresh_min} 分钟检查 drafts 并 push 预览</footer>
+  <script>
+    (function () {{
+      var REFRESH_MS = {refresh_ms};
+
+      function reloadWithCacheBust() {{
+        try {{
+          var u = new URL(window.location.href);
+          u.searchParams.set("_r", String(Date.now()));
+          window.location.replace(u.toString());
+        }} catch (e) {{
+          window.location.reload();
+        }}
+      }}
+
+      window.setInterval(reloadWithCacheBust, REFRESH_MS);
+    }})();
+  </script>
   <script>
     (function () {{
       var toggle = document.getElementById("toc-toggle");

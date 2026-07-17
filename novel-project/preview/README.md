@@ -2,31 +2,41 @@
 
 > 手机 / 浏览器阅读正文，无需打开 IDE 文件树。
 
-## 方式一 · 手机 / GitHub 预览（改稿即重建并 push）
+## 方式一 · 手机 / GitHub 预览（自动刷新 + 定时 push）
 
-**不再使用页面定时刷新。** 每次改动 `drafts/*.md` 后，Agent / 本地须 **立即** 重建 `standalone.html` 并 **push**，读者 **手动刷新** 预览页即可看到新稿。
+**两层同步（默认每 5 分钟）：**
 
-**预览地址（push 后可用）：**
+1. **GitHub Actions**（`.github/workflows/preview-refresh.yml`）  
+   - 每 **5 分钟**检查 `drafts/` 是否有未编入 `standalone.html` 的改动  
+   - 有改动则 **rebuild + push**（无改动不提交，避免空 commit）  
+   - `drafts/` push 时也会 **立即**触发同一流程  
 
-- **推荐（按 commit 固定，避免 CDN 缓存旧稿）：**  
-  `https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<commit>/novel-project/preview/standalone.html`  
-  将 `<commit>` 换为页眉显示的短 SHA（如 `028f0bf`）。
+2. **预览页**（`standalone.html` 内嵌脚本）  
+   - 打开后每 **5 分钟**自动 **带缓存破除参数刷新** 当前页，减轻 raw/CDN 旧稿  
 
-- **分支最新（可能需等 1–2 分钟或强制刷新）：**  
-  https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html
+**预览分支** 见 `preview-config.json` 的 `preview_branch`（当前：`cursor/isekai-novel-outline-1688`）。
 
-也可在 GitHub 仓库中直接打开：`novel-project/preview/standalone.html` → **View file**（看页眉 **构建于 … UTC · commit …** 是否最新）。
+**预览地址（推荐分支最新）：**
 
-### 更新流程（硬规则 · 每次改稿必做）
+https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html
+
+也可按 commit 固定（页眉短 SHA）：
+
+`https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<commit>/novel-project/preview/standalone.html`
+
+页眉 **构建于 … UTC · commit … · 每 5 分钟自动刷新** 可核对是否最新。
+
+### 改稿时（Agent / 本地）
 
 ```bash
 python3 novel-project/preview/build_standalone.py
-git add novel-project/preview/standalone.html novel-project/drafts/
+git add novel-project/drafts/ novel-project/preview/standalone.html
 git commit && git push -u origin <branch>
 ```
 
-- **一次改稿 = 一次 rebuild + 一次 push**（**必须**与 `drafts/` 同批提交 `standalone.html`，禁止只 push md 不 rebuild）
-- 页眉 **构建于 … UTC · commit …** 可核对；看不到新稿时用 **带 commit 的链接** 或浏览器 **强制刷新**
+- **仍建议改稿同批 rebuild + push**（读者不必等最多 5 分钟）  
+- 若只 push 了 `drafts/*.md` 忘了 rebuild，**5 分钟内** Actions 会补推 `standalone.html`  
+- 强制重建（drafts 未变也更新页眉时间）：`python3 novel-project/preview/build_standalone.py --force`
 
 ---
 
@@ -46,6 +56,7 @@ python3 novel-project/preview/server.py
 
 | 文件 | 用途 |
 |------|------|
+| `preview-config.json` | 预览分支、刷新间隔、GitHub 仓库名 |
 | `index.html` | 本地实时预览（fetch 草稿） |
 | `standalone.html` | 手机离线页（内嵌正文，由脚本生成） |
 | `build_standalone.py` | 从 `drafts/` 重建 standalone |
