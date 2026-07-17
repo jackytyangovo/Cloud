@@ -4,7 +4,7 @@
 
 ## 方式一 · 手机推荐（自动刷新）
 
-改稿并 **push 后**，打开下面链接；页面 **每 30 秒自动刷新**，拉取最新 `standalone.html`。
+改稿并 **push 后**，打开下面链接；页面 **每 300 秒（5 分钟）自动刷新**，拉取最新 `standalone.html`。
 
 **预览地址（push 后可用）：**
 
@@ -22,7 +22,7 @@ git add novel-project/preview/standalone.html novel-project/drafts/
 git commit && git push
 ```
 
-推送后，手机预览页在 **30 秒内** 刷新即可看到新稿。
+推送后，手机预览页在 **5 分钟内** 刷新即可看到新稿（也可手动下拉刷新）。
 
 ---
 

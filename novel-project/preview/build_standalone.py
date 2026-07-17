@@ -71,7 +71,7 @@ def main() -> None:
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <meta http-equiv="refresh" content="30" />
+  <meta http-equiv="refresh" content="300" />
   <title>小说正文预览 · 序章</title>
   <style>
     :root {{
@@ -110,10 +110,10 @@ def main() -> None:
 <body>
   <header>
     <h1>异世界重生 · 正文预览</h1>
-    <div class="meta">构建于 {built} · 每 30 秒自动刷新页面以同步最新稿</div>
+    <div class="meta">构建于 {built} · 每 300 秒自动刷新页面以同步最新稿</div>
   </header>
   <main><article>{body}</article></main>
-  <footer>手机阅读：下拉刷新或等待自动刷新 · 改稿推送后约半分钟内更新</footer>
+  <footer>手机阅读：下拉刷新或等待自动刷新（5 分钟）· 改稿推送后更新</footer>
 </body>
 </html>
 """
