@@ -93,6 +93,12 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 - 本体与喻体不可重复
 
+### 人物形象（✓ 用户确认）
+
+- **首次出场**：带容貌或体态 **一两笔**，立住形象（含画像、回忆）
+- **语言、神态、动作**：均须贴合 **`characters.md`**；新细节 **同步回填** 设定
+- **画像**：如莉安娜，正文 **可写很漂亮**；不写内部分数
+
 ---
 
 ## 设定知识分级（✓ 硬规则）
@@ -138,8 +144,8 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 | 层次 | 要求 |
 |------|------|
-| 人物动作 | 具体可见行为，尤其幼女身体限制 |
-| 神态与语言 | 表情、语气、对话；符合年龄与身份 |
+| 人物动作 | 具体可见行为，尤其幼女身体限制；**符合人设** |
+| 神态与语言 | 表情、语气、对话；**首次出场宜带容貌/体态**；言行 **服务 `characters.md` 形象** |
 | 环境变化 | 场景、天气、光线、声响、陈设随情节推移 |
 | 主角心理 | 「我」的内心：前世与现世摩擦、判断与情绪 |
 
@@ -303,7 +309,19 @@ python3 novel-project/preview/build_standalone.py
 ```
 
 - 输出 `novel-project/preview/standalone.html`
+- **只读 `drafts/`**，不读 `finalized/`
 - 目录为右上角「目录」按钮 + 侧滑浮层，**不挤占正文居中阅读区**
+
+---
+
+## 定稿归档（`finalized/` · ✓ 用户确认）
+
+| 规则 | 说明 |
+|------|------|
+| **位置** | `novel-project/finalized/` |
+| **写入** | **仅当**用户说 **「章节定稿」** 时，从 `drafts/` 复制快照并更新 `finalized/README.md` 记录表 |
+| **禁止** | 日常改稿、润色、预览 **不得** 改动 `finalized/` |
+| **预览** | 不参与 `build_standalone.py` 自动构建 |
 
 ---
 

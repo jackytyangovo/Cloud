@@ -12,7 +12,7 @@ alwaysApply: false
 
 - **可修改**：`novel-project/drafts/` 下章节文件（`chapters/` 仅用户明确要求时迁移/清理）
 - **只读参考**：`novel-project/bible/`（outline、style-guide、characters、worldbuilding、timeline）
-- **禁止修改**：`bible/` 下任何文件（除非用户明确说「把设定同步回 bible」）
+- **禁止修改**：`bible/` 下任何文件（除非用户明确说「把设定同步回 bible」）；**`novel-project/finalized/`**（除非用户明确说 **「章节定稿」**）
 
 ## 文风（遵守 style-guide.md）
 

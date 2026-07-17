@@ -18,3 +18,9 @@
 
 - 设定以 `bible/` 为准；正文不得擅自改写世界观。
 - 旧目录 `chapters/` 如有遗留稿，以 **`drafts/`** 为准。
+
+## 定稿归档（`finalized/`）
+
+- **已定稿**章节复制到 `../finalized/`，与 drafts **同名**（如 `prologue.md`）。
+- **`finalized/` 不参与预览自动构建**；Agent **不得**改定稿目录，**除非**用户说 **「章节定稿」**。
+- 详见 `finalized/README.md`。
