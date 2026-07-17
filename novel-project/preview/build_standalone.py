@@ -168,7 +168,6 @@ def main() -> None:
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-  <meta http-equiv="refresh" content="300" />
   <title>小说正文预览 · {html.escape(title_suffix)}</title>
   <style>
     :root {{
@@ -280,11 +279,11 @@ def main() -> None:
 <body>
   <header>
     <h1>异世界重生 · 正文预览</h1>
-    <div class="meta">构建于 {built} · 每 300 秒自动刷新页面以同步最新稿</div>
+    <div class="meta">构建于 {built} · 改稿后须重新运行 build 并 push，再手动刷新本页</div>
   </header>
 {toc}
   <main><article>{body}</article></main>
-  <footer>手机阅读：下拉刷新或等待自动刷新（5 分钟）· 改稿推送后更新</footer>
+  <footer>手机阅读：改稿推送后请手动刷新本页 · 构建时间见页眉</footer>
   <script>
     (function () {{
       var toggle = document.getElementById("toc-toggle");

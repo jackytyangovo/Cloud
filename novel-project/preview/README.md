@@ -2,42 +2,38 @@
 
 > 手机 / 浏览器阅读正文，无需打开 IDE 文件树。
 
-## 方式一 · 手机推荐（自动刷新）
+## 方式一 · 手机 / GitHub 预览（改稿即重建并 push）
 
-改稿并 **push 后**，打开下面链接；页面 **每 300 秒（5 分钟）自动刷新**，拉取最新 `standalone.html`。
+**不再使用页面定时刷新。** 每次改动 `drafts/*.md` 后，Agent / 本地须 **立即** 重建 `standalone.html` 并 **push**，读者 **手动刷新** 预览页即可看到新稿。
 
 **预览地址（push 后可用）：**
 
 https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html
 
-也可在 GitHub 仓库中直接打开：`novel-project/preview/standalone.html` → **Raw** 或 **View file**（视浏览器而定）。
+也可在 GitHub 仓库中直接打开：`novel-project/preview/standalone.html` → **Raw** 或 **View file**。
 
-### 更新流程（Agent / 本地）
-
-正文改动 `drafts/*.md` 后，运行：
+### 更新流程（硬规则 · 每次改稿必做）
 
 ```bash
 python3 novel-project/preview/build_standalone.py
 git add novel-project/preview/standalone.html novel-project/drafts/
-git commit && git push
+git commit && git push -u origin <branch>
 ```
 
-推送后，手机预览页在 **5 分钟内** 刷新即可看到新稿（也可手动下拉刷新）。
+- **一次改稿 = 一次 rebuild + 一次 push**（与正文 commit 同批提交 `standalone.html`）
+- 页眉 **构建于 … UTC** 可核对是否已拉到最新
 
 ---
 
-## 方式二 · 本地实时预览（3 秒刷新）
+## 方式二 · 本地实时预览
 
-适合桌面 Cursor，改 `drafts/` **保存即更新**，无需 push。
+适合桌面 Cursor，改 `drafts/` **保存即更新**（fetch 草稿 md，非 standalone）。
 
 ```bash
 python3 novel-project/preview/server.py
 ```
 
 浏览器打开：**http://127.0.0.1:8765/preview/**
-
-- 每 **3 秒** 自动拉取 `drafts/prologue.md`
-- 后续章节可在 `index.html` 的下拉框中扩展
 
 ---
 
