@@ -13,6 +13,18 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 - 撰写、润色、扩写 `novel-project/drafts/` 下章节
 - 用户要求检查文风、附块、剧透、维洛教表述
 - 修改正文后需重建 `preview/standalone.html`
+- **用户序章/定稿 pass**：用户逐条指定修改 → 只改点名部分 → 记录于 `user-style-iteration-log.md`
+
+## 用户文风 · 高优先级（✓ 用户确认）
+
+> **序章最后修改 pass** 由用户以个人手法主导；Agent **只改用户说的部分**，每次改动记入 [`bible/user-style-iteration-log.md`](../../novel-project/bible/user-style-iteration-log.md)。
+
+| 规则 | 说明 |
+|------|------|
+| **改动范围** | **仅**用户点名的句段/问题；**禁止**顺带改他章、他段（「全文」= 当前章，见 WORKFLOW） |
+| **记录** | 每条：改前 / 改后 / 提炼（待入库） |
+| **入库时机** | pass **结束后**汇总分析 → 用户确认 → 写入 `style-guide.md` / `style-reference.md` / 本 skill，并标 **✓ 用户文风 · 高优先级** |
+| **后续写作** | 与 `style-guide` 冲突时，**用户文风库优先**（以 log 汇总 + 已入库条目为准） |
 
 ## 单一事实来源
 
@@ -22,6 +34,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 | `bible/outline.md` | 当前章节拍、卷一边界 |
 | `bible/narrative-structure.md` | **宏观三阶段**（日常·冒险·危机）、1–3–9 埋线、两拐点避坑 |
 | `bible/daily-growth-writing.md` | **日常成长期** 4要4不要、章自查三问、卷一映射 |
+| [`user-style-iteration-log.md`](user-style-iteration-log.md) | **用户序章 pass** 改动记录 · 汇总后 **高优先级** 入库 |
 | `bible/style-guide.md` | 文风、视角、R18、附块 |
 | `bible/style-reference.md` | 样章语感与节奏参考 |
 | `bible/worldbuilding.md` | 世界观、维洛教、魔法制度 |

@@ -164,6 +164,8 @@ git commit && git push
 
 **「全文」范围**（✓ 用户确认）：用户说 **「全文」** 默认指 **当前章节**（当次任务正在写的 `drafts/chapter-NNN.md` 或指定那一章）。**未点名其他章节时，不得改其他章初稿**；序章/定稿同步须用户 **明确点名**。
 
+**用户序章定稿 pass**（✓ 用户确认）：用户以个人手法 **逐条** 修改序章；Agent **只改用户点名的部分**，每次记入 [`bible/user-style-iteration-log.md`](bible/user-style-iteration-log.md)（改前/改后/提炼）。pass 结束后 **汇总分析**，提取规则 **高优先级** 写入 `style-guide.md` / `style-reference.md` / 写作 skill，供后续章节模仿。
+
 ---
 
 ## 迭代循环
