@@ -19,6 +19,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 | 路径 | 用途 |
 |------|------|
 | `bible/outline.md` | 当前章节拍、卷一边界 |
+| `bible/narrative-structure.md` | **宏观三阶段**（日常·冒险·危机）、1–3–9 埋线、两拐点避坑 |
 | `bible/style-guide.md` | 文风、视角、R18、附块 |
 | `bible/style-reference.md` | 样章语感与节奏参考 |
 | `bible/worldbuilding.md` | 世界观、维洛教、魔法制度 |
@@ -32,10 +33,11 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 ## 写前清单（按顺序）
 
 1. 读 `outline.md` 中**当前章**场景与「不写」列表
-2. 读上一章正文，保持衔接与视角标记一致
-3. 确认本章时间标注（如「觉醒前第二十九天」）
-4. 列出本章会出现的**新专名** → 规划【附】插入点
-5. 写完后自检：文风、附块、剧透、单字、维洛教、卷一边界
+2. 若规划**新幕/新卷/大转折**，读 `narrative-structure.md`（日常·冒险·危机衔接、1–3–9 埋线）
+3. 读上一章正文，保持衔接与视角标记一致
+4. 确认本章时间标注（如「觉醒前第二十九天」）
+5. 列出本章会出现的**新专名** → 规划【附】插入点
+6. 写完后自检：文风、附块、剧透、单字、维洛教、卷一边界
 
 ---
 
@@ -384,6 +386,7 @@ python3 novel-project/preview/build_standalone.py
 
 ## 延伸阅读（按需深入）
 
+- **宏观三阶段（日常·冒险·危机）**：`bible/narrative-structure.md`
 - 样章节奏与 montage：`bible/style-reference.md`
 - 章节细拍与八线脉络：`bible/outline.md`「全文叙事脉络」
 - 模型分工：Composer 改 bible，Sonnet 写正文 → `WORKFLOW.md`

@@ -109,6 +109,7 @@
 **建议 @ 文件**：
 
 - `novel-project/bible/outline.md`
+- `novel-project/bible/narrative-structure.md`
 - `novel-project/bible/worldbuilding.md`
 - `novel-project/bible/characters.md`
 - `novel-project/bible/style-guide.md`
