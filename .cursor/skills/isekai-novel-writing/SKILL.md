@@ -166,7 +166,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 | 结尾 | 悬念断章 |
 | 时间 | 章首标注（如「觉醒前二十三天」） |
 | 节间 | `*` 或空行分段，全书统一 |
-| 专名首次 | 中文（Western），如 莉莉娅·莱恩菲尔（Lilia Lenfiel） |
+| 专名 | **正文仅中文**；Western 对照只在 bible |
 | 容貌 | bible 有内部标尺；**正文不写数字打分**，用旁人反应与具体描写 |
 
 ---
@@ -182,7 +182,9 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 ---
 
-## 维洛教 · 教堂三级（硬逻辑）
+## 维洛教 · 教堂三级（bible 高级知识 · 正文前期不写）
+
+> 以下供 bible 对照；**卷一序章–前期正文属高级知识**，勿写进【附】或「我」之口。
 
 > **编制逻辑**：**有高级神职的教堂** → 下辖**完整低级编制**；**仅设低级神职的教堂** → **不设**高级神职常驻。
 
