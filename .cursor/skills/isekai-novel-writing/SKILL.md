@@ -356,7 +356,7 @@ python3 novel-project/preview/build_standalone.py
 - [ ] 卷一边界：未写禁止项
 - [ ] 净阶 ≠ 即战力；幼童未碾压成人
 - [ ] 四层（动作/神态/环境/心理）均有覆盖
-- [ ] **日常章三问**（变强/变熟、情绪价值、主动或生活麻烦）— 见 `daily-growth-writing.md`
+- [ ] **日常章三问**（变强/变熟、情绪价值、主动或生活麻烦）+ **NPC 双向互动** — 见 `daily-growth-writing.md`
 - [ ] 章内约 **每 1000 字** 有小高潮；人物描写占比够，无流水账
 - [ ] 改稿后已重建 standalone.html（若用户需要预览）
 
