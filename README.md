@@ -20,6 +20,7 @@ novel-project/
 
 | 文档 | 内容 |
 |------|------|
+| [**异世界小说大纲.md**](docs/异世界小说大纲.md) | **计划定稿** · 《缝合线》三卷完整大纲（林砚 · 缝合大陆） |
 | [**WORKFLOW.md**](novel-project/WORKFLOW.md) | **模型分工**：Composer 2.5 修 bible / Sonnet 5 写正文 |
 | [outline.md](novel-project/bible/outline.md) | **完整大纲** · 卷一关键章节拍 + 伏笔 |
 | [worldbuilding.md](novel-project/bible/worldbuilding.md) | 魔法/剑术、种族、地理、势力 |
