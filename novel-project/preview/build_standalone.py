@@ -321,12 +321,40 @@ def main() -> None:
     header {{
       position: sticky; top: 0; z-index: 20;
       background: var(--card); border-bottom: 1px solid var(--border);
-      padding: 14px 16px; box-shadow: 0 1px 8px rgba(0,0,0,.06);
+      box-shadow: 0 1px 6px rgba(0,0,0,.05);
     }}
-    header h1 {{ margin: 0 0 6px; font-size: 1.1rem; }}
-    .meta {{ font-size: .78rem; color: var(--muted); }}
+    .header-bar {{
+      display: flex; align-items: center; gap: 8px;
+      padding: 6px 10px 6px 12px; min-height: 2.4rem;
+    }}
+    header h1 {{
+      margin: 0; flex: 1; min-width: 0;
+      font-size: .92rem; font-weight: 600;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }}
+    .header-actions {{
+      display: flex; align-items: center; gap: 6px; flex-shrink: 0;
+    }}
+    .header-chip {{
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); border-radius: 999px;
+      padding: 3px 10px; font: inherit; font-size: .72rem;
+      cursor: pointer; line-height: 1.3;
+    }}
+    .header-chip:hover, .header-chip:focus {{
+      border-color: var(--accent); outline: none;
+    }}
+    .header-chip:disabled {{ opacity: .55; cursor: wait; }}
+    .header-panel {{
+      display: none;
+      padding: 0 12px 10px;
+      border-top: 1px solid var(--border);
+    }}
+    header.is-expanded .header-panel {{ display: block; }}
+    header.is-expanded .header-toggle {{ border-color: var(--accent); }}
+    .meta {{ font-size: .72rem; color: var(--muted); margin: 8px 0 0; line-height: 1.45; }}
     .toc-toggle {{
-      position: fixed; top: 4.6rem; right: 14px; z-index: 30;
+      position: fixed; bottom: 18px; right: 16px; z-index: 30;
       padding: 8px 14px; border: 1px solid var(--border);
       border-radius: 999px; background: var(--card);
       color: var(--text); font: inherit; font-size: .82rem;
@@ -384,7 +412,7 @@ def main() -> None:
       max-width: 42rem; margin: 0 auto;
       padding: 16px 18px 48px;
     }}
-    section.chapter-section {{ margin-bottom: 2.5em; scroll-margin-top: 5rem; }}
+    section.chapter-section {{ margin-bottom: 2.5em; scroll-margin-top: 3.2rem; }}
     h2.chapter {{ font-size: 1.25rem; text-align: center; margin: 0 0 1em; }}
     article p {{ margin: 0 0 1.1em; text-indent: 2em; text-align: justify; }}
     article p.no-indent {{ text-indent: 0; }}
@@ -398,44 +426,39 @@ def main() -> None:
     aside.setting-note p:last-child {{ margin-bottom: 0; }}
     hr.scene {{ border: none; text-align: center; margin: 1.6em 0; color: var(--scene); letter-spacing: .5em; }}
     hr.scene::before {{ content: "· · ·"; }}
-    footer {{
-      text-align: center; font-size: .75rem; color: var(--muted);
-      padding: 16px; max-width: 42rem; margin: 0 auto;
-    }}
+    footer {{ display: none; }}
     .preview-toolbar {{
       display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
       margin-top: 8px;
     }}
-    .preview-refresh-btn {{
-      border: 1px solid var(--border); background: var(--bg);
-      color: var(--text); border-radius: 999px;
-      padding: 4px 12px; font: inherit; font-size: .78rem;
-      cursor: pointer;
-    }}
-    .preview-refresh-btn:hover, .preview-refresh-btn:focus {{
-      border-color: var(--accent); outline: none;
-    }}
-    .preview-refresh-btn:disabled {{ opacity: .55; cursor: wait; }}
     .preview-sync-status {{ font-size: .72rem; color: var(--muted); }}
     .preview-sync-status.is-new {{ color: var(--accent); font-weight: 600; }}
     .preview-sync-status.is-err {{ color: #b42318; }}
-    @media (max-width: 720px) {{
-      .toc-toggle {{ top: auto; bottom: 18px; right: 16px; }}
+    .header-hint {{
+      margin: 6px 0 0; font-size: .68rem; color: var(--muted); line-height: 1.4;
     }}
   </style>
 </head>
 <body>
-  <header>
-    <h1>异世界重生 · 正文预览</h1>
-    <div class="meta" id="preview-meta">构建于 {built} · rev {revision_placeholder} · 跟踪 {html.escape(preview_branch)} · 打开/切回即检查 · 每 {refresh_min} 分钟轮询</div>
-    <div class="preview-toolbar">
-      <button type="button" class="preview-refresh-btn" id="preview-refresh-btn">立即检查更新</button>
-      <span class="preview-sync-status" id="preview-sync-status">准备检查…</span>
+  <header id="preview-header">
+    <div class="header-bar">
+      <h1>异世界重生 · 正文预览</h1>
+      <div class="header-actions">
+        <button type="button" class="header-chip" id="preview-refresh-btn" title="检查更新">更新</button>
+        <button type="button" class="header-chip header-toggle" id="header-toggle" aria-expanded="false" aria-controls="header-panel">工具</button>
+      </div>
+    </div>
+    <div class="header-panel" id="header-panel" hidden>
+      <div class="meta" id="preview-meta">构建于 {built} · rev {revision_placeholder} · 跟踪 {html.escape(preview_branch)} · 每 {refresh_min} 分钟轮询</div>
+      <div class="preview-toolbar">
+        <span class="preview-sync-status" id="preview-sync-status">准备检查…</span>
+      </div>
+      <p class="header-hint">有新版时页内热替换 · 滚动位置保留 · 切回页面也会检查</p>
     </div>
   </header>
 {toc}
   <main id="preview-main"><article id="preview-article">{body}</article></main>
-  <footer id="preview-status">手机：点「立即检查更新」或切回页面 · 有新版时页内热替换（不整页白屏）· 滚动位置保留</footer>
+  <footer id="preview-status" hidden></footer>
   <script>
     (function () {{
       var REFRESH_MS = {refresh_ms};
@@ -484,8 +507,30 @@ def main() -> None:
         var btn = document.getElementById("preview-refresh-btn");
         if (!btn) return;
         btn.disabled = !!busy;
-        btn.textContent = busy ? "检查中…" : "立即检查更新";
+        btn.textContent = busy ? "…" : "更新";
       }}
+
+      /* 页眉默认折叠，少占阅读空间 */
+      (function initHeaderCollapse() {{
+        var header = document.getElementById("preview-header");
+        var toggle = document.getElementById("header-toggle");
+        var panel = document.getElementById("header-panel");
+        if (!header || !toggle || !panel) return;
+        var KEY = "novel-preview-header-expanded";
+        function apply(expanded) {{
+          header.classList.toggle("is-expanded", expanded);
+          panel.hidden = !expanded;
+          toggle.setAttribute("aria-expanded", expanded ? "true" : "false");
+          toggle.textContent = expanded ? "收起" : "工具";
+          try {{ localStorage.setItem(KEY, expanded ? "1" : "0"); }} catch (e) {{}}
+        }}
+        var saved = null;
+        try {{ saved = localStorage.getItem(KEY); }} catch (e) {{}}
+        apply(saved === "1");
+        toggle.addEventListener("click", function () {{
+          apply(!header.classList.contains("is-expanded"));
+        }});
+      }})();
 
       function saveScrollPosition() {{
         try {{

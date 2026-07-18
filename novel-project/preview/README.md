@@ -21,7 +21,7 @@ https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/C
 | 轮询 | 前台约 **1 分钟**；后台约 **5 分钟** |
 | 多源拉取 | GitHub API → **commit 固定 raw** → **jsDelivr** → branch raw |
 
-页头状态行会显示「已是最新 / 已热更新 / 检查失败」。
+页眉默认折叠为一条细栏（标题 +「更新」+「工具」）；点「工具」展开构建信息与同步状态。「已是最新 / 已热更新」写在展开面板里。
 
 ---
 
