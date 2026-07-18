@@ -116,21 +116,13 @@ def md_to_html(md: str) -> str:
             i += 1
             continue
         if not in_para:
-            stripped = line.strip().lstrip("　")
-            # 仅纯对话段（整段为一对「」）与章首日期不缩进；「吱呀」等拟声单独成行亦不缩进
-            pure_dialogue = (
-                stripped.startswith("「")
-                and stripped.endswith("」")
-                and stripped.count("」") == 1
-                and stripped.index("」") == len(stripped) - 1
-            )
-            no_indent = stripped.startswith("觉醒前") or pure_dialogue or stripped == "「吱呀」"
+            no_indent = line.strip().startswith("「") or line.strip().startswith("觉醒前")
             cls = ' class="no-indent"' if no_indent else ""
             out.append(f"<p{cls}>")
             in_para = True
         else:
             out.append("<br/>")
-        out.append(html.escape(line.strip().lstrip("　")))
+        out.append(html.escape(line))
         i += 1
 
     if in_para:
