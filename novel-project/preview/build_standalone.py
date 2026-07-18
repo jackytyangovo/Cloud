@@ -116,13 +116,21 @@ def md_to_html(md: str) -> str:
             i += 1
             continue
         if not in_para:
-            no_indent = line.strip().startswith("「") or line.strip().startswith("觉醒前")
+            stripped = line.strip().lstrip("　")
+            # 仅纯对话段（整段为一对「」）与章首日期不缩进；「吱呀」等拟声单独成行亦不缩进
+            pure_dialogue = (
+                stripped.startswith("「")
+                and stripped.endswith("」")
+                and stripped.count("」") == 1
+                and stripped.index("」") == len(stripped) - 1
+            )
+            no_indent = stripped.startswith("觉醒前") or pure_dialogue or stripped == "「吱呀」"
             cls = ' class="no-indent"' if no_indent else ""
             out.append(f"<p{cls}>")
             in_para = True
         else:
             out.append("<br/>")
-        out.append(html.escape(line))
+        out.append(html.escape(line.strip().lstrip("　")))
         i += 1
 
     if in_para:
@@ -253,6 +261,7 @@ def main() -> None:
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
   <meta name="drafts-sha" content="{drafts_sha}" />
+  <meta name="preview-raw-url" content="{html.escape(raw_url, quote=True)}" />
   <title>小说正文预览 · {html.escape(title_suffix)}</title>
   <style>
     :root {{
@@ -364,23 +373,24 @@ def main() -> None:
 <body>
   <header>
     <h1>异世界重生 · 正文预览</h1>
-    <div class="meta">构建于 {built} · commit {sha} · 分支 {html.escape(branch)} · 每 {refresh_min} 分钟自动刷新</div>
+    <div class="meta">构建于 {built} · commit {sha} · 分支 {html.escape(branch)} · 每 {refresh_min} 分钟检查更新</div>
   </header>
 {toc}
   <main><article>{body}</article></main>
-  <footer>手机阅读：页面每 {refresh_min} 分钟自动刷新 · GitHub 每 {refresh_min} 分钟检查 drafts 并 push 预览</footer>
+  <footer id="preview-status">手机阅读：有更新时自动刷新 · 每 {refresh_min} 分钟检查 · 滚动位置会保留</footer>
   <script>
     (function () {{
       var REFRESH_MS = {refresh_ms};
       var SCROLL_KEY = "novel-preview-scroll";
+      var RAW_URL = {json.dumps(raw_url)};
+      var CURRENT_SHA = {json.dumps(drafts_sha)};
 
       function saveScrollPosition() {{
         try {{
           sessionStorage.setItem(
             SCROLL_KEY,
             JSON.stringify({{
-              y: window.scrollY || document.documentElement.scrollTop || 0,
-              hash: window.location.hash || ""
+              y: window.scrollY || document.documentElement.scrollTop || 0
             }})
           );
         }} catch (e) {{}}
@@ -391,16 +401,13 @@ def main() -> None:
           var raw = sessionStorage.getItem(SCROLL_KEY);
           if (!raw) return;
           var saved = JSON.parse(raw);
-          if (saved.hash && saved.hash !== window.location.hash) {{
-            window.location.hash = saved.hash;
-          }}
           if (typeof saved.y !== "number") return;
           function apply() {{
             window.scrollTo(0, saved.y);
           }}
           apply();
           requestAnimationFrame(apply);
-          window.setTimeout(apply, 80);
+          window.setTimeout(apply, 120);
         }} catch (e) {{}}
       }}
 
@@ -416,18 +423,45 @@ def main() -> None:
         scrollTimer = window.setTimeout(saveScrollPosition, 200);
       }}, {{ passive: true }});
 
-      function reloadWithCacheBust() {{
-        saveScrollPosition();
-        try {{
-          var u = new URL(window.location.href);
-          u.searchParams.set("_r", String(Date.now()));
-          window.location.replace(u.toString());
-        }} catch (e) {{
-          window.location.reload();
-        }}
+      function extractDraftsSha(html) {{
+        var m = html.match(/meta name="drafts-sha" content="([^"]+)"/);
+        return m ? m[1] : null;
       }}
 
-      window.setInterval(reloadWithCacheBust, REFRESH_MS);
+      function navigateToLatest() {{
+        saveScrollPosition();
+        var bust = RAW_URL + (RAW_URL.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
+        var target = bust;
+        try {{
+          if (window.top !== window && window.location.hostname === "raw.githubusercontent.com") {{
+            target = "https://htmlpreview.github.io/?" + bust;
+            window.top.location.replace(target);
+            return;
+          }}
+        }} catch (e) {{}}
+        window.location.replace(target);
+      }}
+
+      function checkForUpdate() {{
+        var checkUrl = RAW_URL + (RAW_URL.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
+        fetch(checkUrl, {{ cache: "no-store", credentials: "omit" }})
+          .then(function (res) {{
+            if (!res.ok) return null;
+            return res.text();
+          }})
+          .then(function (text) {{
+            if (!text) return;
+            var remoteSha = extractDraftsSha(text);
+            if (remoteSha && remoteSha !== CURRENT_SHA) {{
+              navigateToLatest();
+            }}
+          }})
+          .catch(function () {{
+            /* 网络/CDN 抖动时不刷新、不报错，避免白屏 */
+          }});
+      }}
+
+      window.setInterval(checkForUpdate, REFRESH_MS);
     }})();
   </script>
   <script>
