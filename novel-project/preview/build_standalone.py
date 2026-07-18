@@ -116,7 +116,8 @@ def md_to_html(md: str) -> str:
             i += 1
             continue
         if not in_para:
-            no_indent = line.strip().startswith("「") or line.strip().startswith("觉醒前")
+            # 仅章首日期顶格；对话/叙述均 text-indent，段首第一字对齐
+            no_indent = line.strip().startswith("觉醒前")
             cls = ' class="no-indent"' if no_indent else ""
             out.append(f"<p{cls}>")
             in_para = True

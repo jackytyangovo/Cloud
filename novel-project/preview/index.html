@@ -179,7 +179,7 @@
           continue;
         }
         if (!inPara) {
-          const noIndent = /^「/.test(line.trim()) || /^觉醒前/.test(line.trim());
+          const noIndent = /^觉醒前/.test(line.trim());
           out.push('<p' + (noIndent ? ' class="no-indent"' : '') + '>');
           inPara = true;
         } else {
