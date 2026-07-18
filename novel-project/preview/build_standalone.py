@@ -223,6 +223,12 @@ def main() -> None:
     built = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     sha = git_short_sha()
     branch = git_branch()
+    repo = config["github_repo"]
+    preview_branch = config.get("preview_branch") or branch
+    raw_url = (
+        f"https://raw.githubusercontent.com/{repo}/{preview_branch}"
+        f"/novel-project/preview/standalone.html"
+    )
     sections = []
     for rel, label in chapters:
         path = ROOT / rel.replace("drafts/", "drafts/")
