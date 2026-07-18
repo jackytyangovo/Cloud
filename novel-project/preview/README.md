@@ -1,43 +1,84 @@
 # 正文预览（Preview）
 
-> 手机 / 浏览器阅读正文，无需打开 IDE 文件树。
+> 手机 / 浏览器阅读正文，无需打开 IDE 文件树。  
+> **更新不及时**时，优先用下方 **方案 A** 书签 + 页内「立即检查更新」。
 
-## 方式一 · 手机 / GitHub 预览（自动刷新 + 定时 push）
+---
 
-**两层同步（默认每 5 分钟）：**
+## 方案 A · 稳定书签（推荐）
 
-1. **GitHub Actions**（`.github/workflows/preview-refresh.yml`）  
-   - 每 **5 分钟**检查 `drafts/` 或 **预览模板**（`build_standalone.py`）是否有未编入 `standalone.html` 的改动  
-   - 有改动则 **rebuild + push**（无改动不提交，避免空 commit）  
-   - `drafts/` 或 `build_standalone.py` push 时也会 **立即**触发同一流程  
+固定跟踪仓库的 **`preview` 分支**（Actions 会把各分支刚生成的 `standalone.html` 同步过来）。
 
-2. **预览页**（`standalone.html` 内嵌脚本）  
-   - **打开页 / 切回标签** 即检查；并每 **5 分钟**轮询  
-   - **GitHub API** 取分支最新 commit → 用 **commit 固定 raw** 读 `preview-revision`（绕过 branch raw 的 5 分钟 CDN；`?t=` **不能**破 branch 缓存）  
-   - 有更新则 **重载 htmlpreview**，并改用 **最新 commit 的 raw 链接**  
-   - 旧逻辑仅 fetch branch raw 时，读者可能 **长时间卡在旧 rev**  
-   - **仅在有新版本时** 才刷新（避免无意义白屏）  
-   - 刷新前保存滚动位置；`fetch` 失败时 **保持当前页、不报错**  
-   - 经 htmlpreview 打开时，有更新则 **重载 htmlpreview 包装页**（**绝不**跳转到 raw 直链，避免变成源码视图）  
-   - 页头含 `Cache-Control: no-cache`；仍遇旧缓存时 **切到别的 App 再切回** 触发 API 检查
+**书签（一次收藏，长期有效）：**
 
-**预览分支** 见 `preview-config.json` 的 `preview_branch`（当前：`cursor/isekai-novel-outline-1688`）。
+https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/preview/novel-project/preview/standalone.html
 
-**预览地址（推荐 · 固定分支，无需每次换链接）：**
+| 机制 | 说明 |
+|------|------|
+| Actions 发布 | push `drafts/` / 定时每 **2 分钟** → rebuild → 推到 `preview` 分支 |
+| 页内热更新 | 发现新 `preview-revision` 时 **替换正文**，不整页白屏、少受 htmlpreview 二次缓存影响 |
+| 立即检查 | 页头按钮 **「立即检查更新」**；切回 App / 聚焦窗口也会检查 |
+| 轮询 | 前台约 **1 分钟**；后台约 **5 分钟** |
+| 多源拉取 | GitHub API → **commit 固定 raw** → **jsDelivr** → branch raw |
 
-https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html
+页头状态行会显示「已是最新 / 已热更新 / 检查失败」。
 
-也可按 commit 固定（页眉短 SHA）：
+---
 
-`https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<commit>/novel-project/preview/standalone.html`
+## 方案 B · 工作分支直链（开发中看本分支）
 
-页眉 **构建于 … UTC · rev … · 打开/切回即检查 · 每 5 分钟轮询** 可核对是否最新；`rev` 即 `preview-revision` 短码。
+看 **尚未合并** 的 feature 分支时用（把分支名换成当前分支）：
 
-**勿** 直接收藏 raw 链接（`raw.githubusercontent.com/.../standalone.html`）——浏览器会当纯文本显示源码。请用上方 **htmlpreview + 分支** 书签；若长时间不更新，**切到别的 App 再切回**（触发 API 检查）或暂时用 **commit 固定** 链接：
+```
+https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<branch>/novel-project/preview/standalone.html
+```
 
-`https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<commit>/novel-project/preview/standalone.html`
+例：`cursor/style-check-prologue-129b`  
+日常阅读仍建议 **方案 A**，避免每个分支换书签。
 
-### 改稿时（Agent / 本地）
+---
+
+## 方案 C · jsDelivr 备用（绕过 raw CDN）
+
+GitHub `raw` 分支 CDN 常缓存约 5 分钟，且 `?t=` **破不了**。可用 jsDelivr：
+
+```
+https://cdn.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html
+```
+
+- 浏览器直接打开即可（不必套 htmlpreview）  
+- 若仍旧：打开  
+  `https://purge.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html`  
+  清缓存后再刷  
+- 页内脚本在 API/raw 失败时也会自动试 jsDelivr
+
+---
+
+## 方案 D · commit 钉死链接（核对某一版）
+
+页眉或 `git rev-parse --short HEAD` 取短 SHA：
+
+```
+https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<commit>/novel-project/preview/standalone.html
+```
+
+适合确认「刚 push 的那一版」是否已进预览；不适合当日常书签。
+
+---
+
+## 方案 E · 本地实时预览（桌面）
+
+改 `drafts/` **保存即更新**（fetch md，不经 GitHub）：
+
+```bash
+python3 novel-project/preview/server.py
+```
+
+浏览器：**http://127.0.0.1:8765/preview/**
+
+---
+
+## 改稿时（Agent / 本地）
 
 ```bash
 python3 novel-project/preview/build_standalone.py
@@ -45,22 +86,19 @@ git add novel-project/drafts/ novel-project/preview/standalone.html
 git commit && git push -u origin <branch>
 ```
 
-- **仍建议改稿同批 rebuild + push**（读者不必等最多 5 分钟）  
-- 若只 push 了 `drafts/*.md` 忘了 rebuild，**5 分钟内** Actions 会补推 `standalone.html`  
-- 强制重建（drafts 未变也更新页眉时间）：`python3 novel-project/preview/build_standalone.py --force`  
-- 自动刷新会 **记住滚动位置**（`sessionStorage`）；**仅 preview 有变才 reload**，避免每 5 分钟白屏
+- **仍建议改稿同批 rebuild + push**（不必干等 Actions）  
+- 忘了 rebuild：最多约 **2 分钟** Actions 会补建，并发布到 **`preview` 分支**  
+- 强制重建：`python3 novel-project/preview/build_standalone.py --force`
 
 ---
 
-## 方式二 · 本地实时预览
+## 勿做
 
-适合桌面 Cursor，改 `drafts/` **保存即更新**（fetch 草稿 md，非 standalone）。
-
-```bash
-python3 novel-project/preview/server.py
-```
-
-浏览器打开：**http://127.0.0.1:8765/preview/**
+| 勿 | 原因 |
+|----|------|
+| 收藏 `raw.githubusercontent.com/.../standalone.html` | 当纯文本源码显示 |
+| 只靠「下拉刷新」htmlpreview | 中间层/CDN 可能仍吐旧页；用页内按钮或方案 C |
+| 以为 feature 分支 push 会改旧书签 | 旧书签若仍指向 `outline-1688`，请改收藏 **方案 A** |
 
 ---
 
@@ -68,8 +106,19 @@ python3 novel-project/preview/server.py
 
 | 文件 | 用途 |
 |------|------|
-| `preview-config.json` | 预览分支、刷新间隔、GitHub 仓库名 |
+| `preview-config.json` | 仓库名、`preview` 书签分支、`source_branch`、轮询间隔 |
 | `index.html` | 本地实时预览（fetch 草稿） |
-| `standalone.html` | 手机离线页（内嵌正文，由脚本生成） |
-| `build_standalone.py` | 从 `drafts/` 重建 standalone |
-| `server.py` | 本地 HTTP 服务（8765 端口） |
+| `standalone.html` | 手机页（内嵌正文，由脚本生成） |
+| `build_standalone.py` | 从 `drafts/` 重建 + 内嵌热更新脚本 |
+| `server.py` | 本地 HTTP（8765） |
+| `.github/workflows/preview-refresh.yml` | 定时/push 重建并发布到 `preview` |
+
+---
+
+## 排障清单
+
+1. 书签是否已换成 **方案 A**（`.../Cloud/preview/...`）？  
+2. 点 **「立即检查更新」**，状态是否变为「已热更新」？  
+3. 仍旧 → 试 **方案 C** jsDelivr，或 purge 后再开  
+4. 仍旧 → 用 **方案 D** 钉当前 commit，确认文件本身是否已 push  
+5. 桌面调试用 **方案 E**

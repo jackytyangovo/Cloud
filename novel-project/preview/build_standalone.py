@@ -18,8 +18,11 @@ OUT = PREVIEW / "standalone.html"
 CONFIG_PATH = PREVIEW / "preview-config.json"
 DEFAULT_CONFIG = {
     "github_repo": "jackytyangovo/Cloud",
-    "preview_branch": "cursor/isekai-novel-outline-1688",
-    "refresh_interval_minutes": 5,
+    # 手机书签用的稳定分支（Actions 会把最新 standalone 同步到这里）
+    "preview_branch": "preview",
+    # 定时从哪条分支取 drafts 重建（小说主工作分支）
+    "source_branch": "cursor/isekai-novel-outline-1688",
+    "refresh_interval_minutes": 1,
     "htmlpreview_base": "https://htmlpreview.github.io/?",
 }
 
@@ -399,6 +402,23 @@ def main() -> None:
       text-align: center; font-size: .75rem; color: var(--muted);
       padding: 16px; max-width: 42rem; margin: 0 auto;
     }}
+    .preview-toolbar {{
+      display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+      margin-top: 8px;
+    }}
+    .preview-refresh-btn {{
+      border: 1px solid var(--border); background: var(--bg);
+      color: var(--text); border-radius: 999px;
+      padding: 4px 12px; font: inherit; font-size: .78rem;
+      cursor: pointer;
+    }}
+    .preview-refresh-btn:hover, .preview-refresh-btn:focus {{
+      border-color: var(--accent); outline: none;
+    }}
+    .preview-refresh-btn:disabled {{ opacity: .55; cursor: wait; }}
+    .preview-sync-status {{ font-size: .72rem; color: var(--muted); }}
+    .preview-sync-status.is-new {{ color: var(--accent); font-weight: 600; }}
+    .preview-sync-status.is-err {{ color: #b42318; }}
     @media (max-width: 720px) {{
       .toc-toggle {{ top: auto; bottom: 18px; right: 16px; }}
     }}
@@ -407,14 +427,19 @@ def main() -> None:
 <body>
   <header>
     <h1>异世界重生 · 正文预览</h1>
-    <div class="meta">构建于 {built} · rev {revision_placeholder} · 分支 {html.escape(branch)} · 打开/切回即检查 · 每 {refresh_min} 分钟轮询</div>
+    <div class="meta" id="preview-meta">构建于 {built} · rev {revision_placeholder} · 跟踪 {html.escape(preview_branch)} · 打开/切回即检查 · 每 {refresh_min} 分钟轮询</div>
+    <div class="preview-toolbar">
+      <button type="button" class="preview-refresh-btn" id="preview-refresh-btn">立即检查更新</button>
+      <span class="preview-sync-status" id="preview-sync-status">准备检查…</span>
+    </div>
   </header>
 {toc}
-  <main><article>{body}</article></main>
-  <footer id="preview-status">手机阅读：打开/切回页面即检查更新 · 每 {refresh_min} 分钟轮询 · 滚动位置会保留</footer>
+  <main id="preview-main"><article id="preview-article">{body}</article></main>
+  <footer id="preview-status">手机：点「立即检查更新」或切回页面 · 有新版时页内热替换（不整页白屏）· 滚动位置保留</footer>
   <script>
     (function () {{
       var REFRESH_MS = {refresh_ms};
+      var HIDDEN_REFRESH_MS = Math.max(REFRESH_MS, 5 * 60 * 1000);
       var SCROLL_KEY = "novel-preview-scroll";
       var REPO = {json.dumps(repo)};
       var BRANCH = {json.dumps(preview_branch)};
@@ -422,6 +447,8 @@ def main() -> None:
       var VIEWER_BASE = {json.dumps(viewer_base)};
       var CURRENT_SHA = {json.dumps(drafts_sha)};
       var CURRENT_REVISION = {json.dumps(revision_placeholder)};
+      var checking = false;
+      var pollTimer = null;
 
       function rawUrlForRef(ref, ts) {{
         var url = "https://raw.githubusercontent.com/" + REPO + "/" + ref + RAW_PATH;
@@ -429,17 +456,35 @@ def main() -> None:
         return url;
       }}
 
+      function jsdelivrUrlForRef(ref) {{
+        return "https://cdn.jsdelivr.net/gh/" + REPO + "@" + ref + RAW_PATH;
+      }}
+
       function viewerUrlForRef(ref, ts) {{
         return VIEWER_BASE + rawUrlForRef(ref, ts);
       }}
 
-      /* raw 顶栏误开 → 跳回 htmlpreview（branch 书签地址） */
+      /* raw 顶栏误开 → 跳回 htmlpreview（稳定 preview 分支书签） */
       if (
         window.location.hostname === "raw.githubusercontent.com" &&
         window.top === window
       ) {{
         window.location.replace(viewerUrlForRef(BRANCH, Date.now()));
         return;
+      }}
+
+      function setStatus(text, cls) {{
+        var el = document.getElementById("preview-sync-status");
+        if (!el) return;
+        el.textContent = text;
+        el.className = "preview-sync-status" + (cls ? " " + cls : "");
+      }}
+
+      function setButtonBusy(busy) {{
+        var btn = document.getElementById("preview-refresh-btn");
+        if (!btn) return;
+        btn.disabled = !!busy;
+        btn.textContent = busy ? "检查中…" : "立即检查更新";
       }}
 
       function saveScrollPosition() {{
@@ -480,14 +525,18 @@ def main() -> None:
         scrollTimer = window.setTimeout(saveScrollPosition, 200);
       }}, {{ passive: true }});
 
-      function extractDraftsSha(html) {{
-        var m = html.match(/meta name="drafts-sha" content="([^"]+)"/);
+      function extractMeta(html, name) {{
+        var re = new RegExp('meta name="' + name + '" content="([^"]+)"');
+        var m = html.match(re);
         return m ? m[1] : null;
       }}
 
+      function extractDraftsSha(html) {{
+        return extractMeta(html, "drafts-sha");
+      }}
+
       function extractPreviewRevision(html) {{
-        var m = html.match(/meta name="preview-revision" content="([^"]+)"/);
-        return m ? m[1] : null;
+        return extractMeta(html, "preview-revision");
       }}
 
       function isRemoteNewer(html) {{
@@ -498,6 +547,45 @@ def main() -> None:
           return remoteSha && remoteSha !== CURRENT_SHA;
         }}
         return false;
+      }}
+
+      function parseRemoteDocument(html) {{
+        try {{
+          return new DOMParser().parseFromString(html, "text/html");
+        }} catch (e) {{
+          return null;
+        }}
+      }}
+
+      /* 页内热替换：绕过 htmlpreview 二次缓存，避免整页白屏 */
+      function applyHotSwap(html) {{
+        var doc = parseRemoteDocument(html);
+        if (!doc) return false;
+        var remoteArticle = doc.getElementById("preview-article") || doc.querySelector("main article");
+        var localArticle = document.getElementById("preview-article") || document.querySelector("main article");
+        if (!remoteArticle || !localArticle) return false;
+
+        saveScrollPosition();
+        localArticle.innerHTML = remoteArticle.innerHTML;
+
+        var remoteToc = doc.getElementById("toc-drawer");
+        var localToc = document.getElementById("toc-drawer");
+        if (remoteToc && localToc) localToc.innerHTML = remoteToc.innerHTML;
+
+        var remoteMeta = doc.getElementById("preview-meta") || doc.querySelector("header .meta");
+        var localMeta = document.getElementById("preview-meta");
+        if (remoteMeta && localMeta) localMeta.textContent = remoteMeta.textContent;
+
+        ["drafts-sha", "preview-revision", "build-script-sha", "build-commit", "built-at"].forEach(function (name) {{
+          var val = extractMeta(html, name);
+          var node = document.querySelector('meta[name="' + name + '"]');
+          if (val && node) node.setAttribute("content", val);
+        }});
+
+        CURRENT_REVISION = extractPreviewRevision(html) || CURRENT_REVISION;
+        CURRENT_SHA = extractDraftsSha(html) || CURRENT_SHA;
+        restoreScrollPosition();
+        return true;
       }}
 
       function navigateToLatest(ref) {{
@@ -512,7 +600,46 @@ def main() -> None:
         window.location.replace(target);
       }}
 
-      function checkForUpdateViaApi() {{
+      function applyUpdate(html, ref) {{
+        if (applyHotSwap(html)) {{
+          setStatus("已热更新 · rev " + (CURRENT_REVISION || "").slice(0, 8), "is-new");
+          return;
+        }}
+        setStatus("热更新失败，整页重载…", "is-err");
+        navigateToLatest(ref);
+      }}
+
+      function fetchHtml(url) {{
+        return fetch(url, {{
+          cache: "no-store",
+          credentials: "omit",
+        }}).then(function (res) {{
+          if (!res.ok) throw new Error("fetch " + res.status);
+          return res.text();
+        }});
+      }}
+
+      /* 多源拉取：commit raw → jsDelivr → branch raw */
+      function fetchLatestHtml(commitSha) {{
+        var chain = Promise.reject();
+        if (commitSha) {{
+          chain = fetchHtml(rawUrlForRef(commitSha, Date.now()));
+        }}
+        return chain
+          .catch(function () {{
+            return fetchHtml(jsdelivrUrlForRef(commitSha || BRANCH));
+          }})
+          .catch(function () {{
+            return fetchHtml(rawUrlForRef(BRANCH, Date.now()));
+          }});
+      }}
+
+      function checkForUpdateViaApi(manual) {{
+        if (checking) return;
+        checking = true;
+        if (manual) setButtonBusy(true);
+        setStatus(manual ? "正在检查…" : "后台检查中…");
+
         var apiUrl =
           "https://api.github.com/repos/" + REPO + "/commits/" + encodeURIComponent(BRANCH);
         fetch(apiUrl, {{
@@ -525,41 +652,63 @@ def main() -> None:
             return res.json();
           }})
           .then(function (commit) {{
-            if (!commit || !commit.sha) return;
-            var latestSha = commit.sha;
-            return fetch(rawUrlForRef(latestSha, Date.now()), {{
-              cache: "no-store",
-              credentials: "omit",
-            }})
-              .then(function (res) {{
-                if (!res.ok) throw new Error("raw " + res.status);
-                return res.text();
-              }})
-              .then(function (html) {{
-                if (isRemoteNewer(html)) navigateToLatest(latestSha);
-              }});
+            var latestSha = commit && commit.sha ? commit.sha : null;
+            return fetchLatestHtml(latestSha).then(function (html) {{
+              if (isRemoteNewer(html)) {{
+                applyUpdate(html, latestSha || BRANCH);
+              }} else {{
+                var now = new Date();
+                var hh = String(now.getHours()).padStart(2, "0");
+                var mm = String(now.getMinutes()).padStart(2, "0");
+                setStatus("已是最新 · " + hh + ":" + mm + " · rev " + (CURRENT_REVISION || "").slice(0, 8));
+              }}
+            }});
           }})
           .catch(function () {{
-            /* branch raw CDN 常忽略 ?t=，仅作 API 失败时的后备 */
-            fetch(rawUrlForRef(BRANCH, Date.now()), {{
-              cache: "no-store",
-              credentials: "omit",
-            }})
-              .then(function (res) {{
-                if (!res.ok) return null;
-                return res.text();
+            return fetchLatestHtml(null)
+              .then(function (html) {{
+                if (isRemoteNewer(html)) {{
+                  applyUpdate(html, BRANCH);
+                }} else {{
+                  setStatus("已是最新（后备源）· rev " + (CURRENT_REVISION || "").slice(0, 8));
+                }}
               }})
-              .then(function (text) {{
-                if (text && isRemoteNewer(text)) navigateToLatest(BRANCH);
-              }})
-              .catch(function () {{}});
+              .catch(function () {{
+                setStatus("检查失败，稍后重试或点按钮", "is-err");
+              }});
+          }})
+          .then(function () {{
+            checking = false;
+            setButtonBusy(false);
           }});
       }}
 
-      checkForUpdateViaApi();
-      window.setInterval(checkForUpdateViaApi, REFRESH_MS);
+      function schedulePoll() {{
+        if (pollTimer) window.clearInterval(pollTimer);
+        var ms = document.visibilityState === "hidden" ? HIDDEN_REFRESH_MS : REFRESH_MS;
+        pollTimer = window.setInterval(function () {{
+          checkForUpdateViaApi(false);
+        }}, ms);
+      }}
+
+      var btn = document.getElementById("preview-refresh-btn");
+      if (btn) {{
+        btn.addEventListener("click", function () {{
+          checkForUpdateViaApi(true);
+        }});
+      }}
+
+      checkForUpdateViaApi(false);
+      schedulePoll();
       document.addEventListener("visibilitychange", function () {{
-        if (document.visibilityState === "visible") checkForUpdateViaApi();
+        schedulePoll();
+        if (document.visibilityState === "visible") checkForUpdateViaApi(false);
+      }});
+      window.addEventListener("focus", function () {{
+        checkForUpdateViaApi(false);
+      }});
+      window.addEventListener("pageshow", function () {{
+        checkForUpdateViaApi(false);
       }});
     }})();
   </script>

@@ -2,7 +2,8 @@ name: Preview auto-rebuild
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    # 每 2 分钟扫一次；有改动才 commit
+    - cron: "*/2 * * * *"
   push:
     paths:
       - "novel-project/drafts/**"
@@ -11,7 +12,10 @@ on:
   workflow_dispatch:
 
 env:
-  PREVIEW_BRANCH: cursor/isekai-novel-outline-1688
+  # 定时任务从哪条分支取 drafts 重建
+  SOURCE_BRANCH: cursor/isekai-novel-outline-1688
+  # 手机书签固定跟踪的稳定分支（只放最新 standalone）
+  PREVIEW_BRANCH: preview
 
 permissions:
   contents: write
@@ -23,23 +27,72 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'push' && github.ref || env.PREVIEW_BRANCH }}
+          # push 事件：重建被 push 的分支；定时/手动：用 SOURCE_BRANCH
+          ref: ${{ github.event_name == 'push' && github.ref || env.SOURCE_BRANCH }}
+          fetch-depth: 0
 
       - name: Resolve push branch name
         id: branch
-        run: echo "name=${{ github.event_name == 'push' && github.ref_name || env.PREVIEW_BRANCH }}" >> "$GITHUB_OUTPUT"
+        run: echo "name=${{ github.event_name == 'push' && github.ref_name || env.SOURCE_BRANCH }}" >> "$GITHUB_OUTPUT"
 
       - name: Rebuild standalone.html
-        run: python3 novel-project/preview/build_standalone.py
+        run: python3 novel-project/preview/build_standalone.py --force
 
-      - name: Commit and push if preview changed
+      - name: Commit and push if preview changed (source branch)
         run: |
           if git diff --quiet -- novel-project/preview/standalone.html; then
-            echo "standalone.html unchanged, skip push"
-            exit 0
+            echo "standalone.html unchanged on source branch"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add novel-project/preview/standalone.html
+            git commit -m "preview: auto-rebuild standalone.html [skip ci]"
+            git push origin "HEAD:${{ steps.branch.outputs.name }}"
           fi
+
+      - name: Publish standalone to stable preview branch
+        run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add novel-project/preview/standalone.html
-          git commit -m "preview: auto-rebuild standalone.html [skip ci]"
-          git push origin "HEAD:${{ steps.branch.outputs.name }}"
+
+          SRC_FILE="novel-project/preview/standalone.html"
+          CFG_FILE="novel-project/preview/preview-config.json"
+          test -f "$SRC_FILE"
+
+          TMP_HTML="$(mktemp)"
+          TMP_CFG="$(mktemp)"
+          cp "$SRC_FILE" "$TMP_HTML"
+          if [ -f "$CFG_FILE" ]; then
+            cp "$CFG_FILE" "$TMP_CFG"
+          else
+            printf '%s\n' '{
+            "github_repo": "jackytyangovo/Cloud",
+            "preview_branch": "preview",
+            "source_branch": "cursor/isekai-novel-outline-1688",
+            "refresh_interval_minutes": 1
+          }' > "$TMP_CFG"
+          fi
+
+          if git ls-remote --exit-code --heads origin "${PREVIEW_BRANCH}" >/dev/null 2>&1; then
+            git fetch origin "${PREVIEW_BRANCH}"
+            git checkout -B "${PREVIEW_BRANCH}" "origin/${PREVIEW_BRANCH}"
+          else
+            git checkout --orphan "${PREVIEW_BRANCH}"
+            git rm -rf --quiet . 2>/dev/null || true
+            find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
+          fi
+
+          mkdir -p novel-project/preview
+          cp "$TMP_HTML" novel-project/preview/standalone.html
+          cp "$TMP_CFG" novel-project/preview/preview-config.json
+
+          git add novel-project/preview/standalone.html novel-project/preview/preview-config.json
+          if git diff --cached --quiet; then
+            echo "preview branch already up to date"
+          else
+            git commit -m "preview: publish latest standalone [skip ci]"
+            git push -u origin "${PREVIEW_BRANCH}"
+          fi
+
+          rm -f "$TMP_HTML" "$TMP_CFG"
