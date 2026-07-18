@@ -114,6 +114,7 @@
 - `novel-project/bible/worldbuilding.md`
 - `novel-project/bible/characters.md`
 - `novel-project/bible/style-guide.md`
+- `novel-project/bible/writing-essentials.md`（**纠察/写稿速查**）
 - `novel-project/bible/timeline.md`
 
 ---
@@ -146,7 +147,7 @@
 
 - [`WORKFLOW.md`](WORKFLOW.md)（流程与目录边界）
 - 当前章对应 `outline.md` 节拍（**只读情节边界，严禁照译**）
-- `style-guide.md`、`style-reference.md`
+- `writing-essentials.md`（**优先**）、`style-guide.md`、`style-reference.md`
 - [`.cursor/skills/isekai-novel-writing/SKILL.md`](../.cursor/skills/isekai-novel-writing/SKILL.md)（写前/交稿自检）
 - 必要时 `characters.md`、`worldbuilding.md`（只读参考）
 - 上一章正文（保持衔接）
@@ -201,6 +202,7 @@ novel-project/
 │   ├── characters.md
 │   ├── style-guide.md
 │   ├── style-reference.md
+│   ├── writing-essentials.md  ← 纠察/写稿速查
 │   └── timeline.md
 ├── drafts/         ← 正文撰写与改稿（任意 Agent）
 │   └── chapter-NNN.md
@@ -218,13 +220,13 @@ novel-project/
 
 ## 正文写作检查清单（每章）
 
-写前读：`WORKFLOW.md` · `style-guide.md` · `style-reference.md` · 写作 skill 自检表。
+写前读：`WORKFLOW.md` · **`writing-essentials.md`（速查）** · `style-guide.md` · `style-reference.md` · 写作 skill 自检表。
 
 - [ ] **WORKFLOW 目录边界**：只改 `drafts/`；`finalized/` 仅用户说「章节定稿」；预览读 `drafts/`
 - [ ] **「全文」= 当前章**；未点名不改其他章
 - [ ] **初稿即正文**：**严禁照办纲要**（不照译场次表、技法行、bible 缩略语）
 - [ ] 与 `outline.md` **情节边界**一致（非照抄纲要句式）
-- [ ] 文风符合 `style-guide.md`（平直、长短句、分段透气、对话口语化、四层兼顾）
+- [ ] 文风：先过 **`writing-essentials.md` 红灯表**；细则符合 `style-guide.md`
 - [ ] 交稿前 **陌生读者视角** 通读一遍
 - [ ] 战力未膨胀（孩童高净阶不碾压成人）
 - [ ] 未擅自定稿标有 `【随剧情补充】` 的设定
@@ -262,5 +264,5 @@ novel-project/
 | 自动改 `finalized/` | 定稿被覆盖 | **仅**用户说「章节定稿」时才复制入库 |
 | 设定对话里写正文 | 易忽略 preview / skill 自检 | 正文单独对话，@ style-guide + skill |
 | 预览正文去 chapters/ 找 | 目录已迁 | **优先** `drafts/chapter-NNN.md` |
-| 正文时未 @ style-guide | 文风漂移 | 每次写章都 @ style-guide |
+| 正文时未 @ writing-essentials / style-guide | 文风漂移 | 每次写章都 @ 要领 + style-guide |
 | 用户说「全文」却改了别章 | 范围越界 | 默认只改**当前章**，他章须点名 |

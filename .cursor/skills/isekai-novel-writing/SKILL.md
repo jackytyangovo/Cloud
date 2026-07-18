@@ -43,6 +43,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 | 路径 | 用途 |
 |------|------|
 | [`WORKFLOW.md`](../novel-project/WORKFLOW.md) | **流程总纲**：目录边界、分工、定稿/预览、迭代循环 |
+| [`writing-essentials.md`](../../novel-project/bible/writing-essentials.md) | **写作要领**：纠察红灯表 + 写场六步（写前/交稿优先） |
 | `bible/outline.md` | 当前章节拍、卷一边界 |
 | `bible/narrative-structure.md` | **宏观三阶段**（日常·冒险·危机）、1–3–9 埋线、两拐点避坑 |
 | `bible/daily-growth-writing.md` | **日常成长期** 4要4不要、章自查三问、卷一映射 |
@@ -61,13 +62,14 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 0. 读 [`WORKFLOW.md`](../novel-project/WORKFLOW.md)：**目录边界**、模型分工、**定稿/预览**流程、误操作禁忌
 1. 确认 **当次「全文」= 当前章**（默认 `chapter-NNN.md`）；**未点名不改其他章** `drafts/`
-2. 读 `outline.md` 中**当前章**场景与「不写」列表——**只取情节边界与时间线**，**严禁**把场次表/技法行照译进正文
-2. 若规划**新幕/新卷/大转折**，读 `narrative-structure.md`（日常·冒险·危机衔接、1–3–9 埋线）
-3. 写**日常成长章**（尤其卷一），读 `daily-growth-writing.md`，写完后过 **章自查三问**
-4. 读上一章正文，保持衔接与视角标记一致
-5. 确认本章时间标注（如「觉醒前第二十九天」）
-6. 列出本章会出现的**新专名** → 规划【附】插入点
-7. 写完后自检：**两遍**对照 `style-guide`（见下「写作自检 · 两遍」）——文风、附块、剧透、单字、比喻扣前文、维洛教、卷一边界
+2. 读 [`writing-essentials.md`](../../novel-project/bible/writing-essentials.md)：**红灯表 + 写场六步**（纠察/自检主表）
+3. 读 `outline.md` 中**当前章**场景与「不写」列表——**只取情节边界与时间线**，**严禁**把场次表/技法行照译进正文
+4. 若规划**新幕/新卷/大转折**，读 `narrative-structure.md`（日常·冒险·危机衔接、1–3–9 埋线）
+5. 写**日常成长章**（尤其卷一），读 `daily-growth-writing.md`，写完后过 **章自查三问**
+6. 读上一章正文，保持衔接与视角标记一致
+7. 确认本章时间标注（如「觉醒前第二十九天」）
+8. 列出本章会出现的**新专名** → 规划【附】插入点
+9. 写完后自检：**两遍**对照 `writing-essentials` → 细则再查 `style-guide`
 
 ---
 
