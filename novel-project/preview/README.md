@@ -12,7 +12,10 @@
    - `drafts/` push 时也会 **立即**触发同一流程  
 
 2. **预览页**（`standalone.html` 内嵌脚本）  
-   - 打开后每 **5 分钟**自动 **带缓存破除参数刷新** 当前页，减轻 raw/CDN 旧稿  
+   - 每 **5 分钟**用 `fetch` 检查 `drafts-sha` 是否变化  
+   - **仅在有新稿时**才刷新（避免无意义白屏）  
+   - 刷新前保存滚动位置；`fetch` 失败时 **保持当前页、不报错**  
+   - 经 htmlpreview 打开时，有更新则 **重载顶层预览页**（避免 iframe 内 `Failed to fetch`）
 
 **预览分支** 见 `preview-config.json` 的 `preview_branch`（当前：`cursor/isekai-novel-outline-1688`）。
 
@@ -37,7 +40,7 @@ git commit && git push -u origin <branch>
 - **仍建议改稿同批 rebuild + push**（读者不必等最多 5 分钟）  
 - 若只 push 了 `drafts/*.md` 忘了 rebuild，**5 分钟内** Actions 会补推 `standalone.html`  
 - 强制重建（drafts 未变也更新页眉时间）：`python3 novel-project/preview/build_standalone.py --force`  
-- 自动刷新会 **记住滚动位置**（`sessionStorage`），刷新后回到原阅读处
+- 自动刷新会 **记住滚动位置**（`sessionStorage`）；**仅 drafts 有变才 reload**，避免每 5 分钟白屏
 
 ---
 
