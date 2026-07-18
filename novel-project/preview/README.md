@@ -17,7 +17,7 @@
    - 旧页无 `preview-revision` 时 **回退** 比对 `drafts-sha`  
    - **仅在有新版本时** 才刷新（避免无意义白屏）  
    - 刷新前保存滚动位置；`fetch` 失败时 **保持当前页、不报错**  
-   - 经 htmlpreview 打开时，有更新则 **重载顶层预览页**（避免 iframe 内 `Failed to fetch`）  
+   - 经 htmlpreview 打开时，有更新则 **重载 htmlpreview 包装页**（**绝不**跳转到 raw 直链，避免变成源码视图）  
    - 页头含 `Cache-Control: no-cache`；仍遇旧缓存时可 **硬刷新** 或在 raw URL 后加 `?t=时间戳`
 
 **预览分支** 见 `preview-config.json` 的 `preview_branch`（当前：`cursor/isekai-novel-outline-1688`）。
@@ -31,6 +31,8 @@ https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/C
 `https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<commit>/novel-project/preview/standalone.html`
 
 页眉 **构建于 … UTC · commit … · 打开/切回即检查 · 每 5 分钟轮询** 可核对是否最新；`<meta name="preview-revision">` 与页内 `CURRENT_REVISION` 一致。
+
+**勿** 直接收藏 raw 链接（`raw.githubusercontent.com/.../standalone.html`）——浏览器会当纯文本显示源码；自动刷新若误跳 raw 也会如此。请始终用上方 **htmlpreview** 地址打开。
 
 ### 改稿时（Agent / 本地）
 

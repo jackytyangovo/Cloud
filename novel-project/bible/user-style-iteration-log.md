@@ -1482,6 +1482,24 @@
 
 ---
 
+### #84 · 2026-07-18 · 预览 · 刷新误跳 raw 源码页
+
+**用户指令**：预览过一阵变成 `raw.githubusercontent.com/...standalone.html?t=…` 的 **纯代码格式**
+
+**原因**：`navigateToLatest()` 在 htmlpreview 顶层或 iframe 回退失败时 **`location.replace` 到 raw 直链**；GitHub raw 对 HTML 以 **text/plain** 返回，浏览器 **不渲染**
+
+**处理**：
+- 刷新 **始终** 跳 `htmlpreview.github.io/?` + raw（带 `t=` 破缓存）；`fetch` 检查仍用 raw
+- raw 顶栏误开时（脚本仍可执行）**自动跳回** htmlpreview
+- 新增 meta `preview-viewer-url`；README 注明 **勿收藏 raw 链接**
+
+**提炼（待入库）**：
+- 手机预览 **读者 URL = htmlpreview 包装**；raw 仅作 **fetch 源**
+
+**已写入**：§正例（格式/预览）
+
+---
+
 ## 为什么这么写（用户原话 · 持续汇总）
 
 > 用户改动时若说明 **用意 / 好处 / 为何删**，记入本条对应 **#N**，并 **追加汇总表**。Agent 代写时对照执行；pass 结束后并入 `style-guide` / `style-reference`。

@@ -20,6 +20,7 @@ DEFAULT_CONFIG = {
     "github_repo": "jackytyangovo/Cloud",
     "preview_branch": "cursor/isekai-novel-outline-1688",
     "refresh_interval_minutes": 5,
+    "htmlpreview_base": "https://htmlpreview.github.io/?",
 }
 
 CHAPTERS = [
@@ -258,6 +259,8 @@ def main() -> None:
         f"https://raw.githubusercontent.com/{repo}/{preview_branch}"
         f"/novel-project/preview/standalone.html"
     )
+    viewer_base = config.get("htmlpreview_base", DEFAULT_CONFIG["htmlpreview_base"])
+    viewer_url = f"{viewer_base}{raw_url}"
     sections = []
     for rel, label in chapters:
         path = ROOT / rel.replace("drafts/", "drafts/")
@@ -292,6 +295,7 @@ def main() -> None:
   <meta name="build-commit" content="{sha}" />
   <meta name="built-at" content="{built}" />
   <meta name="preview-raw-url" content="{html.escape(raw_url, quote=True)}" />
+  <meta name="preview-viewer-url" content="{html.escape(viewer_url, quote=True)}" />
   <title>小说正文预览 · {html.escape(title_suffix)}</title>
   <style>
     :root {{
@@ -413,8 +417,26 @@ def main() -> None:
       var REFRESH_MS = {refresh_ms};
       var SCROLL_KEY = "novel-preview-scroll";
       var RAW_URL = {json.dumps(raw_url)};
+      var VIEWER_BASE = {json.dumps(viewer_base)};
       var CURRENT_SHA = {json.dumps(drafts_sha)};
       var CURRENT_REVISION = {json.dumps(revision_placeholder)};
+
+      function bustRawUrl(ts) {{
+        return RAW_URL + (RAW_URL.indexOf("?") >= 0 ? "&" : "?") + "t=" + ts;
+      }}
+
+      function viewerUrl(ts) {{
+        return VIEWER_BASE + bustRawUrl(ts);
+      }}
+
+      /* raw.githubusercontent.com 顶栏打开时浏览器只显示源码；若脚本仍能执行则跳回预览器 */
+      if (
+        window.location.hostname === "raw.githubusercontent.com" &&
+        window.top === window
+      ) {{
+        window.location.replace(viewerUrl(Date.now()));
+        return;
+      }}
 
       function saveScrollPosition() {{
         try {{
@@ -476,11 +498,9 @@ def main() -> None:
 
       function navigateToLatest() {{
         saveScrollPosition();
-        var bust = RAW_URL + (RAW_URL.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
-        var target = bust;
+        var target = viewerUrl(Date.now());
         try {{
-          if (window.top !== window && window.location.hostname === "raw.githubusercontent.com") {{
-            target = "https://htmlpreview.github.io/?" + bust;
+          if (window.top !== window) {{
             window.top.location.replace(target);
             return;
           }}
@@ -489,7 +509,7 @@ def main() -> None:
       }}
 
       function checkForUpdate() {{
-        var checkUrl = RAW_URL + (RAW_URL.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
+        var checkUrl = bustRawUrl(Date.now());
         fetch(checkUrl, {{ cache: "no-store", credentials: "omit" }})
           .then(function (res) {{
             if (!res.ok) return null;

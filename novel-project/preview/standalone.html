@@ -6,11 +6,12 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta name="drafts-sha" content="05705fa5e964" />
-  <meta name="preview-revision" content="fb4e23a0d862c8e4" />
-  <meta name="build-script-sha" content="5c016a25d9de" />
-  <meta name="build-commit" content="f03c506" />
-  <meta name="built-at" content="2026-07-18 12:35 UTC" />
+  <meta name="preview-revision" content="64caa4a340d7d32f" />
+  <meta name="build-script-sha" content="70f09066253f" />
+  <meta name="build-commit" content="d66d5e6" />
+  <meta name="built-at" content="2026-07-18 12:39 UTC" />
   <meta name="preview-raw-url" content="https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html" />
+  <meta name="preview-viewer-url" content="https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html" />
   <title>小说正文预览 · 序章 · 第一章</title>
   <style>
     :root {
@@ -122,7 +123,7 @@
 <body>
   <header>
     <h1>异世界重生 · 正文预览</h1>
-    <div class="meta">构建于 2026-07-18 12:35 UTC · commit f03c506 · 分支 cursor/isekai-novel-outline-1688 · 打开/切回即检查 · 每 5 分钟轮询</div>
+    <div class="meta">构建于 2026-07-18 12:39 UTC · commit d66d5e6 · 分支 cursor/isekai-novel-outline-1688 · 打开/切回即检查 · 每 5 分钟轮询</div>
   </header>
   <button type="button" class="toc-toggle" id="toc-toggle" aria-expanded="false" aria-controls="toc-drawer">目录</button>
   <div class="toc-backdrop" id="toc-backdrop" hidden></div>
@@ -144,8 +145,26 @@
       var REFRESH_MS = 300000;
       var SCROLL_KEY = "novel-preview-scroll";
       var RAW_URL = "https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html";
+      var VIEWER_BASE = "https://htmlpreview.github.io/?";
       var CURRENT_SHA = "05705fa5e964";
-      var CURRENT_REVISION = "fb4e23a0d862c8e4";
+      var CURRENT_REVISION = "64caa4a340d7d32f";
+
+      function bustRawUrl(ts) {
+        return RAW_URL + (RAW_URL.indexOf("?") >= 0 ? "&" : "?") + "t=" + ts;
+      }
+
+      function viewerUrl(ts) {
+        return VIEWER_BASE + bustRawUrl(ts);
+      }
+
+      /* raw.githubusercontent.com 顶栏打开时浏览器只显示源码；若脚本仍能执行则跳回预览器 */
+      if (
+        window.location.hostname === "raw.githubusercontent.com" &&
+        window.top === window
+      ) {
+        window.location.replace(viewerUrl(Date.now()));
+        return;
+      }
 
       function saveScrollPosition() {
         try {
@@ -207,11 +226,9 @@
 
       function navigateToLatest() {
         saveScrollPosition();
-        var bust = RAW_URL + (RAW_URL.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
-        var target = bust;
+        var target = viewerUrl(Date.now());
         try {
-          if (window.top !== window && window.location.hostname === "raw.githubusercontent.com") {
-            target = "https://htmlpreview.github.io/?" + bust;
+          if (window.top !== window) {
             window.top.location.replace(target);
             return;
           }
@@ -220,7 +237,7 @@
       }
 
       function checkForUpdate() {
-        var checkUrl = RAW_URL + (RAW_URL.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
+        var checkUrl = bustRawUrl(Date.now());
         fetch(checkUrl, { cache: "no-store", credentials: "omit" })
           .then(function (res) {
             if (!res.ok) return null;
