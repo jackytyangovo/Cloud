@@ -1555,6 +1555,25 @@
 
 ---
 
+### #88 · 2026-07-18 · 预览 · branch CDN 导致不更新
+
+**用户反馈**：页眉停在 `12:55 UTC · commit e2a92a8`，刷新/重开仍无 #86/#87 正文
+
+**根因**：
+- `raw.githubusercontent.com/<branch>/...` **CDN max-age=300**，且 **`?t=` 不刷新**（同 etag）
+- 页内旧逻辑 fetch branch raw → 一直拿到 **旧 rev**，`isRemoteNewer` 为 false
+- htmlpreview **首次加载** 也走 branch raw → 同样可能旧
+- 页眉 `build-commit` 在 **git commit 前** build → 显示 **上一提交** sha，易误导
+
+**处理**：
+- 更新检查：**GitHub API 最新 commit** + **commit 固定 raw** 读 `preview-revision`
+- 有更新 → htmlpreview 重载，raw 改用 **最新 commit sha**
+- 页眉改为 **rev {preview-revision}**
+
+**已写入**：§正例（格式/预览）
+
+---
+
 ## 为什么这么写（用户原话 · 持续汇总）
 
 > 用户改动时若说明 **用意 / 好处 / 为何删**，记入本条对应 **#N**，并 **追加汇总表**。Agent 代写时对照执行；pass 结束后并入 `style-guide` / `style-reference`。

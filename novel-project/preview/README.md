@@ -13,12 +13,13 @@
 
 2. **预览页**（`standalone.html` 内嵌脚本）  
    - **打开页 / 切回标签** 即检查；并每 **5 分钟**轮询  
-   - 用 `fetch` 比对 **`preview-revision`**（全文指纹：正文 + 模板/CSS/脚本任一变动都会变）  
-   - 旧页无 `preview-revision` 时 **回退** 比对 `drafts-sha`  
+   - **GitHub API** 取分支最新 commit → 用 **commit 固定 raw** 读 `preview-revision`（绕过 branch raw 的 5 分钟 CDN；`?t=` **不能**破 branch 缓存）  
+   - 有更新则 **重载 htmlpreview**，并改用 **最新 commit 的 raw 链接**  
+   - 旧逻辑仅 fetch branch raw 时，读者可能 **长时间卡在旧 rev**  
    - **仅在有新版本时** 才刷新（避免无意义白屏）  
    - 刷新前保存滚动位置；`fetch` 失败时 **保持当前页、不报错**  
    - 经 htmlpreview 打开时，有更新则 **重载 htmlpreview 包装页**（**绝不**跳转到 raw 直链，避免变成源码视图）  
-   - 页头含 `Cache-Control: no-cache`；仍遇旧缓存时可 **硬刷新** 或在 raw URL 后加 `?t=时间戳`
+   - 页头含 `Cache-Control: no-cache`；仍遇旧缓存时 **切到别的 App 再切回** 触发 API 检查
 
 **预览分支** 见 `preview-config.json` 的 `preview_branch`（当前：`cursor/isekai-novel-outline-1688`）。
 
@@ -30,9 +31,11 @@ https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/C
 
 `https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<commit>/novel-project/preview/standalone.html`
 
-页眉 **构建于 … UTC · commit … · 打开/切回即检查 · 每 5 分钟轮询** 可核对是否最新；`<meta name="preview-revision">` 与页内 `CURRENT_REVISION` 一致。
+页眉 **构建于 … UTC · rev … · 打开/切回即检查 · 每 5 分钟轮询** 可核对是否最新；`rev` 即 `preview-revision` 短码。
 
-**勿** 直接收藏 raw 链接（`raw.githubusercontent.com/.../standalone.html`）——浏览器会当纯文本显示源码；自动刷新若误跳 raw 也会如此。请始终用上方 **htmlpreview** 地址打开。
+**勿** 直接收藏 raw 链接（`raw.githubusercontent.com/.../standalone.html`）——浏览器会当纯文本显示源码。请用上方 **htmlpreview + 分支** 书签；若长时间不更新，**切到别的 App 再切回**（触发 API 检查）或暂时用 **commit 固定** 链接：
+
+`https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<commit>/novel-project/preview/standalone.html`
 
 ### 改稿时（Agent / 本地）
 

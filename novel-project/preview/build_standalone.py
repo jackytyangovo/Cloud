@@ -255,9 +255,9 @@ def main() -> None:
     branch = git_branch()
     repo = config["github_repo"]
     preview_branch = config.get("preview_branch") or branch
+    raw_path = "/novel-project/preview/standalone.html"
     raw_url = (
-        f"https://raw.githubusercontent.com/{repo}/{preview_branch}"
-        f"/novel-project/preview/standalone.html"
+        f"https://raw.githubusercontent.com/{repo}/{preview_branch}{raw_path}"
     )
     viewer_base = config.get("htmlpreview_base", DEFAULT_CONFIG["htmlpreview_base"])
     viewer_url = f"{viewer_base}{raw_url}"
@@ -407,7 +407,7 @@ def main() -> None:
 <body>
   <header>
     <h1>异世界重生 · 正文预览</h1>
-    <div class="meta">构建于 {built} · commit {sha} · 分支 {html.escape(branch)} · 打开/切回即检查 · 每 {refresh_min} 分钟轮询</div>
+    <div class="meta">构建于 {built} · rev {revision_placeholder} · 分支 {html.escape(branch)} · 打开/切回即检查 · 每 {refresh_min} 分钟轮询</div>
   </header>
 {toc}
   <main><article>{body}</article></main>
@@ -416,25 +416,29 @@ def main() -> None:
     (function () {{
       var REFRESH_MS = {refresh_ms};
       var SCROLL_KEY = "novel-preview-scroll";
-      var RAW_URL = {json.dumps(raw_url)};
+      var REPO = {json.dumps(repo)};
+      var BRANCH = {json.dumps(preview_branch)};
+      var RAW_PATH = {json.dumps(raw_path)};
       var VIEWER_BASE = {json.dumps(viewer_base)};
       var CURRENT_SHA = {json.dumps(drafts_sha)};
       var CURRENT_REVISION = {json.dumps(revision_placeholder)};
 
-      function bustRawUrl(ts) {{
-        return RAW_URL + (RAW_URL.indexOf("?") >= 0 ? "&" : "?") + "t=" + ts;
+      function rawUrlForRef(ref, ts) {{
+        var url = "https://raw.githubusercontent.com/" + REPO + "/" + ref + RAW_PATH;
+        if (ts) url += (url.indexOf("?") >= 0 ? "&" : "?") + "t=" + ts;
+        return url;
       }}
 
-      function viewerUrl(ts) {{
-        return VIEWER_BASE + bustRawUrl(ts);
+      function viewerUrlForRef(ref, ts) {{
+        return VIEWER_BASE + rawUrlForRef(ref, ts);
       }}
 
-      /* raw.githubusercontent.com 顶栏打开时浏览器只显示源码；若脚本仍能执行则跳回预览器 */
+      /* raw 顶栏误开 → 跳回 htmlpreview（branch 书签地址） */
       if (
         window.location.hostname === "raw.githubusercontent.com" &&
         window.top === window
       ) {{
-        window.location.replace(viewerUrl(Date.now()));
+        window.location.replace(viewerUrlForRef(BRANCH, Date.now()));
         return;
       }}
 
@@ -496,9 +500,9 @@ def main() -> None:
         return false;
       }}
 
-      function navigateToLatest() {{
+      function navigateToLatest(ref) {{
         saveScrollPosition();
-        var target = viewerUrl(Date.now());
+        var target = viewerUrlForRef(ref || BRANCH, Date.now());
         try {{
           if (window.top !== window) {{
             window.top.location.replace(target);
@@ -508,26 +512,54 @@ def main() -> None:
         window.location.replace(target);
       }}
 
-      function checkForUpdate() {{
-        var checkUrl = bustRawUrl(Date.now());
-        fetch(checkUrl, {{ cache: "no-store", credentials: "omit" }})
+      function checkForUpdateViaApi() {{
+        var apiUrl =
+          "https://api.github.com/repos/" + REPO + "/commits/" + encodeURIComponent(BRANCH);
+        fetch(apiUrl, {{
+          cache: "no-store",
+          credentials: "omit",
+          headers: {{ Accept: "application/vnd.github+json" }},
+        }})
           .then(function (res) {{
-            if (!res.ok) return null;
-            return res.text();
+            if (!res.ok) throw new Error("api " + res.status);
+            return res.json();
           }})
-          .then(function (text) {{
-            if (!text) return;
-            if (isRemoteNewer(text)) navigateToLatest();
+          .then(function (commit) {{
+            if (!commit || !commit.sha) return;
+            var latestSha = commit.sha;
+            return fetch(rawUrlForRef(latestSha, Date.now()), {{
+              cache: "no-store",
+              credentials: "omit",
+            }})
+              .then(function (res) {{
+                if (!res.ok) throw new Error("raw " + res.status);
+                return res.text();
+              }})
+              .then(function (html) {{
+                if (isRemoteNewer(html)) navigateToLatest(latestSha);
+              }});
           }})
           .catch(function () {{
-            /* 网络/CDN 抖动时不刷新、不报错，避免白屏 */
+            /* branch raw CDN 常忽略 ?t=，仅作 API 失败时的后备 */
+            fetch(rawUrlForRef(BRANCH, Date.now()), {{
+              cache: "no-store",
+              credentials: "omit",
+            }})
+              .then(function (res) {{
+                if (!res.ok) return null;
+                return res.text();
+              }})
+              .then(function (text) {{
+                if (text && isRemoteNewer(text)) navigateToLatest(BRANCH);
+              }})
+              .catch(function () {{}});
           }});
       }}
 
-      checkForUpdate();
-      window.setInterval(checkForUpdate, REFRESH_MS);
+      checkForUpdateViaApi();
+      window.setInterval(checkForUpdateViaApi, REFRESH_MS);
       document.addEventListener("visibilitychange", function () {{
-        if (document.visibilityState === "visible") checkForUpdate();
+        if (document.visibilityState === "visible") checkForUpdateViaApi();
       }});
     }})();
   </script>
