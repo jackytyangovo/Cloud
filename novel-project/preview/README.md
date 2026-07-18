@@ -7,19 +7,22 @@
 **两层同步（默认每 5 分钟）：**
 
 1. **GitHub Actions**（`.github/workflows/preview-refresh.yml`）  
-   - 每 **5 分钟**检查 `drafts/` 是否有未编入 `standalone.html` 的改动  
+   - 每 **5 分钟**检查 `drafts/` 或 **预览模板**（`build_standalone.py`）是否有未编入 `standalone.html` 的改动  
    - 有改动则 **rebuild + push**（无改动不提交，避免空 commit）  
-   - `drafts/` push 时也会 **立即**触发同一流程  
+   - `drafts/` 或 `build_standalone.py` push 时也会 **立即**触发同一流程  
 
 2. **预览页**（`standalone.html` 内嵌脚本）  
-   - 每 **5 分钟**用 `fetch` 检查 `drafts-sha` 是否变化  
-   - **仅在有新稿时**才刷新（避免无意义白屏）  
+   - **打开页 / 切回标签** 即检查；并每 **5 分钟**轮询  
+   - 用 `fetch` 比对 **`preview-revision`**（全文指纹：正文 + 模板/CSS/脚本任一变动都会变）  
+   - 旧页无 `preview-revision` 时 **回退** 比对 `drafts-sha`  
+   - **仅在有新版本时** 才刷新（避免无意义白屏）  
    - 刷新前保存滚动位置；`fetch` 失败时 **保持当前页、不报错**  
-   - 经 htmlpreview 打开时，有更新则 **重载顶层预览页**（避免 iframe 内 `Failed to fetch`）
+   - 经 htmlpreview 打开时，有更新则 **重载顶层预览页**（避免 iframe 内 `Failed to fetch`）  
+   - 页头含 `Cache-Control: no-cache`；仍遇旧缓存时可 **硬刷新** 或在 raw URL 后加 `?t=时间戳`
 
 **预览分支** 见 `preview-config.json` 的 `preview_branch`（当前：`cursor/isekai-novel-outline-1688`）。
 
-**预览地址（推荐分支最新）：**
+**预览地址（推荐 · 固定分支，无需每次换链接）：**
 
 https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/cursor/isekai-novel-outline-1688/novel-project/preview/standalone.html
 
@@ -27,7 +30,7 @@ https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/C
 
 `https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/<commit>/novel-project/preview/standalone.html`
 
-页眉 **构建于 … UTC · commit … · 每 5 分钟自动刷新** 可核对是否最新。
+页眉 **构建于 … UTC · commit … · 打开/切回即检查 · 每 5 分钟轮询** 可核对是否最新；`<meta name="preview-revision">` 与页内 `CURRENT_REVISION` 一致。
 
 ### 改稿时（Agent / 本地）
 
@@ -40,7 +43,7 @@ git commit && git push -u origin <branch>
 - **仍建议改稿同批 rebuild + push**（读者不必等最多 5 分钟）  
 - 若只 push 了 `drafts/*.md` 忘了 rebuild，**5 分钟内** Actions 会补推 `standalone.html`  
 - 强制重建（drafts 未变也更新页眉时间）：`python3 novel-project/preview/build_standalone.py --force`  
-- 自动刷新会 **记住滚动位置**（`sessionStorage`）；**仅 drafts 有变才 reload**，避免每 5 分钟白屏
+- 自动刷新会 **记住滚动位置**（`sessionStorage`）；**仅 preview 有变才 reload**，避免每 5 分钟白屏
 
 ---
 

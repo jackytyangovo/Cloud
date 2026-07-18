@@ -32,10 +32,10 @@ jobs:
       - name: Rebuild standalone.html
         run: python3 novel-project/preview/build_standalone.py
 
-      - name: Commit and push if drafts changed
+      - name: Commit and push if preview changed
         run: |
           if git diff --quiet -- novel-project/preview/standalone.html; then
-            echo "standalone.html unchanged (drafts hash matches), skip push"
+            echo "standalone.html unchanged, skip push"
             exit 0
           fi
           git config user.name "github-actions[bot]"

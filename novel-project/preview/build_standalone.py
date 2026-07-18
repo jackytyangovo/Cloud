@@ -173,6 +173,25 @@ def read_embedded_drafts_sha(html_text: str) -> str | None:
     return m.group(1) if m else None
 
 
+def read_embedded_preview_revision(html_text: str) -> str | None:
+    m = re.search(r'<meta name="preview-revision" content="([^"]+)"', html_text)
+    return m.group(1) if m else None
+
+
+def read_embedded_build_script_sha(html_text: str) -> str | None:
+    m = re.search(r'<meta name="build-script-sha" content="([^"]+)"', html_text)
+    return m.group(1) if m else None
+
+
+def build_script_hash() -> str:
+    return hashlib.sha256(Path(__file__).read_bytes()).hexdigest()[:12]
+
+
+def preview_revision(page: str) -> str:
+    """全文指纹：正文或预览模板任一变动都会变，供页内同步检测。"""
+    return hashlib.sha256(page.encode("utf-8")).hexdigest()[:16]
+
+
 def git_branch() -> str:
     try:
         out = subprocess.check_output(
@@ -215,10 +234,19 @@ def main() -> None:
     chapters = discover_chapters()
     drafts_sha = drafts_content_hash(chapters)
 
+    script_sha = build_script_hash()
+
     if OUT.is_file() and not args.force:
         existing = OUT.read_text(encoding="utf-8")
-        if read_embedded_drafts_sha(existing) == drafts_sha:
-            print(f"Drafts unchanged (sha {drafts_sha}), skip rebuild. Use --force to refresh.")
+        if (
+            read_embedded_drafts_sha(existing) == drafts_sha
+            and read_embedded_preview_revision(existing) is not None
+            and read_embedded_build_script_sha(existing) == script_sha
+        ):
+            print(
+                f"Preview up to date (drafts {drafts_sha}, script {script_sha}), "
+                "skip rebuild. Use --force to refresh."
+            )
             return
 
     built = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -248,12 +276,21 @@ def main() -> None:
     if len(chapters) > 3:
         title_suffix += "…"
 
+    # 占位 revision，写入后再回填（revision 依赖完整 HTML）
+    revision_placeholder = "__PREVIEW_REVISION__"
+
     page = f"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
   <meta name="drafts-sha" content="{drafts_sha}" />
+  <meta name="preview-revision" content="{revision_placeholder}" />
+  <meta name="build-script-sha" content="{script_sha}" />
+  <meta name="build-commit" content="{sha}" />
+  <meta name="built-at" content="{built}" />
   <meta name="preview-raw-url" content="{html.escape(raw_url, quote=True)}" />
   <title>小说正文预览 · {html.escape(title_suffix)}</title>
   <style>
@@ -366,17 +403,18 @@ def main() -> None:
 <body>
   <header>
     <h1>异世界重生 · 正文预览</h1>
-    <div class="meta">构建于 {built} · commit {sha} · 分支 {html.escape(branch)} · 每 {refresh_min} 分钟检查更新</div>
+    <div class="meta">构建于 {built} · commit {sha} · 分支 {html.escape(branch)} · 打开/切回即检查 · 每 {refresh_min} 分钟轮询</div>
   </header>
 {toc}
   <main><article>{body}</article></main>
-  <footer id="preview-status">手机阅读：有更新时自动刷新 · 每 {refresh_min} 分钟检查 · 滚动位置会保留</footer>
+  <footer id="preview-status">手机阅读：打开/切回页面即检查更新 · 每 {refresh_min} 分钟轮询 · 滚动位置会保留</footer>
   <script>
     (function () {{
       var REFRESH_MS = {refresh_ms};
       var SCROLL_KEY = "novel-preview-scroll";
       var RAW_URL = {json.dumps(raw_url)};
       var CURRENT_SHA = {json.dumps(drafts_sha)};
+      var CURRENT_REVISION = {json.dumps(revision_placeholder)};
 
       function saveScrollPosition() {{
         try {{
@@ -421,6 +459,21 @@ def main() -> None:
         return m ? m[1] : null;
       }}
 
+      function extractPreviewRevision(html) {{
+        var m = html.match(/meta name="preview-revision" content="([^"]+)"/);
+        return m ? m[1] : null;
+      }}
+
+      function isRemoteNewer(html) {{
+        var remoteRev = extractPreviewRevision(html);
+        if (remoteRev && remoteRev !== CURRENT_REVISION) return true;
+        if (!remoteRev) {{
+          var remoteSha = extractDraftsSha(html);
+          return remoteSha && remoteSha !== CURRENT_SHA;
+        }}
+        return false;
+      }}
+
       function navigateToLatest() {{
         saveScrollPosition();
         var bust = RAW_URL + (RAW_URL.indexOf("?") >= 0 ? "&" : "?") + "t=" + Date.now();
@@ -444,17 +497,18 @@ def main() -> None:
           }})
           .then(function (text) {{
             if (!text) return;
-            var remoteSha = extractDraftsSha(text);
-            if (remoteSha && remoteSha !== CURRENT_SHA) {{
-              navigateToLatest();
-            }}
+            if (isRemoteNewer(text)) navigateToLatest();
           }})
           .catch(function () {{
             /* 网络/CDN 抖动时不刷新、不报错，避免白屏 */
           }});
       }}
 
+      checkForUpdate();
       window.setInterval(checkForUpdate, REFRESH_MS);
+      document.addEventListener("visibilitychange", function () {{
+        if (document.visibilityState === "visible") checkForUpdate();
+      }});
     }})();
   </script>
   <script>
@@ -499,8 +553,10 @@ def main() -> None:
 </body>
 </html>
 """
+    revision = preview_revision(page.replace(revision_placeholder, ""))
+    page = page.replace(revision_placeholder, revision)
     OUT.write_text(page, encoding="utf-8")
-    print(f"Wrote {OUT} ({built}) · {len(chapters)} 章")
+    print(f"Wrote {OUT} ({built}) · revision {revision} · {len(chapters)} 章")
 
 
 if __name__ == "__main__":
