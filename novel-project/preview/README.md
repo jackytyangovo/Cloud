@@ -117,9 +117,9 @@ git commit && git push -u origin <branch>
 
 | 勿 | 原因 |
 |----|------|
-| 收藏 / 分享 **不带** `htmlpreview.github.io/?` 的 raw 链 | 当纯文本源码显示；人读必须用方案 A/B |
-| 只靠「下拉刷新」htmlpreview | 中间层/CDN 可能仍吐旧页；用页内按钮或方案 C |
-| 以为 feature 分支 push 会改旧书签 | 旧书签若仍指向 `outline-1688`，请改收藏 **方案 A** |
+| 继续收藏旧的 **`standalone.html` 书签** | CDN/htmlpreview 粘旧壳；请改收藏 **live.html** |
+| 收藏 / 分享 **不带** `htmlpreview` 的 raw 链 | 当纯文本源码显示 |
+| 只靠「下拉刷新」htmlpreview | 对旧壳无效；换 live 书签后每次打开会重拉 tip |
 
 ---
 
