@@ -9,6 +9,7 @@ on:
       - "novel-project/drafts/**"
       - "novel-project/finalized/**"
       - "novel-project/preview/build_standalone.py"
+      - "novel-project/preview/live.html"
       - "novel-project/preview/preview-config.json"
   workflow_dispatch:
 
@@ -58,12 +59,16 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           SRC_FILE="novel-project/preview/standalone.html"
+          LIVE_FILE="novel-project/preview/live.html"
           CFG_FILE="novel-project/preview/preview-config.json"
           test -f "$SRC_FILE"
+          test -f "$LIVE_FILE"
 
           TMP_HTML="$(mktemp)"
+          TMP_LIVE="$(mktemp)"
           TMP_CFG="$(mktemp)"
           cp "$SRC_FILE" "$TMP_HTML"
+          cp "$LIVE_FILE" "$TMP_LIVE"
           if [ -f "$CFG_FILE" ]; then
             cp "$CFG_FILE" "$TMP_CFG"
           else
@@ -86,9 +91,16 @@ jobs:
 
           mkdir -p novel-project/preview
           cp "$TMP_HTML" novel-project/preview/standalone.html
+          cp "$TMP_LIVE" novel-project/preview/live.html
           cp "$TMP_CFG" novel-project/preview/preview-config.json
+          # 根目录副本：便于将来开 GitHub Pages 时直接挂 index
+          cp "$TMP_LIVE" index.html
+          cp "$TMP_HTML" standalone.html
 
-          git add novel-project/preview/standalone.html novel-project/preview/preview-config.json
+          git add novel-project/preview/standalone.html \
+                  novel-project/preview/live.html \
+                  novel-project/preview/preview-config.json \
+                  index.html standalone.html
           if git diff --cached --quiet; then
             echo "preview branch already up to date"
           else
@@ -96,4 +108,8 @@ jobs:
             git push -u origin "${PREVIEW_BRANCH}"
           fi
 
-          rm -f "$TMP_HTML" "$TMP_CFG"
+          # 尽量清 jsDelivr；失败不阻断
+          curl -fsS "https://purge.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html" >/dev/null 2>&1 || true
+          curl -fsS "https://purge.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/live.html" >/dev/null 2>&1 || true
+
+          rm -f "$TMP_HTML" "$TMP_LIVE" "$TMP_CFG"

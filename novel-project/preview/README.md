@@ -1,17 +1,20 @@
 # 正文预览（Preview）
 
-> 手机 / 浏览器阅读正文，无需打开 IDE 文件树。  
-> **更新不及时**时，优先用下方 **方案 A** 书签 + 页内「立即检查更新」。
+> 手机 / 浏览器阅读正文，无需打开 IDE 文件树。
 
-### 人读 vs 机器读（务必分清）
+### 为何旧书签总是旧版？
 
-| 用途 | 链接形态 |
-|------|----------|
-| **人读（阅读模式）** | 必须带前缀 `https://htmlpreview.github.io/?` + raw 地址 |
-| **Agent / 对源码** | 直接用 `https://raw.githubusercontent.com/.../standalone.html`（纯 HTML 文本） |
+直接收藏 `standalone.html` 时，**htmlpreview / raw / jsDelivr 都会缓存整页壳**。  
+推送再新，书签仍可能打开几小时前的 HTML。
 
-没有 `htmlpreview` 前缀时，浏览器会把页面当源码显示，不适合阅读。  
-目录跳转已在页内拦截：点「第一章」只会滚动到对应章节，**不会**丢掉前缀跳到 raw。
+**办法**：书签改收藏 **启动页 `live.html`**——壳几乎不变；**每次打开**都问 GitHub「standalone 最新 commit」，再按 **commit SHA** 拉正文写进页面。这样书签本身不用改，也能跟上推送。
+
+### 人读 vs 机器读
+
+| 用途 | 链接 |
+|------|------|
+| **人读（请换这个书签）** | 下方 **方案 A · live 启动页** |
+| **Agent / 对源码** | `raw.githubusercontent.com/.../standalone.html` |
 
 ### 正文同步规则（✓ 用户确认）
 
@@ -20,39 +23,21 @@
 | 该章已有 `finalized/*.md` | **用定稿** |
 | 尚无定稿、仅有 `drafts/*.md` | **用初稿** |
 
-重建命令不变：`python3 novel-project/preview/build_standalone.py`（改 `drafts/` 或 `finalized/` 后都要 rebuild / 等 Actions）。
-
-### 推流与刷新（2026-07-19 起）
-
-| 层 | 做法 |
-|----|------|
-| **发布源** | Actions 定时/手动从 **`source_branch`（当前写作分支）** 重建，再推到 `preview`；不再从旧 outline 盖书签 |
-| **打开页面** | 首屏 **强制** 拉最新 `standalone.html` 并热替换（优先 jsDelivr，再 raw） |
-| **点「更新」** | 同上；失败则整页重开备用源；顶栏 `rev` 为正文指纹 |
-| **备用直链** | 不用 htmlpreview： [jsDelivr 直开](https://cdn.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html)（若旧：先开 [purge](https://purge.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html)） |
-
-**注意**：页内 `fetch` **不能**带 `Cache-Control` 等自定义头，否则 CORS 预检被拒，会误报「拉取失败」。
-
-若仍看到旧句：看顶栏 **rev** → 点「更新」→ 或 purge 后用 jsDelivr 书签。
+重建：`python3 novel-project/preview/build_standalone.py`（改 `drafts/` / `finalized/` 后 rebuild 或等 Actions）。
 
 ---
 
-## 方案 A · 稳定书签（推荐）
+## 方案 A · 即时书签（推荐 · live 启动页）
 
-固定跟踪仓库的 **`preview` 分支**（Actions 会把各分支刚生成的 `standalone.html` 同步过来）。
+**请改收藏这一条（旧的 standalone 书签请删掉）：**
 
-**书签（一次收藏，长期有效）——推荐，避开 raw CDN 旧壳：**
-
-https://htmlpreview.github.io/?https://cdn.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html
-
-若 jsDelivr 仍旧：先打开  
-https://purge.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html  
-再刷新书签。顶栏应出现 `rev` 指纹；点「更新」会按 GitHub commit 强制热替换正文。
+https://htmlpreview.github.io/?https://cdn.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/live.html
 
 | 机制 | 说明 |
 |------|------|
-| Actions 发布 | push `drafts/` 或 `finalized/` / 定时每 **2 分钟** → rebuild → 推到 `preview` 分支 |
-| 页内热更新 | 发现新 `preview-revision` 时 **替换正文**，不整页白屏、少受 htmlpreview 二次缓存影响 |
+| 启动页 | `live.html` 每次打开 → API 查 tip SHA → 拉该 SHA 的 `standalone.html` |
+| Actions 发布 | push 正文 / 定时 → rebuild → 推到 `preview`，并尽量 purge jsDelivr |
+| 页内「更新」 | 进入正文后仍可热替换 |
 | 立即检查 | 页头按钮 **「立即检查更新」**；切回 App / 聚焦窗口也会检查 |
 | 轮询 | 前台约 **1 分钟**；后台约 **5 分钟** |
 | 多源拉取 | GitHub API → **commit 固定 raw** → **jsDelivr** → branch raw |
