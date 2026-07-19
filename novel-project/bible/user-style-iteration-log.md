@@ -1780,6 +1780,14 @@
 
 ---
 
+### #99 · 2026-07-19 · 定稿同步
+
+**用户指令**：同步到定稿
+
+**操作**：`drafts/prologue.md` → `finalized/prologue.md`；`drafts/chapter-001.md` → `finalized/chapter-001.md`（含发色对齐后正文）
+
+---
+
 ## 为什么这么写（用户原话 · 持续汇总）
 
 > 用户改动时若说明 **用意 / 好处 / 为何删**，记入本条对应 **#N**，并 **追加汇总表**。Agent 代写时对照执行；pass 结束后并入 `style-guide` / `style-reference`。
