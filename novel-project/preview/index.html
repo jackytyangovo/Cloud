@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <title>小说正文预览</title>
+  <style>
+    :root {
+      --bg: #faf8f5;
+      --text: #2c2825;
+      --muted: #7a7268;
+      --accent: #8b6914;
+      --card: #fff;
+      --border: #e8e2d9;
+      --scene: #c4b8a8;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1a1816;
+        --text: #ebe6df;
+        --muted: #9a9288;
+        --accent: #d4b86a;
+        --card: #242120;
+        --border: #3a3530;
+        --scene: #5a5248;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Noto Serif SC", serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.85;
+      font-size: 18px;
+      -webkit-font-smoothing: antialiased;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px 10px;
+      box-shadow: 0 1px 8px rgba(0,0,0,.06);
+    }
+    header h1 {
+      margin: 0 0 6px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      letter-spacing: .02em;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      font-size: .78rem;
+      color: var(--muted);
+      align-items: center;
+    }
+    .dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #52c41a;
+      animation: pulse 2s infinite;
+    }
+    .dot.off { background: #faad14; animation: none; }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: .45; }
+    }
+    select {
+      font: inherit;
+      font-size: .85rem;
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: var(--bg);
+      color: var(--text);
+    }
+    main {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 20px 18px 48px;
+    }
+    article h2 {
+      font-size: 1.35rem;
+      margin: 0 0 1.2em;
+      text-align: center;
+      font-weight: 600;
+    }
+    article p {
+      margin: 0 0 1.1em;
+      text-indent: 2em;
+      text-align: justify;
+    }
+    article p.no-indent { text-indent: 0; }
+    article hr.scene {
+      border: none;
+      text-align: center;
+      margin: 1.6em 0;
+      color: var(--scene);
+      letter-spacing: .5em;
+    }
+    article hr.scene::before { content: "· · ·"; }
+    .error {
+      background: #fff2f0;
+      color: #cf1322;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: .9rem;
+      line-height: 1.5;
+    }
+    @media (prefers-color-scheme: dark) {
+      .error { background: #2a1215; color: #ff7875; }
+    }
+    footer {
+      text-align: center;
+      font-size: .75rem;
+      color: var(--muted);
+      padding: 16px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="title">加载中…</h1>
+    <div class="meta">
+      <span class="dot" id="statusDot" title="自动刷新"></span>
+      <span id="statusText">连接中</span>
+      <select id="chapter" aria-label="选择章节">
+        <option value="drafts/prologue.md">序章 · 错位的清晨</option>
+      </select>
+      <span id="updated"></span>
+    </div>
+  </header>
+  <main>
+    <article id="content"></article>
+    <div class="error" id="err" hidden></div>
+  </main>
+  <footer>每 3 秒自动刷新 · 改稿后保存即更新</footer>
+
+  <script>
+    const POLL_MS = 3000;
+    const chapterEl = document.getElementById("chapter");
+    const contentEl = document.getElementById("content");
+    const titleEl = document.getElementById("title");
+    const statusText = document.getElementById("statusText");
+    const statusDot = document.getElementById("statusDot");
+    const updatedEl = document.getElementById("updated");
+    const errEl = document.getElementById("err");
+    let lastHash = "";
+
+    function simpleHash(s) {
+      let h = 0;
+      for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+      return String(h);
+    }
+
+    function mdToHtml(md) {
+      const lines = md.replace(/\r\n/g, "\n").split("\n");
+      const out = [];
+      let inPara = false;
+      for (const raw of lines) {
+        const line = raw.trimEnd();
+        if (line.startsWith("# ")) {
+          if (inPara) { out.push("</p>"); inPara = false; }
+          out.push("<h2>" + esc(line.slice(2)) + "</h2>");
+          continue;
+        }
+        if (line === "*" || line === "---") {
+          if (inPara) { out.push("</p>"); inPara = false; }
+          out.push('<hr class="scene" />');
+          continue;
+        }
+        if (!line.trim()) {
+          if (inPara) { out.push("</p>"); inPara = false; }
+          continue;
+        }
+        if (!inPara) {
+          const noIndent = /^觉醒前/.test(line.trim());
+          out.push('<p' + (noIndent ? ' class="no-indent"' : '') + '>');
+          inPara = true;
+        } else {
+          out.push("<br/>");
+        }
+        out.push(esc(line));
+      }
+      if (inPara) out.push("</p>");
+      return out.join("");
+    }
+
+    function esc(s) {
+      return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+
+    async function load() {
+      const path = chapterEl.value;
+      const url = "../" + path + "?t=" + Date.now();
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        const md = await res.text();
+        const hash = simpleHash(md);
+        if (hash !== lastHash) {
+          lastHash = hash;
+          const m = md.match(/^#\s+(.+)/m);
+          titleEl.textContent = m ? m[1] : "正文预览";
+          contentEl.innerHTML = mdToHtml(md);
+          updatedEl.textContent = "更新 " + new Date().toLocaleTimeString("zh-CN");
+        }
+        errEl.hidden = true;
+        statusDot.classList.remove("off");
+        statusText.textContent = "实时预览中";
+      } catch (e) {
+        statusDot.classList.add("off");
+        statusText.textContent = "离线";
+        errEl.hidden = false;
+        errEl.innerHTML =
+          "无法加载 <code>" + path + "</code>。<br/>" +
+          "请在本机运行预览服务：<br/><code>python3 novel-project/preview/server.py</code><br/>" +
+          "然后打开 <code>http://127.0.0.1:8765/preview/</code><br/>" +
+          "或刷新 GitHub 上的 <code>preview/standalone.html</code>。";
+      }
+    }
+
+    chapterEl.addEventListener("change", () => { lastHash = ""; load(); });
+    load();
+    setInterval(load, POLL_MS);
+  </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+---
+description: 小说正文撰写与润色。任意 Agent，只写 drafts/，设定以 bible/ 为只读参考。
+globs: novel-project/drafts/**,novel-project/chapters/**
+alwaysApply: false
+---
+
+# 小说项目 · 正文写作规则
+
+你正在撰写**小说正文**，不是修缮大纲。
+
+## 职责范围
+
+- **可修改**：`novel-project/drafts/` 下章节文件（`chapters/` 仅用户明确要求时迁移/清理）
+- **只读参考**：`novel-project/bible/`（outline、style-guide、characters、worldbuilding、timeline）
+- **禁止修改**：`bible/` 下任何文件（除非用户明确说「把设定同步回 bible」）；**`novel-project/finalized/`**（除非用户明确说 **「章节定稿」**）
+
+## 文风（遵守 style-guide.md）
+
+- **第一人称「我」为主**；偶尔短段**第三人称限知**旁白（设定、场面、他人限知），见 style-guide 叙事视角节
+- **平直简单**：直接清楚，不堆辞藻
+- 每章兼顾：**人物动作**、**神态与语言**、**环境变化**、**主角心理**
+- 设定融入场景，避免大段说明文
+- 目标约 **3000 字/章**；章末留悬念
+- **「全文」默认当前章**；未点名不改其他 `drafts/` 章节
+
+## 内容分级（R18 · 用户确认）
+
+- 本作 **R18**；**幼年主角无亲身 R18**
+- 可写主角**目睹配角**成人向场面（【R18·目睹】）：**内心看懂、表面装不懂**
+- 主角成年后亲密戏标【R18·主角】，见 style-reference 第七节
+
+## 写作前必读
+
+1. `novel-project/WORKFLOW.md` — 流程与目录边界
+2. `.cursor/skills/isekai-novel-writing/SKILL.md` — 写前/交稿自检
+3. `bible/outline.md` — 当前章情节边界（**严禁照办纲要**）
+4. `bible/style-guide.md` — 文风与战力约束
+5. `bible/style-reference.md` — 语感与节奏参考
+6. 必要时 `characters.md`、`worldbuilding.md`
+7. 上一章正文（保持衔接）
+
+## 改稿后
+
+```bash
+python3 novel-project/preview/build_standalone.py
+```
+
+与 `drafts/` 同批 commit/push `preview/standalone.html`。
+
+## 硬约束
+
+- 天赋净阶 ≠ 即战力；6 岁孩童觉醒净章也不能碾压成年人
+- 不得擅自定稿标有 `【随剧情补充】` 的设定；缺口用占位或略过，并提醒用户补 bible
+- 前 2 章须完成 `outline.md` 中 序章–第一章 列出的背景交代
+
+## 模式
+
+- **Agent**（**不限定 Sonnet**；见 `WORKFLOW.md`）
+
+## 禁止
+
+- 不要在本会话中修改 `bible/outline.md` 等设定文件（除非用户明确要求）
+- 发现大纲与写作冲突时，指出问题并请用户修缮 bible，不要自行改设定

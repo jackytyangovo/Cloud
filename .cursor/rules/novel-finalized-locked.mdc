@@ -1,0 +1,23 @@
+---
+description: 已定稿正文归档。finalized/ 为只读快照；仅用户说「章节定稿」时可写入。
+globs: novel-project/finalized/**
+alwaysApply: false
+---
+
+# 小说项目 · 定稿正文（只读）
+
+`novel-project/finalized/` 存放 **已定稿章节快照**。
+
+## 硬规则
+
+- **默认禁止**修改、删除、覆盖本目录下任何文件
+- **仅当**用户明确说 **「章节定稿」**（或同等指令）时，才可：
+  - 从 `drafts/` **复制**对应章节到 `finalized/`
+  - 更新 `finalized/README.md` 定稿记录表
+- **不得**因润色、预览、同步等理由自动改动本目录
+- **预览脚本**不读取本目录；继续只构建 `drafts/`
+
+## 与 drafts 的关系
+
+- `drafts/` = 撰写与改稿中的正文
+- `finalized/` = 定稿归档；与 drafts **无自动同步**
