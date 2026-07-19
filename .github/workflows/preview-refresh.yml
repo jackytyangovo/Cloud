@@ -2,21 +2,17 @@ name: Preview auto-rebuild
 
 on:
   schedule:
-    # 每 2 分钟扫一次；有改动才 commit
     - cron: "*/2 * * * *"
   push:
     paths:
       - "novel-project/drafts/**"
       - "novel-project/finalized/**"
       - "novel-project/preview/build_standalone.py"
-      - "novel-project/preview/live.html"
       - "novel-project/preview/preview-config.json"
   workflow_dispatch:
 
 env:
-  # 定时任务从哪条分支取正文重建（须为当前写作主分支，勿指旧 outline）
   SOURCE_BRANCH: cursor/style-check-prologue-129b
-  # 手机书签固定跟踪的稳定分支（只放最新 standalone）
   PREVIEW_BRANCH: preview
 
 permissions:
@@ -26,24 +22,21 @@ jobs:
   rebuild-standalone:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          # push 事件：重建被 push 的分支；定时/手动：用 SOURCE_BRANCH
           ref: ${{ github.event_name == 'push' && github.ref || env.SOURCE_BRANCH }}
           fetch-depth: 0
 
-      - name: Resolve push branch name
-        id: branch
+      - id: branch
         run: echo "name=${{ github.event_name == 'push' && github.ref_name || env.SOURCE_BRANCH }}" >> "$GITHUB_OUTPUT"
 
       - name: Rebuild standalone.html
         run: python3 novel-project/preview/build_standalone.py --force
 
-      - name: Commit and push if preview changed (source branch)
+      - name: Commit on source branch if changed
         run: |
           if git diff --quiet -- novel-project/preview/standalone.html; then
-            echo "standalone.html unchanged on source branch"
+            echo "unchanged"
           else
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -52,65 +45,36 @@ jobs:
             git push origin "HEAD:${{ steps.branch.outputs.name }}"
           fi
 
-      - name: Publish standalone to stable preview branch
+      - name: Publish to preview branch (Pages root)
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           SRC_FILE="novel-project/preview/standalone.html"
-          LIVE_FILE="novel-project/preview/live.html"
           CFG_FILE="novel-project/preview/preview-config.json"
           test -f "$SRC_FILE"
-          test -f "$LIVE_FILE"
-
           TMP_HTML="$(mktemp)"
-          TMP_LIVE="$(mktemp)"
           TMP_CFG="$(mktemp)"
           cp "$SRC_FILE" "$TMP_HTML"
-          cp "$LIVE_FILE" "$TMP_LIVE"
-          if [ -f "$CFG_FILE" ]; then
-            cp "$CFG_FILE" "$TMP_CFG"
-          else
-            printf '%s\n' '{
-            "github_repo": "jackytyangovo/Cloud",
-            "preview_branch": "preview",
-            "source_branch": "cursor/style-check-prologue-129b",
-            "refresh_interval_minutes": 1
-          }' > "$TMP_CFG"
-          fi
+          cp "$CFG_FILE" "$TMP_CFG"
 
-          if git ls-remote --exit-code --heads origin "${PREVIEW_BRANCH}" >/dev/null 2>&1; then
-            git fetch origin "${PREVIEW_BRANCH}"
-            git checkout -B "${PREVIEW_BRANCH}" "origin/${PREVIEW_BRANCH}"
-          else
-            git checkout --orphan "${PREVIEW_BRANCH}"
-            git rm -rf --quiet . 2>/dev/null || true
-            find . -mindepth 1 -maxdepth 1 ! -name '.git' -exec rm -rf {} +
-          fi
+          git fetch origin "${PREVIEW_BRANCH}"
+          git checkout -B "${PREVIEW_BRANCH}" "origin/${PREVIEW_BRANCH}"
 
           mkdir -p novel-project/preview
           cp "$TMP_HTML" novel-project/preview/standalone.html
-          cp "$TMP_LIVE" novel-project/preview/live.html
           cp "$TMP_CFG" novel-project/preview/preview-config.json
-          # 根目录：GitHub Pages 直接挂最新正文（index=standalone，不再套第三方壳）
           cp "$TMP_HTML" index.html
           cp "$TMP_HTML" standalone.html
-          cp "$TMP_LIVE" live.html
 
           git add novel-project/preview/standalone.html \
-                  novel-project/preview/live.html \
                   novel-project/preview/preview-config.json \
-                  index.html standalone.html live.html
+                  index.html standalone.html
           if git diff --cached --quiet; then
-            echo "preview branch already up to date"
+            echo "preview branch up to date"
           else
             git commit -m "preview: publish latest standalone [skip ci]"
             git push -u origin "${PREVIEW_BRANCH}"
           fi
-
-          # 尽量清 jsDelivr；失败不阻断
-          curl -fsS "https://purge.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html" >/dev/null 2>&1 || true
-          curl -fsS "https://purge.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/live.html" >/dev/null 2>&1 || true
-
-          rm -f "$TMP_HTML" "$TMP_LIVE" "$TMP_CFG"
+          rm -f "$TMP_HTML" "$TMP_CFG"
