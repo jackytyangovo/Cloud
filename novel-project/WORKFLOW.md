@@ -222,7 +222,16 @@ novel-project/
 
 ## 正文写作检查清单（每章）
 
-写前读：`WORKFLOW.md` · **`writing-essentials.md`（速查）** · `style-guide.md` · `style-reference.md` · 写作 skill 自检表。
+写前读：`WORKFLOW.md` · **`writing-essentials.md` §〇模仿卡 + 红灯表（主对照）** · `style-guide.md` · `style-reference.md` · 写作 skill 自检表。
+
+### 用户手改入库（硬 · 便于 Agent 模仿）
+
+用户对正文做手改（推送 / 粘贴 / 逐句点名）后，负责正文或纠察的 Agent **须同轮**：
+
+1. 写入 [`bible/writing-essentials.md`](bible/writing-essentials.md) **§〇 用户手改 · 模仿卡**（固定格式：`✗` 改前 / `✓` 改后 / `→` 以后怎么写）  
+2. 追加 [`bible/user-style-iteration-log.md`](bible/user-style-iteration-log.md) 一条（改前/改后/提炼；有原话则记「为什么」）  
+3. 若成硬规则 → 同步红灯表与 `style-guide.md`  
+4. **禁止**只改正文却不入库；**禁止**无用户点名改 `characters.md`
 
 - [ ] **WORKFLOW 目录边界**：只改 `drafts/`；`finalized/` 仅用户说「章节定稿」；预览读 `drafts/`
 - [ ] **「全文」= 当前章**；未点名不改其他章
