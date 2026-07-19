@@ -13,18 +13,19 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 - 撰写、润色、扩写 `novel-project/drafts/` 下章节
 - 用户要求检查文风、附块、剧透、维洛教表述
 - 修改正文后需重建 `preview/standalone.html`
-- **用户序章/定稿 pass**：用户逐条指定修改 → 只改点名部分 → 记录于 `user-style-iteration-log.md`
+- **用户手改 / 定稿 pass**：用户逐条修改 → 只改点名部分 → **同轮**写入 `writing-essentials` **§〇 模仿卡** + `user-style-iteration-log.md`
 
 ## 用户文风 · 高优先级（✓ 用户确认 · 序章 pass 已入库 2026-07-18）
 
-> **序章定稿 pass 已完成**（`finalized/prologue.md`）。**#1–#87** 逐条见 [`user-style-iteration-log.md`](../../novel-project/bible/user-style-iteration-log.md)；**逻辑分析 + 正反例** 见该文件 **§汇总分析**、**§正例**、**§反例**。模仿模型见 [`style-reference.md`](../../novel-project/bible/style-reference.md) **§九·附**。
+> **主对照**：[`writing-essentials.md`](../../novel-project/bible/writing-essentials.md) **§〇 用户手改 · 模仿卡**（`✗`/`✓`/`→`）。  
+> 档案：[`user-style-iteration-log.md`](../../novel-project/bible/user-style-iteration-log.md)；长析见该文件汇总；样章语感见 `style-reference` §九·附。
 
 | 规则 | 说明 |
 |------|------|
 | **改动范围** | **仅**用户点名的句段/问题；**禁止**顺带改他章、他段（「全文」= 当前章，见 WORKFLOW） |
-| **记录** | 每条：改前 / 改后 / 提炼 |
-| **后续写作** | 与 `style-guide` 冲突时，**序章 pass 已入库条目优先** |
-| **模仿顺序** | ① 身魂对照 ② 感官链+内心直写 ③ 通俗易懂/2–3句 ④ 外物先动 ⑤ 中世纪用语 ⑥ 单一情绪落点 |
+| **记录（硬）** | 每处手改 → **模仿卡一张** + log：改前 / 改后 / 提炼（有原话记为什么） |
+| **后续写作** | 冲突时：**最新手改模仿卡** > 旧指南 |
+| **模仿顺序** | ① 先扫 §〇 模仿卡 ② 身魂 ③ 感官+内心直写 ④ 2–3句/通俗 ⑤ 外物先动 ⑥ 用语 ⑦ 单落点 |
 
 ### 序章 pass · 写章模仿清单（Agent 必对照）
 
@@ -43,7 +44,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 | 路径 | 用途 |
 |------|------|
 | [`WORKFLOW.md`](../novel-project/WORKFLOW.md) | **流程总纲**：目录边界、分工、定稿/预览、迭代循环 |
-| [`writing-essentials.md`](../../novel-project/bible/writing-essentials.md) | **写作要领**：纠察红灯表 + 写场六步（写前/交稿优先） |
+| [`writing-essentials.md`](../../novel-project/bible/writing-essentials.md) | **写作要领**：**§〇 模仿卡** + 红灯表 + 写场六步（写前第一优先） |
 | `bible/outline.md` | 当前章节拍、卷一边界 |
 | `bible/narrative-structure.md` | **宏观三阶段**（日常·冒险·危机）、1–3–9 埋线、两拐点避坑 |
 | `bible/daily-growth-writing.md` | **日常成长期** 4要4不要、章自查三问、卷一映射 |
@@ -62,14 +63,15 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 0. 读 [`WORKFLOW.md`](../novel-project/WORKFLOW.md)：**目录边界**、模型分工、**定稿/预览**流程、误操作禁忌
 1. 确认 **当次「全文」= 当前章**（默认 `chapter-NNN.md`）；**未点名不改其他章** `drafts/`
-2. 读 [`writing-essentials.md`](../../novel-project/bible/writing-essentials.md)：**红灯表 + 写场六步**（纠察/自检主表）
+2. 读 [`writing-essentials.md`](../../novel-project/bible/writing-essentials.md)：**§〇 模仿卡 → 红灯表 → 写场六步**
 3. 读 `outline.md` 中**当前章**场景与「不写」列表——**只取情节边界与时间线**，**严禁**把场次表/技法行照译进正文
 4. 若规划**新幕/新卷/大转折**，读 `narrative-structure.md`（日常·冒险·危机衔接、1–3–9 埋线）
 5. 写**日常成长章**（尤其卷一），读 `daily-growth-writing.md`，写完后过 **章自查三问**
 6. 读上一章正文，保持衔接与视角标记一致
 7. 确认本章时间标注（如「觉醒前第二十九天」）
 8. 列出本章会出现的**新专名** → 规划【附】插入点
-9. 写完后自检：**两遍**对照 `writing-essentials` → 细则再查 `style-guide`
+9. 写完后自检：**两遍**对照模仿卡+红灯表 → 细则再查 `style-guide`
+10. **用户手改到达**：同轮入库模仿卡 + log（见 WORKFLOW「用户手改入库」）
 
 ---
 
