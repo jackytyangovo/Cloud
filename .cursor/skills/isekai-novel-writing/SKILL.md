@@ -1,6 +1,6 @@
 ---
 name: isekai-novel-writing
-description: 异世界重生小说（莉莉娅·莱恩菲尔）的写作与润色规范。撰写或修改 novel-project/drafts/ 正文、插入【附】设定块、检查文风/维洛教/卷一边界、重建 preview 时使用。涵盖第一人称叙事、平直文风、附块规则、R18 边界、战力约束与教堂三级编制逻辑。
+description: 异世界重生小说（莉莉娅·莱恩菲尔）的写作与润色规范。撰写或修改 novel-project/drafts/ 正文、outline 章节纲要、bible 场次说明、插入【附】设定块、检查文风/维洛教/卷一边界、重建 preview 时使用。涵盖第一人称叙事、平直文风、附块规则、R18 边界、战力约束与教堂三级编制逻辑。
 paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 ---
 
@@ -11,9 +11,20 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 ## 何时启用
 
 - 撰写、润色、扩写 `novel-project/drafts/` 下章节
+- **撰写或修订** `outline.md` **章节纲要**、场次表、撰写约束（**同样严格参照写作规范**）
 - 用户要求检查文风、附块、剧透、维洛教表述
 - 修改正文后需重建 `preview/standalone.html`
 - **用户序章/定稿 pass**：用户逐条指定修改 → 只改点名部分 → 记录于 `user-style-iteration-log.md`
+
+## 写作规范 · 全局约束（✓ 用户确认 · 2026-07-19）
+
+> **所有小说写作相关产出**（**章节纲要** + **正文** + 定稿 pass）均须 **严格参考** 写作规范；**无「纲要可以随便写」的例外**。
+
+| 任务 | 必对照 |
+|------|--------|
+| 写/改正文 | `style-guide` · `user-style-iteration-log` §正例/§反例 · `style-reference` §九·附 · 本 skill 自检表 · `outline` 情节边界 · `characters` 章区 |
+| 写/改纲要 | `style-guide` · `user-style-iteration-log` · `characters` 章区 · `WORKFLOW` **章节纲要检查清单** |
+| 冲突时 | **序章 pass 已入库** > `style-guide` > `outline` 旧用语 |
 
 ## 用户文风 · 高优先级（✓ 用户确认 · 序章 pass 已入库 2026-07-18）
 
