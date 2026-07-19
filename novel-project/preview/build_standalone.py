@@ -26,9 +26,10 @@ DEFAULT_CONFIG = {
     "htmlpreview_base": "https://htmlpreview.github.io/?",
 }
 
+# 预览收录列表。第一章手改中、未定稿 → 暂不进手机书签；定稿后再加回。
 CHAPTERS = [
     ("drafts/prologue.md", "序章 · 错位的清晨"),
-    ("drafts/chapter-001.md", "第一章 · 两家莱恩菲尔"),
+    # ("drafts/chapter-001.md", "第一章 · 两家莱恩菲尔"),
 ]
 
 

@@ -17,7 +17,7 @@
 
 ### 当前优先（用户确认 · 2026-07-17 更新）
 
-1. **正文撰写与润色**（`drafts/`）——**序章、第一章已定稿**（`finalized/prologue.md` · `finalized/chapter-001.md`）；后续章工作稿迭代中
+1. **正文撰写与润色**（`drafts/`）——**序章已定稿**（`finalized/prologue.md`）；**第一章未定稿**（手改中，仅 `drafts/chapter-001.md`，预览暂不收录）
 2. **样文文风分析**（用户发样章 → 更新 `style-reference.md` / `style-guide.md`）
 3. **大纲与设定补充**（`bible/`）——随正文审阅 **同步回 bible**（用户明确要求时）
 4. 用户已确认章节拍 **保留在 `outline.md`**，不删
