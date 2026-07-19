@@ -35,7 +35,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 【用语】大厅·饭后·仆从·小桌·空匙；午饭送卧房；忌膳/小几/箸/杂役
 【对话】仆「好的，小姐」；脸上打趣非语气里；应答可单独成行
 【收束】单场一个落点；忌 checklist；我已经搞清楚 > 清楚了
-【删】meta声明、Agent帮补、近距重复罗列、一时A一时B
+【删】meta声明、Agent帮补、近距重复罗列、一时A一时B、多句只表一意
 ```
 
 ## 单一事实来源
