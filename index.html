@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <title>正文预览 · 加载中</title>
+  <style>
+    body {
+      margin: 0; min-height: 100vh; display: grid; place-items: center;
+      font: 15px/1.6 "PingFang SC", "Noto Sans SC", sans-serif;
+      background: #faf8f5; color: #2c2825;
+    }
+    .box { text-align: center; padding: 2rem; max-width: 22rem; }
+    .muted { color: #7a7268; font-size: .9rem; }
+    .err { color: #b42318; margin-top: 1rem; font-size: .9rem; }
+    a { color: #8b6914; }
+  </style>
+</head>
+<body>
+  <div class="box" id="boot">
+    <p>正在拉取最新正文…</p>
+    <p class="muted">书签指向本启动页；每次打开都按 GitHub 最新 commit 加载，不吃旧 CDN 壳。</p>
+    <p class="err" id="err" hidden></p>
+  </div>
+  <script>
+    (function () {
+      var REPO = "jackytyangovo/Cloud";
+      var BRANCH = "preview";
+      var RAW_PATH = "/novel-project/preview/standalone.html";
+
+      function showErr(msg) {
+        var el = document.getElementById("err");
+        if (!el) return;
+        el.hidden = false;
+        el.innerHTML = msg;
+      }
+
+      function fetchText(url) {
+        /* 勿加自定义头，否则 CORS 预检失败 */
+        return fetch(url, { cache: "no-store", credentials: "omit", mode: "cors" }).then(function (res) {
+          if (!res.ok) throw new Error(res.status + " " + url);
+          return res.text();
+        });
+      }
+
+      function tipSha() {
+        var path = RAW_PATH.replace(/^\//, "");
+        var url =
+          "https://api.github.com/repos/" +
+          REPO +
+          "/commits?path=" +
+          encodeURIComponent(path) +
+          "&sha=" +
+          encodeURIComponent(BRANCH) +
+          "&per_page=1";
+        return fetchText(url)
+          .then(function (t) {
+            var list = JSON.parse(t);
+            if (list && list[0] && list[0].sha) return list[0].sha;
+            throw new Error("empty");
+          })
+          .catch(function () {
+            return fetchText(
+              "https://api.github.com/repos/" + REPO + "/commits/" + encodeURIComponent(BRANCH)
+            ).then(function (t) {
+              var c = JSON.parse(t);
+              return c && c.sha ? c.sha : null;
+            });
+          });
+      }
+
+      function loadHtml(sha) {
+        var ts = Date.now();
+        var tries = [];
+        if (sha) {
+          tries.push(
+            "https://cdn.jsdelivr.net/gh/" + REPO + "@" + sha + RAW_PATH + "?t=" + ts
+          );
+          tries.push(
+            "https://raw.githubusercontent.com/" + REPO + "/" + sha + RAW_PATH + "?t=" + ts
+          );
+        }
+        tries.push(
+          "https://cdn.jsdelivr.net/gh/" + REPO + "@" + BRANCH + RAW_PATH + "?t=" + ts
+        );
+        tries.push(
+          "https://raw.githubusercontent.com/" + REPO + "/" + BRANCH + RAW_PATH + "?t=" + ts
+        );
+        var i = 0;
+        function next(err) {
+          if (i >= tries.length) return Promise.reject(err || new Error("all failed"));
+          return fetchText(tries[i++]).catch(next);
+        }
+        return next();
+      }
+
+      tipSha()
+        .catch(function () {
+          return null;
+        })
+        .then(function (sha) {
+          return loadHtml(sha);
+        })
+        .then(function (html) {
+          if (!html || html.indexOf("<html") < 0) throw new Error("bad html");
+          document.open();
+          document.write(html);
+          document.close();
+        })
+        .catch(function () {
+          showErr(
+            "加载失败。可直开 " +
+              '<a href="https://cdn.jsdelivr.net/gh/' +
+              REPO +
+              "@" +
+              BRANCH +
+              RAW_PATH +
+              '">jsDelivr</a>，或稍后再试。'
+          );
+        });
+    })();
+  </script>
+</body>
+</html>
