@@ -69,9 +69,9 @@
 
 ### 用户手改与模仿（✓ · 写前优先）
 
-- Agent 写稿/纠察 **先读** [`writing-essentials.md`](writing-essentials.md) **§〇 模仿卡** + **红灯表**（含看不懂词表、第一章 H 卡等）。
+- Agent 写稿/纠察 **先读** [`writing-essentials.md`](writing-essentials.md)（§一→§三→§三·附宜学/勿学→§二红灯→§〇模仿卡）。
 - 用户每处手改须 **同轮** 入库模仿卡 + `user-style-iteration-log.md`；冲突时 **最新手改优先**。
-- **勿**在本文件复述模仿卡条文——细则以 `writing-essentials` 为准。
+- 手改细则与正例/反例速查 **以 essentials 为准**；本文件管视角/R18/附块等政策。
 
 ### 人物形象（✓ 用户确认）
 

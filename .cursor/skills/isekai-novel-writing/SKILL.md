@@ -17,9 +17,10 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 ## 用户文风 · 高优先级
 
-> **主对照（唯一细则源）**：[`writing-essentials.md`](../../novel-project/bible/writing-essentials.md) **§〇 模仿卡** + **红灯表** + **写场六步**。  
-> **改前/改后档案**：[`user-style-iteration-log.md`](../../novel-project/bible/user-style-iteration-log.md)（不复述规则）。  
-> **样章语感**：`style-reference.md`；**视角/R18/附块/知识分级**：`style-guide.md`。
+> **主读**：[`writing-essentials.md`](../../novel-project/bible/writing-essentials.md)  
+> 阅读顺序：**§一**（逻辑+Agent分歧）→ **§三** 六步 → **§三·附** 宜学/勿学 → **§二** 红灯 → **§〇** 模仿卡 → **§四** 自检。  
+> **档案**：[`user-style-iteration-log.md`](../../novel-project/bible/user-style-iteration-log.md)（查改前/改后）。  
+> **样章桥**：`style-reference` §九·附；**政策层**：`style-guide`（视角/R18/附块）。
 
 | 规则 | 说明 |
 |------|------|
@@ -27,18 +28,18 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 | **记录（硬）** | 每处手改 → 模仿卡一张 + log `#N` |
 | **冲突优先** | 最新手改模仿卡 > style-guide > 旧档案 |
 
-## 单一事实来源
+## 多文件怎么配合（不必只留一个）
 
-| 路径 | 用途 |
-|------|------|
-| [`WORKFLOW.md`](../novel-project/WORKFLOW.md) | 流程总纲、目录边界、定稿/预览 |
-| [`writing-essentials.md`](../../novel-project/bible/writing-essentials.md) | **写前第一优先**：模仿卡 / 红灯 / 写场六步 |
-| `bible/style-guide.md` | 视角、附块、R18、知识分级、章节惯例 |
-| `bible/style-reference.md` | 样章语感（非手改规则复本） |
-| `bible/daily-growth-writing.md` | 日常成长期 4要4不要 |
-| `bible/user-style-iteration-log.md` | `#N` 改前/改后档案 |
-| `bible/outline.md` 等设定 | 情节/世界边界（**严禁照译**；characters **只读**） |
-| `drafts/*.md` | 正文（可改） |
+| 路径 | 何时读 | 读什么 |
+|------|--------|--------|
+| `writing-essentials.md` | **每次写/改** | 完整手改规则 + 宜学勿学（主） |
+| `style-guide.md` | 视角/附块/R18/知识不确定时 | 政策硬规则 |
+| `style-reference.md` | 要对齐样章节奏/语气时 | 样章分析；§九·附速览 |
+| `daily-growth-writing.md` | 写日常成长章时 | 4要4不要 + 三问 |
+| `user-style-iteration-log.md` | 要核对某次手改原文时 | `#N` 档案 |
+| `WORKFLOW.md` | 定稿/预览/目录边界 | 流程 |
+| `outline.md` 等设定 | 情节边界（characters **只读**） | **严禁照译** |
+| 本 skill | Agent 入口 | 阅读顺序 + 卷一/维洛边界 |
 
 **正文不得擅自定稿** bible 中 `【随剧情补充】` 的内容。
 
@@ -46,34 +47,26 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 ## 写前清单（按顺序）
 
-0. `WORKFLOW.md`：目录边界、定稿/预览、误操作禁忌  
-1. 当次「全文」= 当前章；未点名不改他章  
-2. **`writing-essentials`**：§〇 → 红灯表 → 写场六步  
-3. `outline.md` 当前章：只取情节边界（严禁照译）  
-4. 新幕/大转折 → `narrative-structure.md`  
-5. 日常成长章 → `daily-growth-writing.md` + 章自查  
-6. 读上一章衔接；确认时间标注；规划【附】  
-7. 交稿两遍：对照模仿卡+红灯；细则再查 `style-guide`  
-8. 用户手改到达：同轮模仿卡 + log（见 WORKFLOW）
+0. `WORKFLOW`：目录边界、定稿/预览  
+1. 当次「全文」= 当前章  
+2. **`writing-essentials`** 按文首顺序通读（尤其 §三·附 宜学/勿学）  
+3. `outline` 当前章：只取情节边界  
+4. 日常章 → `daily-growth-writing`；大转折 → `narrative-structure`  
+5. 读上一章衔接；规划【附】  
+6. 交稿：essentials §四 + 红灯；政策疑问查 `style-guide`  
+7. 用户手改：同轮模仿卡 + log
 
 ---
 
 ## 写作自检 · 两遍（✓ #29）
 
-> **落笔前**想一遍，**交稿前**再扫一遍。细则与检查项见 [`writing-essentials.md`](../../novel-project/bible/writing-essentials.md) **§四** + **红灯表**（本 skill 不复述）。
+> 落笔前 / 交稿前各一遍 → [`writing-essentials`](../../novel-project/bible/writing-essentials.md) **§四**（12 问）+ **§三·附** 勿学表扫一眼。
 
----
-
-## 叙事视角 · 文风 · 附块 · 四层 · 章节惯例
-
-> **详见** [`style-guide.md`](../../novel-project/bible/style-guide.md)。  
-> **手改模仿 / 红灯 / 写场**：[`writing-essentials.md`](../../novel-project/bible/writing-essentials.md)。  
-> 本 skill **不复述**上述条文。写正文时硬记摘要即可：
->
-> - 严格第一人称「我」；禁 meta / 报告体 / 照办纲要  
-> - 【附】仅首次专名下方；高级知识不进附  
-> - 每章兼顾动作 / 神态语言 / 环境 / 心理  
-> - 冲突时：最新模仿卡 > style-guide
+**硬记摘要**：
+- 严格「我」；禁 meta / 报告体 / 照办纲要  
+- 外物先动；内心直写；身魂要物+心事  
+- 【附】仅首次专名；高级知识不进附  
+- 冲突：最新模仿卡 > style-guide
 
 ---
 
