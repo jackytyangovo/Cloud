@@ -324,10 +324,6 @@ def main() -> None:
         f'<h2 class="chapter">{html.escape(label)}</h2>{content}</section>'
         for label, anchor, content in sections
     )
-    # 顶栏可见校验：方便判断书签是否仍是旧壳
-    tang_ok = ("堂哥" in body) or ("堂弟" in body)
-    tang_chip = "堂✓" if tang_ok else "堂✗"
-
     title_suffix = " · ".join(label.split(" · ", 1)[0] for _, label in chapters[:3])
     if len(chapters) > 3:
         title_suffix += "…"
@@ -497,7 +493,6 @@ def main() -> None:
     <div class="header-bar">
       <h1>异世界重生 · 正文预览</h1>
       <div class="header-actions">
-        <span class="header-chip header-rev" id="preview-tang-chip" title="正文是否含堂哥/堂弟（旧壳会显示堂✗）">{html.escape(tang_chip)}</span>
         <span class="header-chip header-rev" id="preview-rev-chip" title="正文指纹">rev …</span>
         <button type="button" class="header-chip" id="preview-refresh-btn" title="强制拉取 GitHub 最新正文">更新</button>
         <button type="button" class="header-chip header-toggle" id="header-toggle" aria-expanded="false" aria-controls="header-panel">工具</button>

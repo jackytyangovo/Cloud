@@ -36,8 +36,6 @@
 
 https://jackytyangovo.github.io/Cloud/
 
-顶栏有 **`堂✓`** = 已是含堂哥/堂弟的新正文；**`堂✗`** = 仍是旧壳。
-
 ### 不启用 Pages 时：先在 GitHub 上核对初稿
 
 https://github.com/jackytyangovo/Cloud/blob/cursor/style-check-prologue-129b/novel-project/drafts/chapter-001.md#L55
