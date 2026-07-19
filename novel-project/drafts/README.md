@@ -9,10 +9,10 @@
 |----------|------|
 | **序章** | `prologue.md` |
 | **第一章** | `chapter-001.md` |
-| **第二十九章** | `chapter-029.md` |
+| **第三十章** | `chapter-030.md` |
 | **第N章** | `chapter-NNN.md`（三位数字） |
 
-**卷一**止于 `chapter-029.md`；**卷二**自 `chapter-030.md`（入学许可）起。
+**卷一**止于 `chapter-030.md`；**卷二**自 `chapter-031.md`（入学许可）起。
 
 ## 与 bible 的关系
 
