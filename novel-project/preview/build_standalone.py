@@ -566,6 +566,24 @@ def main() -> None:
         chip.textContent = "rev " + short;
       }}
 
+      /* 旧壳热更新只换正文、不换顶栏；主动拆掉已废弃的堂✓ 芯片 */
+      function stripLegacyHeaderChips() {{
+        ["preview-tang-chip"].forEach(function (id) {{
+          var el = document.getElementById(id);
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+        }});
+        try {{
+          var actions = document.querySelector("#preview-header .header-actions");
+          if (!actions) return;
+          Array.prototype.slice.call(actions.querySelectorAll(".header-chip")).forEach(function (chip) {{
+            var t = (chip.textContent || "").replace(/\\s+/g, "");
+            if (t === "堂✓" || t === "堂✗") {{
+              if (chip.parentNode) chip.parentNode.removeChild(chip);
+            }}
+          }});
+        }} catch (e) {{}}
+      }}
+
       function setButtonBusy(busy) {{
         var btn = document.getElementById("preview-refresh-btn");
         if (!btn) return;
@@ -573,6 +591,7 @@ def main() -> None:
         btn.textContent = busy ? "…" : "更新";
       }}
 
+      stripLegacyHeaderChips();
       setRevChip(CURRENT_REVISION);
 
       /* 页眉默认折叠，少占阅读空间 */
@@ -700,6 +719,7 @@ def main() -> None:
 
         CURRENT_REVISION = extractPreviewRevision(html) || CURRENT_REVISION;
         CURRENT_SHA = extractDraftsSha(html) || CURRENT_SHA;
+        stripLegacyHeaderChips();
         setRevChip(CURRENT_REVISION);
         restoreScrollPosition();
         return true;
