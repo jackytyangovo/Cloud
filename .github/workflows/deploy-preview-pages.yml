@@ -1,0 +1,39 @@
+# 启用 GitHub Pages 后：每次 preview 分支更新都会发布到
+# https://jackytyangovo.github.io/Cloud/
+#
+# 仓库主人需一次性设置：
+#   Settings → Pages → Build and deployment → Source = GitHub Actions
+# 或：Source = Deploy from a branch → Branch = preview → / (root)
+
+name: Deploy preview to GitHub Pages
+
+on:
+  push:
+    branches: [preview]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: preview-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: preview
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - id: deployment
+        uses: actions/deploy-pages@v4

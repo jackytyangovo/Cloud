@@ -93,14 +93,15 @@ jobs:
           cp "$TMP_HTML" novel-project/preview/standalone.html
           cp "$TMP_LIVE" novel-project/preview/live.html
           cp "$TMP_CFG" novel-project/preview/preview-config.json
-          # 根目录副本：便于将来开 GitHub Pages 时直接挂 index
-          cp "$TMP_LIVE" index.html
+          # 根目录：GitHub Pages 直接挂最新正文（index=standalone，不再套第三方壳）
+          cp "$TMP_HTML" index.html
           cp "$TMP_HTML" standalone.html
+          cp "$TMP_LIVE" live.html
 
           git add novel-project/preview/standalone.html \
                   novel-project/preview/live.html \
                   novel-project/preview/preview-config.json \
-                  index.html standalone.html
+                  index.html standalone.html live.html
           if git diff --cached --quiet; then
             echo "preview branch already up to date"
           else

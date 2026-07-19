@@ -29,15 +29,20 @@
 
 ## 方案 A · 即时书签（推荐 · live 启动页）
 
-**请只收藏这一条（删掉所有 htmlpreview / jsDelivr 旧书签）：**
+### 稳定方案（推荐）：仓库自带 GitHub Pages
 
-https://raw.githack.com/jackytyangovo/Cloud/preview/novel-project/preview/standalone.html
+**不必另建网站。** 第三方预览缓存太凶，手机上经常假旧。  
+请按 [`ENABLE-GITHUB-PAGES.md`](./ENABLE-GITHUB-PAGES.md) **点一次设置**，然后只收藏：
 
-这是 **raw.githack** 直开（`text/html` 阅读模式），**不必**再套 `htmlpreview`。  
-GitHub 上的初稿/预览里已有「堂弟芬恩」「堂哥埃里克」；以前看不到，是 htmlpreview/CDN 粘旧壳，不是没推送。
+https://jackytyangovo.github.io/Cloud/
 
-备用启动器（每次按 tip SHA 拉取后再打开）：  
-https://raw.githack.com/jackytyangovo/Cloud/preview/novel-project/preview/live.html
+顶栏有 **`堂✓`** = 已是含堂哥/堂弟的新正文；**`堂✗`** = 仍是旧壳。
+
+### 不启用 Pages 时：先在 GitHub 上核对初稿
+
+https://github.com/jackytyangovo/Cloud/blob/cursor/style-check-prologue-129b/novel-project/drafts/chapter-001.md#L55
+
+这里能直接看到「堂弟芬恩 / 堂哥埃里克」（证明已推送，问题只在预览壳）。
 
 | 机制 | 说明 |
 |------|------|
