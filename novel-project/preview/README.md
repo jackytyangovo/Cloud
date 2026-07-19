@@ -39,9 +39,13 @@
 
 固定跟踪仓库的 **`preview` 分支**（Actions 会把各分支刚生成的 `standalone.html` 同步过来）。
 
-**书签（一次收藏，长期有效）：**
+**书签（一次收藏，长期有效）——推荐，避开 raw CDN 旧壳：**
 
-https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/Cloud/preview/novel-project/preview/standalone.html
+https://htmlpreview.github.io/?https://cdn.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html
+
+若 jsDelivr 仍旧：先打开  
+https://purge.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html  
+再刷新书签。顶栏应出现 `rev` 指纹；点「更新」会按 GitHub commit 强制热替换正文。
 
 | 机制 | 说明 |
 |------|------|

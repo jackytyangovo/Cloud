@@ -305,8 +305,10 @@ def main() -> None:
     raw_url = (
         f"https://raw.githubusercontent.com/{repo}/{preview_branch}{raw_path}"
     )
+    # 人读书签走 jsDelivr：raw 分支 CDN 粘旧壳；jsDelivr 可 purge，且可被 htmlpreview 套读
+    cdn_url = f"https://cdn.jsdelivr.net/gh/{repo}@{preview_branch}{raw_path}"
     viewer_base = config.get("htmlpreview_base", DEFAULT_CONFIG["htmlpreview_base"])
-    viewer_url = f"{viewer_base}{raw_url}"
+    viewer_url = f"{viewer_base}{cdn_url}"
     sections = []
     sources: list[str] = []
     for rel, label in chapters:
@@ -536,7 +538,8 @@ def main() -> None:
       }}
 
       function viewerUrlForRef(ref, ts) {{
-        return VIEWER_BASE + rawUrlForRef(ref, ts);
+        /* 整页重载也走 jsDelivr，避免 raw 分支 CDN 粘旧壳 */
+        return VIEWER_BASE + jsdelivrUrlForRef(ref, ts);
       }}
 
       /* raw 顶栏误开 → 跳回 htmlpreview（稳定 preview 分支书签）
