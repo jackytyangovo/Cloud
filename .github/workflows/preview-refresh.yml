@@ -13,8 +13,8 @@ on:
   workflow_dispatch:
 
 env:
-  # 定时任务从哪条分支取 drafts 重建
-  SOURCE_BRANCH: cursor/isekai-novel-outline-1688
+  # 定时任务从哪条分支取正文重建（须为当前写作主分支，勿指旧 outline）
+  SOURCE_BRANCH: cursor/style-check-prologue-129b
   # 手机书签固定跟踪的稳定分支（只放最新 standalone）
   PREVIEW_BRANCH: preview
 
@@ -70,7 +70,7 @@ jobs:
             printf '%s\n' '{
             "github_repo": "jackytyangovo/Cloud",
             "preview_branch": "preview",
-            "source_branch": "cursor/isekai-novel-outline-1688",
+            "source_branch": "cursor/style-check-prologue-129b",
             "refresh_interval_minutes": 1
           }' > "$TMP_CFG"
           fi
