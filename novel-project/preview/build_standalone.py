@@ -487,12 +487,14 @@ def main() -> None:
         return VIEWER_BASE + rawUrlForRef(ref, ts);
       }}
 
-      /* raw 顶栏误开 → 跳回 htmlpreview（稳定 preview 分支书签） */
+      /* raw 顶栏误开 → 跳回 htmlpreview（稳定 preview 分支书签）
+         注意：raw 常按 text/plain 下发，脚本未必执行；真正防跳走靠下方锚点拦截 */
       if (
         window.location.hostname === "raw.githubusercontent.com" &&
         window.top === window
       ) {{
-        window.location.replace(viewerUrlForRef(BRANCH, Date.now()));
+        var keepHash = window.location.hash || "";
+        window.location.replace(viewerUrlForRef(BRANCH, Date.now()) + keepHash);
         return;
       }}
 
@@ -785,12 +787,60 @@ def main() -> None:
         }}, 220);
       }}
 
+      /* htmlpreview 会把 #锚点 解析成 raw.githubusercontent.com/...#锚点，
+         一点目录就丢掉阅读前缀、变成源码页。拦截后只做页内滚动。 */
+      function findHashTarget(hash) {{
+        if (!hash || hash.charAt(0) !== "#") return null;
+        var raw = hash.slice(1);
+        var candidates = [raw];
+        try {{
+          var decoded = decodeURIComponent(raw);
+          if (decoded !== raw) candidates.push(decoded);
+        }} catch (e) {{}}
+        for (var i = 0; i < candidates.length; i++) {{
+          var el = document.getElementById(candidates[i]);
+          if (el) return {{ el: el, hash: "#" + candidates[i] }};
+        }}
+        return null;
+      }}
+
+      function stayOnViewerHash(hash) {{
+        try {{
+          if (window.location.hostname === "htmlpreview.github.io") {{
+            var base = window.location.href.split("#")[0];
+            history.replaceState(null, "", base + hash);
+          }} else if (window.location.hostname !== "raw.githubusercontent.com") {{
+            history.replaceState(null, "", hash);
+          }}
+        }} catch (e) {{}}
+      }}
+
+      function goToHash(hash) {{
+        var hit = findHashTarget(hash);
+        if (!hit) return false;
+        hit.el.scrollIntoView({{ behavior: "smooth", block: "start" }});
+        stayOnViewerHash(hit.hash);
+        return true;
+      }}
+
+      document.addEventListener("click", function (e) {{
+        var a = e.target && e.target.closest ? e.target.closest('a[href^="#"]') : null;
+        if (!a) return;
+        var href = a.getAttribute("href");
+        if (!href || href === "#") return;
+        if (!goToHash(href)) return;
+        e.preventDefault();
+        e.stopPropagation();
+        if (toggle.getAttribute("aria-expanded") === "true") closeToc();
+      }}, true);
+
+      if (window.location.hash) {{
+        window.setTimeout(function () {{ goToHash(window.location.hash); }}, 0);
+      }}
+
       toggle.addEventListener("click", openToc);
       if (closeBtn) closeBtn.addEventListener("click", closeToc);
       backdrop.addEventListener("click", closeToc);
-      drawer.querySelectorAll("a").forEach(function (link) {{
-        link.addEventListener("click", closeToc);
-      }});
       document.addEventListener("keydown", function (e) {{
         if (e.key === "Escape" && toggle.getAttribute("aria-expanded") === "true") closeToc();
       }});

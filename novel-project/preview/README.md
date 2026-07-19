@@ -3,6 +3,16 @@
 > 手机 / 浏览器阅读正文，无需打开 IDE 文件树。  
 > **更新不及时**时，优先用下方 **方案 A** 书签 + 页内「立即检查更新」。
 
+### 人读 vs 机器读（务必分清）
+
+| 用途 | 链接形态 |
+|------|----------|
+| **人读（阅读模式）** | 必须带前缀 `https://htmlpreview.github.io/?` + raw 地址 |
+| **Agent / 对源码** | 直接用 `https://raw.githubusercontent.com/.../standalone.html`（纯 HTML 文本） |
+
+没有 `htmlpreview` 前缀时，浏览器会把页面当源码显示，不适合阅读。  
+目录跳转已在页内拦截：点「第一章」只会滚动到对应章节，**不会**丢掉前缀跳到 raw。
+
 ---
 
 ## 方案 A · 稳定书签（推荐）
@@ -96,7 +106,7 @@ git commit && git push -u origin <branch>
 
 | 勿 | 原因 |
 |----|------|
-| 收藏 `raw.githubusercontent.com/.../standalone.html` | 当纯文本源码显示 |
+| 收藏 / 分享 **不带** `htmlpreview.github.io/?` 的 raw 链 | 当纯文本源码显示；人读必须用方案 A/B |
 | 只靠「下拉刷新」htmlpreview | 中间层/CDN 可能仍吐旧页；用页内按钮或方案 C |
 | 以为 feature 分支 push 会改旧书签 | 旧书签若仍指向 `outline-1688`，请改收藏 **方案 A** |
 
