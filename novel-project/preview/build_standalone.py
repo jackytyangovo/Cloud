@@ -750,16 +750,40 @@ def main() -> None:
         }});
       }}
 
-      /* 多源：jsDelivr → commit raw → 分支 raw（?t= 破缓存） */
+      function onGitHubPages() {{
+        return /\\.github\\.io$/i.test(window.location.hostname || "");
+      }}
+
+      function pagesBaseUrl() {{
+        var path = window.location.pathname || "/";
+        if (/\\.html?$/i.test(path)) {{
+          path = path.replace(/\\/[^\\/]*$/, "/");
+        }} else if (path.slice(-1) !== "/") {{
+          path += "/";
+        }}
+        return window.location.origin + path;
+      }}
+
+      function hasTangKinship(text) {{
+        return text.indexOf("堂哥") >= 0 || text.indexOf("堂弟") >= 0;
+      }}
+
+      /* Pages 上只拉同源，避免 jsDelivr/raw 旧壳把正确正文盖掉 */
       function fetchLatestHtml(commitSha) {{
         var ts = Date.now();
-        var ref = commitSha || BRANCH;
-        var tries = [
-          function () {{ return fetchHtml(jsdelivrUrlForRef(ref, ts)); }},
-          function () {{ return fetchHtml(jsdelivrUrlForRef(BRANCH, ts + 1)); }},
-        ];
-        if (commitSha) tries.push(function () {{ return fetchHtml(rawUrlForRef(commitSha, ts)); }});
-        tries.push(function () {{ return fetchHtml(rawUrlForRef(BRANCH, ts)); }});
+        var tries = [];
+        if (onGitHubPages()) {{
+          var base = pagesBaseUrl();
+          tries.push(function () {{ return fetchHtml(base + "standalone.html?t=" + ts); }});
+          tries.push(function () {{ return fetchHtml(base + "index.html?t=" + (ts + 1)); }});
+        }} else {{
+          if (commitSha) {{
+            tries.push(function () {{ return fetchHtml(rawUrlForRef(commitSha, ts)); }});
+            tries.push(function () {{ return fetchHtml(jsdelivrUrlForRef(commitSha, ts)); }});
+          }}
+          tries.push(function () {{ return fetchHtml(rawUrlForRef(BRANCH, ts)); }});
+          tries.push(function () {{ return fetchHtml(jsdelivrUrlForRef(BRANCH, ts + 1)); }});
+        }}
         var i = 0;
         function next(err) {{
           if (i >= tries.length) {{
@@ -830,18 +854,27 @@ def main() -> None:
               var localText = localArticleText();
               var fpChanged = remoteFp && remoteFp !== CURRENT_REVISION && remoteFp !== CURRENT_SHA;
               var textChanged = remoteText && remoteText !== localText;
+              /* 禁止用缺堂称谓的旧壳覆盖已有堂称谓的正文 */
+              if (
+                textChanged &&
+                hasTangKinship(localText) &&
+                !hasTangKinship(remoteText)
+              ) {{
+                setStatus("已忽略旧源（缺堂称谓）· rev " + (CURRENT_REVISION || "").slice(0, 8));
+                setRevChip(CURRENT_REVISION);
+                return;
+              }}
               if (force) {{
                 if (textChanged || fpChanged || remoteFp !== CURRENT_REVISION) {{
                   if (applyHotSwap(html)) {{
                     setStatus(
-                      (textChanged ? "已热更新（绕过缓存）· " : "已对齐最新 · ") +
+                      (textChanged ? "已热更新 · " : "已对齐最新 · ") +
                         "rev " +
                         (CURRENT_REVISION || "").slice(0, 8),
                       "is-new"
                     );
                   }} else {{
-                    setStatus("热更新失败，整页重载…", "is-err");
-                    navigateToLatest(sha || BRANCH);
+                    setStatus("热更新失败，请手动刷新页面", "is-err");
                   }}
                 }} else {{
                   var now = new Date();
