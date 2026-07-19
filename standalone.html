@@ -6,10 +6,10 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta name="drafts-sha" content="6bb7317c2a66" />
-  <meta name="preview-revision" content="c88a6f3d69c521f2" />
-  <meta name="build-script-sha" content="61e22d534830" />
-  <meta name="build-commit" content="436a503" />
-  <meta name="built-at" content="2026-07-19 08:35 UTC" />
+  <meta name="preview-revision" content="12822dd04836df73" />
+  <meta name="build-script-sha" content="5142eb80ff69" />
+  <meta name="build-commit" content="1ebdf48" />
+  <meta name="built-at" content="2026-07-19 08:37 UTC" />
   <meta name="preview-raw-url" content="https://raw.githubusercontent.com/jackytyangovo/Cloud/preview/novel-project/preview/standalone.html" />
   <meta name="preview-viewer-url" content="https://htmlpreview.github.io/?https://cdn.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html" />
   <title>小说正文预览 · 序章 · 第一章</title>
@@ -166,7 +166,7 @@
       </div>
     </div>
     <div class="header-panel" id="header-panel" hidden>
-      <div class="meta" id="preview-meta">构建于 2026-07-19 08:35 UTC · rev c88a6f3d69c521f2 · 跟踪 preview · 源 序章←finalized / 第一章←drafts</div>
+      <div class="meta" id="preview-meta">构建于 2026-07-19 08:37 UTC · rev 12822dd04836df73 · 跟踪 preview · 源 序章←finalized / 第一章←drafts</div>
       <div class="preview-toolbar">
         <span class="preview-sync-status" id="preview-sync-status">正在拉取最新正文…</span>
       </div>
@@ -199,7 +199,7 @@
       var RAW_PATH = "/novel-project/preview/standalone.html";
       var VIEWER_BASE = "https://htmlpreview.github.io/?";
       var CURRENT_SHA = "6bb7317c2a66";
-      var CURRENT_REVISION = "c88a6f3d69c521f2";
+      var CURRENT_REVISION = "12822dd04836df73";
       var checking = false;
       var pollTimer = null;
 
@@ -245,6 +245,24 @@
         chip.textContent = "rev " + short;
       }
 
+      /* 旧壳热更新只换正文、不换顶栏；主动拆掉已废弃的堂✓ 芯片 */
+      function stripLegacyHeaderChips() {
+        ["preview-tang-chip"].forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el && el.parentNode) el.parentNode.removeChild(el);
+        });
+        try {
+          var actions = document.querySelector("#preview-header .header-actions");
+          if (!actions) return;
+          Array.prototype.slice.call(actions.querySelectorAll(".header-chip")).forEach(function (chip) {
+            var t = (chip.textContent || "").replace(/\s+/g, "");
+            if (t === "堂✓" || t === "堂✗") {
+              if (chip.parentNode) chip.parentNode.removeChild(chip);
+            }
+          });
+        } catch (e) {}
+      }
+
       function setButtonBusy(busy) {
         var btn = document.getElementById("preview-refresh-btn");
         if (!btn) return;
@@ -252,6 +270,7 @@
         btn.textContent = busy ? "…" : "更新";
       }
 
+      stripLegacyHeaderChips();
       setRevChip(CURRENT_REVISION);
 
       /* 页眉默认折叠，少占阅读空间 */
@@ -379,6 +398,7 @@
 
         CURRENT_REVISION = extractPreviewRevision(html) || CURRENT_REVISION;
         CURRENT_SHA = extractDraftsSha(html) || CURRENT_SHA;
+        stripLegacyHeaderChips();
         setRevChip(CURRENT_REVISION);
         restoreScrollPosition();
         return true;
