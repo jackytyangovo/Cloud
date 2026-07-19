@@ -164,7 +164,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 ### 人物形象（✓ 用户确认）
 
-- **`characters.md` 按章区形象表**：写第 N 章只取 **对应章区**；定稿后 **回填** 该章区行
+- **`characters.md` 按章区形象表**：写第 N 章只取 **对应章区**；**只读参考**，无用户点名 **不得**回填或改写
 - **首次实写**：带容貌或体态一两笔
 - **侧面描写** 烘托；画像可写很漂亮
 
