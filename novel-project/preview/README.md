@@ -128,9 +128,10 @@ git commit && git push -u origin <branch>
 | 文件 | 用途 |
 |------|------|
 | `preview-config.json` | 仓库名、`preview` 书签分支、`source_branch`、轮询间隔 |
-| `index.html` | 本地实时预览（fetch 草稿） |
-| `standalone.html` | 手机页（内嵌正文，由脚本生成） |
-| `build_standalone.py` | 从 `drafts/` 重建 + 内嵌热更新脚本 |
+| `live.html` | **人读书签启动页**（每次按 tip SHA 拉最新 standalone） |
+| `index.html` | 本地实时预览（fetch 草稿；与 preview 分支根 index 不同） |
+| `standalone.html` | 正文整页（由脚本生成；勿再当书签） |
+| `build_standalone.py` | 从定稿/初稿重建 + 内嵌热更新脚本 |
 | `server.py` | 本地 HTTP（8765） |
 | `.github/workflows/preview-refresh.yml` | 定时/push 重建并发布到 `preview` |
 
