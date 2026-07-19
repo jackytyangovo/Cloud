@@ -1,12 +1,12 @@
 # 写作要领（纠察 / 写稿速查）
 
-> **用途**：写稿/纠察的 **主对照**——把序章 pass 与第一章手改，连同旧正例/反例/写场模型，**整合成一份可顺读的执行清单**。  
-> **阅读顺序（流畅优先）**：  
-> ① **§一** 一句话 + 五层逻辑 → ② **§三** 写场六步 → ③ **§三·附** 宜学/勿学速查 → ④ **§二** 红灯表 → ⑤ **§〇** 模仿卡（查漏/入库）→ ⑥ **§四** 交稿自检。  
-> **冲突优先**：用户最新手改 / 最新确认 > 本文件模仿卡 > `style-guide` > `#N` 档案旧条。  
+> **模仿对象（最高）**：[`finalized/prologue.md`](../finalized/prologue.md)——用户 **已满意的序章定稿**。写卷一/改第一章时，**先读、对照、学语气与节奏**；本文件是从该定稿与后续手改 **提炼出的辅助清单**，**不能代替**读序章正文。  
+> **用途**：写稿/纠察时的 **自检与红灯**——宜学/勿学、模仿卡、写场六步。  
+> **阅读顺序**：  
+> ① **先读序章定稿** → ② **§一** 逻辑 → ③ **§三** 六步 → ④ **§三·附** 宜学/勿学 → ⑤ **§二** 红灯 → ⑥ **§〇** 卡（查漏/入库）→ ⑦ **§四** 自检。  
+> **冲突优先**：用户最新手改 / 最新确认 > **序章定稿语感** > 本文件模仿卡 > `style-guide` > `#N` 档案。  
 > **手改入库**：每处 → **一张模仿卡（§〇）** + `user-style-iteration-log` `#N`；能硬化 → 红灯表。  
-> **档案**：改前/改后全文仍在 [`user-style-iteration-log.md`](user-style-iteration-log.md)；本文件不替代样章长析（见 `style-reference`）。
-
+> **档案**：[`user-style-iteration-log.md`](user-style-iteration-log.md)；样章泛化技巧见 `style-reference`（**次于**序章定稿）。
 ---
 
 ## 〇、用户手改 · 模仿卡（Agent 写前必读）
@@ -584,10 +584,11 @@
 
 ```
 写稿/纠察：
-1. 按文首阅读顺序：§一 → §三 → §三·附 → §二 → §〇（查漏）→ §四
-2. 打开本章 drafts/*.md
-3. 违规 → 按对应模仿卡 / 宜学表重写 → 再扫一遍
-4. rebuild preview + push
+1. **先读** `finalized/prologue.md`（模仿对象）
+2. 再按：§一 → §三 → §三·附 → §二 → §〇（查漏）→ §四
+3. 打开本章 drafts/*.md；对照序章语气写/改
+4. 违规 → 先回序章找同类写法，再按模仿卡 / 宜学表重写 → 再扫一遍
+5. rebuild preview + push
 
 用户手改到达后（推送 / 粘贴 / 点名改句）：
 1. 逐处 diff：只记用户改了什么
@@ -606,22 +607,22 @@
 
 | 文件 | 职责 |
 |------|------|
-| **本文件** | **写前主读**：逻辑 · 六步 · 宜学/勿学 · 红灯 · 模仿卡 · 自检 |
-| [`style-guide.md`](style-guide.md) | 视角、附块、R18、知识分级、章节惯例（政策层） |
-| [`style-reference.md`](style-reference.md) | 样章语感、节奏、R18 笔法；§九·附为手改速览桥 |
-| [`user-style-iteration-log.md`](user-style-iteration-log.md) | `#N` 改前/改后档案（查原文用） |
+| [`finalized/prologue.md`](../finalized/prologue.md) | **模仿与学习对象**（用户满意的序章定稿） |
+| **本文件** | 自检辅助：逻辑 · 六步 · 宜学/勿学 · 红灯 · 模仿卡 |
+| [`style-guide.md`](style-guide.md) | 视角、附块、R18、知识分级（政策层） |
+| [`style-reference.md`](style-reference.md) | 外部样章分析（**次于**序章定稿）；§九·附速览 |
+| [`user-style-iteration-log.md`](user-style-iteration-log.md) | `#N` 改前/改后档案 |
 | [`daily-growth-writing.md`](daily-growth-writing.md) | 日常期 4要4不要与章自查 |
 | [`characters.md`](characters.md) | 人设、章区形象（**只读**） |
 | [`outline.md`](outline.md) | 情节边界（**严禁照译**） |
 | [`../WORKFLOW.md`](../WORKFLOW.md) | 目录边界、预览、定稿流程 |
-| [`finalized/prologue.md`](../finalized/prologue.md) | 序章定稿语感标杆 |
-| 写作 skill | Agent 入口：阅读顺序 + 卷一/维洛硬边界 |
+| 写作 skill | Agent 入口：先读序章 + 卷一/维洛硬边界 |
 
 ---
 
 ## 十一、维护
 
 - **用户手改** → **先** §〇 模仿卡 + log → 再红灯/`style-guide`  
-- 本文件保持 **可顺读**：逻辑→六步→宜学勿学→红灯→卡；新卡用真实改前/改后  
-- 样章长析留 `style-reference`；设定全文留 bible；档案留 log  
+- **学写法先读序章定稿**，再用本文件自检；新卡用真实改前/改后  
+- 外部样章长析留 `style-reference`（勿压过序章）；设定留 bible；档案留 log  
 - 新卡编号续接（章内可标 `卡H1…` 第一章新手改等）

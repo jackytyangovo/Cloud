@@ -1,7 +1,7 @@
 # 用户文风迭代记录 · 改前/改后档案
 
 > **用途**：**逐条档案**——用户手改的改前 / 改后 / 提炼 / 原话。查「当时改成什么样」时翻本文件。  
-> **写前规则（已整合宜学/勿学/写场）**：[`writing-essentials.md`](writing-essentials.md)——按文首阅读顺序扫 §一→§三→§三·附→§二→§〇→§四。  
+> **模仿对象**：[`finalized/prologue.md`](../finalized/prologue.md)（满意定稿）。**自检**：[`writing-essentials.md`](writing-essentials.md)。  
 > **Agent 约束**：只改用户点名处；删改按语义删整句；手改同轮 → 模仿卡 + 本文件一条 `#N`。  
 > **冲突优先**：最新手改 / 模仿卡 > `style-guide` > 本档案旧条。
 

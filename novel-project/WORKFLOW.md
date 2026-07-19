@@ -166,7 +166,8 @@ git commit && git push
 
 **「全文」范围**（✓ 用户确认）：用户说 **「全文」** 默认指 **当前章节**（当次任务正在写的 `drafts/chapter-NNN.md` 或指定那一章）。**未点名其他章节时，不得改其他章初稿**；序章/定稿同步须用户 **明确点名**。
 
-**用户手改**（✓）：只改点名处；同轮写入 [`writing-essentials.md`](bible/writing-essentials.md) **§〇 模仿卡** + [`user-style-iteration-log.md`](bible/user-style-iteration-log.md) `#N` 档案。写前规则以 **writing-essentials** 为准；log **不**再维护正例/反例复本。
+**用户手改**（✓）：只改点名处；同轮写入 [`writing-essentials.md`](bible/writing-essentials.md) **§〇 模仿卡** + [`user-style-iteration-log.md`](bible/user-style-iteration-log.md) `#N`。  
+**模仿对象**：[`finalized/prologue.md`](finalized/prologue.md)（满意定稿）；essentials 是辅助自检，不能代替读序章。
 
 ---
 
@@ -222,9 +223,9 @@ novel-project/
 
 ## 正文写作检查清单（每章）
 
-写前读：`WORKFLOW.md` · **`writing-essentials.md` §〇模仿卡 + 红灯表（主对照）** · `style-guide.md` · `style-reference.md` · 写作 skill 自检表。
+写前读：① **`finalized/prologue.md`（模仿对象 · 用户满意的序章定稿）** → ② `writing-essentials.md`（自检/红灯/卡）→ ③ 需要时再 `style-guide` / `style-reference`（外部样章 **次于** 序章）。
 
-### 用户手改入库（硬 · 便于 Agent 模仿）
+### 用户手改入库（硬 · 便于 Agent 对照）
 
 用户对正文做手改（推送 / 粘贴 / 逐句点名）后，负责正文或纠察的 Agent **须同轮**：
 

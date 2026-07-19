@@ -17,29 +17,29 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 ## 用户文风 · 高优先级
 
-> **主读**：[`writing-essentials.md`](../../novel-project/bible/writing-essentials.md)  
-> 阅读顺序：**§一**（逻辑+Agent分歧）→ **§三** 六步 → **§三·附** 宜学/勿学 → **§二** 红灯 → **§〇** 模仿卡 → **§四** 自检。  
-> **档案**：[`user-style-iteration-log.md`](../../novel-project/bible/user-style-iteration-log.md)（查改前/改后）。  
-> **样章桥**：`style-reference` §九·附；**政策层**：`style-guide`（视角/R18/附块）。
+> **模仿与学习对象**：[`finalized/prologue.md`](../../novel-project/finalized/prologue.md)——用户 **很满意的序章定稿**。写/改后续章节时 **先读这篇**，学语气、节奏、感官与收束；规则卡不能代替读正文。  
+> **辅助清单**：[`writing-essentials.md`](../../novel-project/bible/writing-essentials.md)（读完序章后再用：§一→§三→§三·附→§二→§〇→§四）。  
+> **档案**：[`user-style-iteration-log.md`](../../novel-project/bible/user-style-iteration-log.md)。  
+> **外部样章**（次于序章）：`style-reference`；**政策**：`style-guide`。
 
 | 规则 | 说明 |
 |------|------|
 | **改动范围** | **仅**用户点名的句段；「全文」= 当前章（见 WORKFLOW） |
 | **记录（硬）** | 每处手改 → 模仿卡一张 + log `#N` |
-| **冲突优先** | 最新手改模仿卡 > style-guide > 旧档案 |
+| **冲突优先** | 最新手改 > **序章定稿语感** > 模仿卡 > style-guide |
 
-## 多文件怎么配合（不必只留一个）
+## 多文件怎么配合
 
 | 路径 | 何时读 | 读什么 |
 |------|--------|--------|
-| `writing-essentials.md` | **每次写/改** | 完整手改规则 + 宜学勿学（主） |
-| `style-guide.md` | 视角/附块/R18/知识不确定时 | 政策硬规则 |
-| `style-reference.md` | 要对齐样章节奏/语气时 | 样章分析；§九·附速览 |
+| **`finalized/prologue.md`** | **每次写/改之前** | **模仿对象**（满意定稿） |
+| `writing-essentials.md` | 读完序章后自检 | 宜学/勿学 · 红灯 · 模仿卡 |
+| `style-guide.md` | 视角/附块/R18 不确定时 | 政策硬规则 |
+| `style-reference.md` | 外部样章节奏参考时 | **次于**序章定稿 |
 | `daily-growth-writing.md` | 写日常成长章时 | 4要4不要 + 三问 |
-| `user-style-iteration-log.md` | 要核对某次手改原文时 | `#N` 档案 |
+| `user-style-iteration-log.md` | 核对某次手改原文 | `#N` 档案 |
 | `WORKFLOW.md` | 定稿/预览/目录边界 | 流程 |
 | `outline.md` 等设定 | 情节边界（characters **只读**） | **严禁照译** |
-| 本 skill | Agent 入口 | 阅读顺序 + 卷一/维洛边界 |
 
 **正文不得擅自定稿** bible 中 `【随剧情补充】` 的内容。
 
@@ -49,24 +49,25 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 0. `WORKFLOW`：目录边界、定稿/预览  
 1. 当次「全文」= 当前章  
-2. **`writing-essentials`** 按文首顺序通读（尤其 §三·附 宜学/勿学）  
-3. `outline` 当前章：只取情节边界  
-4. 日常章 → `daily-growth-writing`；大转折 → `narrative-structure`  
-5. 读上一章衔接；规划【附】  
-6. 交稿：essentials §四 + 红灯；政策疑问查 `style-guide`  
-7. 用户手改：同轮模仿卡 + log
+2. **读 `finalized/prologue.md`**（模仿对象）  
+3. 再扫 `writing-essentials`（宜学/勿学 + 红灯）  
+4. `outline` 当前章：只取情节边界  
+5. 日常章 → `daily-growth-writing`；大转折 → `narrative-structure`  
+6. 读上一章衔接；规划【附】  
+7. 交稿：对照序章语气 + essentials §四；政策查 `style-guide`  
+8. 用户手改：同轮模仿卡 + log
 
 ---
 
 ## 写作自检 · 两遍（✓ #29）
 
-> 落笔前 / 交稿前各一遍 → [`writing-essentials`](../../novel-project/bible/writing-essentials.md) **§四**（12 问）+ **§三·附** 勿学表扫一眼。
+> 落笔前 / 交稿前：① 这段是否 **像序章定稿的写法**？② [`writing-essentials`](../../novel-project/bible/writing-essentials.md) **§四** + **§三·附** 勿学表。
 
 **硬记摘要**：
-- 严格「我」；禁 meta / 报告体 / 照办纲要  
-- 外物先动；内心直写；身魂要物+心事  
+- 学序章：感官进身、外物先动、内心直写、身魂有物、场末单落点  
+- 禁 meta / 报告体 / 照办纲要  
 - 【附】仅首次专名；高级知识不进附  
-- 冲突：最新模仿卡 > style-guide
+- 冲突：最新手改 > 序章语感 > 模仿卡
 
 ---
 

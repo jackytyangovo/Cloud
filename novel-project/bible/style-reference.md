@@ -337,14 +337,13 @@ aftermath：分离、余温、命令式告别（「不准忘记我」）
 
 ---
 
-## 九·附、序章定稿 pass · 用户手改速览（桥接）
+## 九·附、序章定稿 · 模仿速览
 
-> **完整执行清单**（含宜学/勿学、红灯、模仿卡）：[`writing-essentials.md`](writing-essentials.md)。  
-> **改前/改后档案**：[`user-style-iteration-log.md`](user-style-iteration-log.md)。  
-> **定稿语感**：`finalized/prologue.md`。  
-> 本节供读样章时 **一眼对照手改取向**；写正文请跟 essentials 阅读顺序。
+> **模仿对象**：[`finalized/prologue.md`](../finalized/prologue.md)——用户满意的序章正文；**先读定稿，再读本表**。  
+> **自检清单**：[`writing-essentials.md`](writing-essentials.md)。**档案**：[`user-style-iteration-log.md`](user-style-iteration-log.md)。  
+> 下文外部样章分析 **不得压过** 序章定稿的语气与节奏。
 
-### 模仿核心
+### 从序章学到的核心
 
 **感官进身 → 外物先动 → 内心直写 → 设定白说 → 身魂对照写透 → 场末一个落点。**
 
