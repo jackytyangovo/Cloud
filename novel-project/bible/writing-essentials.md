@@ -506,8 +506,8 @@
 |------|----------|
 | **本文件 §〇 模仿卡** | **写前 / 纠察 / 手改入库 · 第一优先** |
 | [`style-guide.md`](style-guide.md) | 视角、附块、R18、知识分级、全文硬规则 |
-| [`style-reference.md`](style-reference.md) | 样章语感、R18 笔法、序章 pass 模仿模型 |
-| [`user-style-iteration-log.md`](user-style-iteration-log.md) | 改前/改后全文档案、#1–#N 逐条 |
+| [`style-reference.md`](style-reference.md) | 样章语感、R18 笔法（手改模型已迁入本文件） |
+| [`user-style-iteration-log.md`](user-style-iteration-log.md) | `#N` 改前/改后档案（**不**再维护正例/反例复本） |
 | [`daily-growth-writing.md`](daily-growth-writing.md) | 日常期 4要4不要与章自查 |
 | [`characters.md`](characters.md) | 人设、章区形象（**只读**，无点名不改） |
 | [`outline.md`](outline.md) | 情节边界（**严禁照译**） |
