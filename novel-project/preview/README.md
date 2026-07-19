@@ -29,9 +29,15 @@
 
 ## 方案 A · 即时书签（推荐 · live 启动页）
 
-**请改收藏这一条（旧的 standalone 书签请删掉）：**
+**请只收藏这一条（删掉所有 htmlpreview / jsDelivr 旧书签）：**
 
-https://htmlpreview.github.io/?https://cdn.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/live.html
+https://raw.githack.com/jackytyangovo/Cloud/preview/novel-project/preview/standalone.html
+
+这是 **raw.githack** 直开（`text/html` 阅读模式），**不必**再套 `htmlpreview`。  
+GitHub 上的初稿/预览里已有「堂弟芬恩」「堂哥埃里克」；以前看不到，是 htmlpreview/CDN 粘旧壳，不是没推送。
+
+备用启动器（每次按 tip SHA 拉取后再打开）：  
+https://raw.githack.com/jackytyangovo/Cloud/preview/novel-project/preview/live.html
 
 | 机制 | 说明 |
 |------|------|
