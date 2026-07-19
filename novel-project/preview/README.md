@@ -13,6 +13,15 @@
 没有 `htmlpreview` 前缀时，浏览器会把页面当源码显示，不适合阅读。  
 目录跳转已在页内拦截：点「第一章」只会滚动到对应章节，**不会**丢掉前缀跳到 raw。
 
+### 正文同步规则（✓ 用户确认）
+
+| 情况 | 预览收录 |
+|------|----------|
+| 该章已有 `finalized/*.md` | **用定稿** |
+| 尚无定稿、仅有 `drafts/*.md` | **用初稿** |
+
+重建命令不变：`python3 novel-project/preview/build_standalone.py`（改 `drafts/` 或 `finalized/` 后都要 rebuild / 等 Actions）。
+
 ---
 
 ## 方案 A · 稳定书签（推荐）
@@ -25,7 +34,7 @@ https://htmlpreview.github.io/?https://raw.githubusercontent.com/jackytyangovo/C
 
 | 机制 | 说明 |
 |------|------|
-| Actions 发布 | push `drafts/` / 定时每 **2 分钟** → rebuild → 推到 `preview` 分支 |
+| Actions 发布 | push `drafts/` 或 `finalized/` / 定时每 **2 分钟** → rebuild → 推到 `preview` 分支 |
 | 页内热更新 | 发现新 `preview-revision` 时 **替换正文**，不整页白屏、少受 htmlpreview 二次缓存影响 |
 | 立即检查 | 页头按钮 **「立即检查更新」**；切回 App / 聚焦窗口也会检查 |
 | 轮询 | 前台约 **1 分钟**；后台约 **5 分钟** |

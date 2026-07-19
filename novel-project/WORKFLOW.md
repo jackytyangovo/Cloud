@@ -10,14 +10,14 @@
 |------|--------|-------------|--------------|
 | 大纲、设定、人物、时间线 | **设定修缮**（常为 Composer 2.5） | Plan → Agent | `novel-project/bible/` |
 | 正文撰写、文风润色 | **任意 Agent**（**不指定 Sonnet**） | Agent | `novel-project/drafts/` |
-| 正文预览 / 审阅 | 任意 | Ask / Agent | **只读** `novel-project/drafts/` · 手机见 `preview/standalone.html` |
+| 正文预览 / 审阅 | 任意 | Ask / Agent | **定稿优先**（`finalized/` → 否则 `drafts/`）· 手机见 `preview/standalone.html` |
 | 快速查设定、讨论剧情 | 任意 | Ask | 只读，不改文件 |
 
 **单一事实来源**：所有设定以 `bible/` 为准。正文不得擅自新增或改写世界观；发现设定缺口应停下，补 `bible/`（或请用户明确后同步）。
 
 ### 当前优先（用户确认 · 2026-07-17 更新）
 
-1. **正文撰写与润色**（`drafts/`）——**序章已定稿**（`finalized/prologue.md`）；**第一章未定稿**（手改中，仅 `drafts/chapter-001.md`，预览暂不收录）
+1. **正文撰写与润色**（`drafts/`）——**序章已定稿**（`finalized/prologue.md`，预览用定稿）；**第一章未定稿**（手改中，预览用 `drafts/chapter-001.md`）
 2. **样文文风分析**（用户发样章 → 更新 `style-reference.md` / `style-guide.md`）
 3. **大纲与设定补充**（`bible/`）——随正文审阅 **同步回 bible**（用户明确要求时）
 4. 用户已确认章节拍 **保留在 `outline.md`**，不删
@@ -216,7 +216,7 @@ novel-project/
 - **`characters.md` 等参考设定**：**无用户点名不得改**（即使正文写了新形象细节，也**勿擅自回填**；等用户吩咐）
 - **drafts/**：正文 Agent 可写；**不限定模型**
 - **`finalized/`**：**禁止**日常修改；**仅**用户说 **「章节定稿」** 时复制 `drafts/` 快照入库
-- **预览正文**：读 `drafts/`；**不读** `finalized/`
+- **预览正文**：**定稿优先**——有 `finalized/` 用定稿，否则用 `drafts/` 初稿
 
 ---
 
@@ -237,7 +237,7 @@ novel-project/
 
 用户以 **读者视角** 问某个词/说法看不懂 → **视为反例**（读者也看不懂）→ 正文避免；同轮写入要领 **红灯 #20**、「看不懂词表」、模仿卡，并改掉已出现处。
 
-- [ ] **WORKFLOW 目录边界**：只改 `drafts/`；`finalized/` 仅用户说「章节定稿」；预览读 `drafts/`
+- [ ] **WORKFLOW 目录边界**：只改 `drafts/`；`finalized/` 仅用户说「章节定稿」；预览定稿优先、否则初稿
 - [ ] **「全文」= 当前章**；未点名不改其他章
 - [ ] **初稿即正文**：**严禁照办纲要**（不照译场次表、技法行、bible 缩略语）
 - [ ] 与 `outline.md` **情节边界**一致（非照抄纲要句式）

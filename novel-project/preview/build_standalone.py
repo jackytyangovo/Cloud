@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""从 drafts/*.md 生成可离线/手机浏览的 standalone.html"""
+"""生成可离线/手机浏览的 standalone.html。
+
+同步规则（✓ 用户确认）：
+- 有定稿 → 收录 finalized/
+- 无定稿、仅有初稿 → 收录 drafts/
+"""
 from __future__ import annotations
 
 import argparse
@@ -14,23 +19,20 @@ from pathlib import Path
 PREVIEW = Path(__file__).resolve().parent
 ROOT = PREVIEW.parent
 DRAFTS = ROOT / "drafts"
+FINALIZED = ROOT / "finalized"
 OUT = PREVIEW / "standalone.html"
 CONFIG_PATH = PREVIEW / "preview-config.json"
 DEFAULT_CONFIG = {
     "github_repo": "jackytyangovo/Cloud",
     # 手机书签用的稳定分支（Actions 会把最新 standalone 同步到这里）
     "preview_branch": "preview",
-    # 定时从哪条分支取 drafts 重建（小说主工作分支）
+    # 定时从哪条分支取正文重建（小说主工作分支）
     "source_branch": "cursor/isekai-novel-outline-1688",
     "refresh_interval_minutes": 1,
     "htmlpreview_base": "https://htmlpreview.github.io/?",
 }
 
-# 预览收录列表。第一章手改中、未定稿 → 暂不进手机书签；定稿后再加回。
-CHAPTERS = [
-    ("drafts/prologue.md", "序章 · 错位的清晨"),
-    # ("drafts/chapter-001.md", "第一章 · 两家莱恩菲尔"),
-]
+CHAPTER_NAME_RE = re.compile(r"^(prologue|chapter-\d+)\.md$", re.IGNORECASE)
 
 
 def chapter_anchor(label: str) -> str:
@@ -38,20 +40,55 @@ def chapter_anchor(label: str) -> str:
     return label.replace(" ", "-")
 
 
+def chapter_sort_key(name: str) -> tuple:
+    lower = name.lower()
+    if lower == "prologue.md":
+        return (0, 0)
+    m = re.match(r"chapter-(\d+)\.md$", lower)
+    if m:
+        return (1, int(m.group(1)))
+    return (2, lower)
+
+
+def resolve_chapter_path(filename: str) -> Path | None:
+    """定稿优先；无定稿则用初稿。"""
+    fin = FINALIZED / filename
+    if fin.is_file():
+        return fin
+    draft = DRAFTS / filename
+    if draft.is_file():
+        return draft
+    return None
+
+
+def label_from_md(path: Path) -> str:
+    first = path.read_text(encoding="utf-8").split("\n", 1)[0].strip()
+    return first[2:].strip() if first.startswith("# ") else path.stem
+
+
 def discover_chapters() -> list[tuple[str, str]]:
-    """按 prologue → chapter-NNN 顺序扫描 drafts/*.md（排除 README）。"""
-    if CHAPTERS:
-        return CHAPTERS
-    items: list[tuple[str, str]] = []
-    for path in sorted(DRAFTS.glob("*.md")):
-        if path.name.lower() == "readme.md":
+    """扫描 finalized/ + drafts/，按 prologue → chapter-NNN 排序。
+
+    返回 (相对 novel-project 的路径, 章名标签每章优先 finalized。
+    """
+    names: set[str] = set()
+    for folder in (FINALIZED, DRAFTS):
+        if not folder.is_dir():
             continue
-        first = path.read_text(encoding="utf-8").split("\n", 1)[0].strip()
-        label = first[2:].strip() if first.startswith("# ") else path.stem
-        items.append((f"drafts/{path.name}", label))
-    prologue = [x for x in items if "prologue" in x[0]]
-    numbered = sorted(x for x in items if x not in prologue)
-    return prologue + numbered
+        for path in folder.glob("*.md"):
+            if path.name.lower() == "readme.md":
+                continue
+            if CHAPTER_NAME_RE.match(path.name):
+                names.add(path.name)
+
+    items: list[tuple[str, str]] = []
+    for name in sorted(names, key=chapter_sort_key):
+        path = resolve_chapter_path(name)
+        if path is None:
+            continue
+        rel = f"{path.parent.name}/{path.name}"
+        items.append((rel, label_from_md(path)))
+    return items
 
 
 def md_to_html(md: str) -> str:
@@ -166,9 +203,12 @@ def load_preview_config() -> dict:
 
 
 def drafts_content_hash(chapters: list[tuple[str, str]]) -> str:
+    """正文指纹：按实际收录文件（定稿或初稿）计算。"""
     h = hashlib.sha256()
     for rel, _ in chapters:
-        path = ROOT / rel.replace("drafts/", "drafts/")
+        path = ROOT / rel
+        h.update(rel.encode("utf-8"))
+        h.update(b"\0")
         h.update(path.read_bytes())
     return h.hexdigest()[:12]
 
@@ -224,11 +264,13 @@ def git_short_sha() -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Build standalone.html from drafts/")
+    parser = argparse.ArgumentParser(
+        description="Build standalone.html（定稿优先，无定稿用初稿）"
+    )
     parser.add_argument(
         "--force",
         action="store_true",
-        help="Rebuild even when drafts content hash is unchanged",
+        help="Rebuild even when content hash is unchanged",
     )
     args = parser.parse_args()
 
@@ -249,7 +291,7 @@ def main() -> None:
             and read_embedded_build_script_sha(existing) == script_sha
         ):
             print(
-                f"Preview up to date (drafts {drafts_sha}, script {script_sha}), "
+                f"Preview up to date (content {drafts_sha}, script {script_sha}), "
                 "skip rebuild. Use --force to refresh."
             )
             return
@@ -266,11 +308,13 @@ def main() -> None:
     viewer_base = config.get("htmlpreview_base", DEFAULT_CONFIG["htmlpreview_base"])
     viewer_url = f"{viewer_base}{raw_url}"
     sections = []
+    sources: list[str] = []
     for rel, label in chapters:
-        path = ROOT / rel.replace("drafts/", "drafts/")
+        path = ROOT / rel
         md = path.read_text(encoding="utf-8")
         anchor = chapter_anchor(label)
         sections.append((label, anchor, md_to_html(md)))
+        sources.append(f"{label.split(' · ', 1)[0]}←{rel.split('/', 1)[0]}")
 
     toc = build_toc(chapters)
     body = "\n".join(
@@ -450,7 +494,7 @@ def main() -> None:
       </div>
     </div>
     <div class="header-panel" id="header-panel" hidden>
-      <div class="meta" id="preview-meta">构建于 {built} · rev {revision_placeholder} · 跟踪 {html.escape(preview_branch)} · 每 {refresh_min} 分钟轮询</div>
+      <div class="meta" id="preview-meta">构建于 {built} · rev {revision_placeholder} · 跟踪 {html.escape(preview_branch)} · 每 {refresh_min} 分钟轮询 · 源 {html.escape(' / '.join(sources))}</div>
       <div class="preview-toolbar">
         <span class="preview-sync-status" id="preview-sync-status">准备检查…</span>
       </div>
@@ -853,7 +897,10 @@ def main() -> None:
     revision = preview_revision(page.replace(revision_placeholder, ""))
     page = page.replace(revision_placeholder, revision)
     OUT.write_text(page, encoding="utf-8")
-    print(f"Wrote {OUT} ({built}) · revision {revision} · {len(chapters)} 章")
+    print(
+        f"Wrote {OUT} ({built}) · revision {revision} · {len(chapters)} 章 · "
+        + ", ".join(sources)
+    )
 
 
 if __name__ == "__main__":
