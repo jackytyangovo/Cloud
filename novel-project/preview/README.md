@@ -27,11 +27,13 @@
 | 层 | 做法 |
 |----|------|
 | **发布源** | Actions 定时/手动从 **`source_branch`（当前写作分支）** 重建，再推到 `preview`；不再从旧 outline 盖书签 |
-| **打开页面** | 首屏 **强制** 向 GitHub 拉最新 `standalone.html`，正文热替换（绕过 htmlpreview 旧壳） |
-| **点「更新」** | 同上强制拉取；顶栏 `rev xxxxxxxx` 为正文指纹，变了才算刷到新版 |
+| **打开页面** | 首屏 **强制** 拉最新 `standalone.html` 并热替换（优先 jsDelivr，再 raw） |
+| **点「更新」** | 同上；失败则整页重开备用源；顶栏 `rev` 为正文指纹 |
 | **备用直链** | 不用 htmlpreview： [jsDelivr 直开](https://cdn.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html)（若旧：先开 [purge](https://purge.jsdelivr.net/gh/jackytyangovo/Cloud@preview/novel-project/preview/standalone.html)） |
 
-若仍看到「侧翼 / 盖伦一系」等旧句：先看顶栏 **rev** 是否变化 → 点「更新」→ 或改用 jsDelivr 备用。
+**注意**：页内 `fetch` **不能**带 `Cache-Control` 等自定义头，否则 CORS 预检被拒，会误报「拉取失败」。
+
+若仍看到旧句：看顶栏 **rev** → 点「更新」→ 或 purge 后用 jsDelivr 书签。
 
 ---
 

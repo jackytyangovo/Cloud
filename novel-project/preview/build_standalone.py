@@ -719,33 +719,40 @@ def main() -> None:
       }}
 
       function fetchHtml(url) {{
+        /* 勿加 Cache-Control/Pragma 等自定义头：会触发 CORS 预检，
+           raw.githubusercontent.com 对预检直接 403，导致「全部拉取失败」。 */
         return fetch(url, {{
           cache: "no-store",
           credentials: "omit",
-          headers: {{ "Cache-Control": "no-cache", Pragma: "no-cache" }},
+          mode: "cors",
         }}).then(function (res) {{
-          if (!res.ok) throw new Error("fetch " + res.status);
+          if (!res.ok) throw new Error("fetch " + res.status + " " + url);
           return res.text();
         }});
       }}
 
-      /* 多源：文件最新 commit raw → 分支 tip raw → jsDelivr */
+      /* 多源：jsDelivr → commit raw → 分支 raw（?t= 破缓存） */
       function fetchLatestHtml(commitSha) {{
         var ts = Date.now();
-        var tries = [];
+        var ref = commitSha || BRANCH;
+        var tries = [
+          function () {{ return fetchHtml(jsdelivrUrlForRef(ref, ts)); }},
+          function () {{ return fetchHtml(jsdelivrUrlForRef(BRANCH, ts + 1)); }},
+        ];
         if (commitSha) tries.push(function () {{ return fetchHtml(rawUrlForRef(commitSha, ts)); }});
         tries.push(function () {{ return fetchHtml(rawUrlForRef(BRANCH, ts)); }});
-        tries.push(function () {{ return fetchHtml(jsdelivrUrlForRef(commitSha || BRANCH, ts)); }});
         var i = 0;
-        function next() {{
-          if (i >= tries.length) return Promise.reject(new Error("all sources failed"));
+        function next(err) {{
+          if (i >= tries.length) {{
+            return Promise.reject(err || new Error("all sources failed"));
+          }}
           return tries[i++]().catch(next);
         }}
         return next();
       }}
 
       function fetchPreviewTipSha() {{
-        /* 只问改过 standalone.html 的最新 commit，避免被无关 commit 误导 */
+        /* 不加自定义 Accept，避免多余 CORS 预检 */
         var path = RAW_PATH.replace(/^\\//, "");
         var apiUrl =
           "https://api.github.com/repos/" +
@@ -758,7 +765,7 @@ def main() -> None:
         return fetch(apiUrl, {{
           cache: "no-store",
           credentials: "omit",
-          headers: {{ Accept: "application/vnd.github+json" }},
+          mode: "cors",
         }})
           .then(function (res) {{
             if (!res.ok) throw new Error("api " + res.status);
@@ -774,7 +781,7 @@ def main() -> None:
               {{
                 cache: "no-store",
                 credentials: "omit",
-                headers: {{ Accept: "application/vnd.github+json" }},
+                mode: "cors",
               }}
             ).then(function (res) {{
               if (!res.ok) throw new Error("api tip " + res.status);
@@ -834,7 +841,12 @@ def main() -> None:
             }});
           }})
           .catch(function () {{
-            setStatus("拉取失败：可点「更新」，或打开工具里的 jsDelivr 备用链", "is-err");
+            if (force) {{
+              setStatus("拉取失败，正在整页重开备用源…", "is-err");
+              navigateToLatest(BRANCH);
+            }} else {{
+              setStatus("后台拉取失败，可再点「更新」", "is-err");
+            }}
           }})
           .then(function () {{
             checking = false;
