@@ -337,9 +337,9 @@ aftermath：分离、余温、命令式告别（「不准忘记我」）
 
 ---
 
-## 九·附、序章定稿 · 模仿速览
+## 九·附、第一章定稿（原序章）· 模仿速览
 
-> **模仿对象**：[`finalized/prologue.md`](../finalized/prologue.md)——用户满意的序章正文；**先读定稿，再读本表**。  
+> **模仿对象**：[`finalized/chapter-001.md`](../finalized/chapter-001.md)——用户满意的序章正文；**先读定稿，再读本表**。  
 > **自检清单**：[`writing-essentials.md`](writing-essentials.md)。**档案**：[`user-style-iteration-log.md`](user-style-iteration-log.md)。  
 > 下文外部样章分析 **不得压过** 序章定稿的语气与节奏。
 

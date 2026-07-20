@@ -69,9 +69,10 @@
 
 ### 用户手改与模仿（✓ · 写前优先）
 
-- Agent 写稿 **先读** [`finalized/prologue.md`](../finalized/prologue.md)（模仿对象），再对照 [`writing-essentials.md`](writing-essentials.md) 自检。
-- 用户每处手改须 **同轮** 入库模仿卡 + `user-style-iteration-log.md`；冲突时 **最新手改 > 序章定稿语感**。
-- 本文件管视角/R18/附块等政策；语气节奏 **以序章定稿为准**。
+- Agent 写稿 **先读** [`finalized/chapter-001.md`](../finalized/chapter-001.md)（模仿对象；原序章定稿），再对照 [`writing-essentials.md`](writing-essentials.md) 自检。
+- 用户每处手改须 **同轮** 入库模仿卡 + `user-style-iteration-log.md`；冲突时 **最新手改 > 第一章定稿语感**。
+- 本文件管视角/R18/附块等政策；语气节奏 **以第一章定稿为准**。
+- **结构**：序章拟插叙；正叙自第一章。
 
 ### 人物形象（✓ 用户确认）
 
