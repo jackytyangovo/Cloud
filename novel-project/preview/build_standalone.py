@@ -170,6 +170,17 @@ def md_to_html(md: str) -> str:
     return "".join(out)
 
 
+def chapter_char_count(md: str) -> int:
+    """正文字数：去标题行与空白后的字符数（含标点）。"""
+    lines = md.replace("\r\n", "\n").split("\n")
+    body: list[str] = []
+    for line in lines:
+        if line.startswith("# "):
+            continue
+        body.append(line)
+    return sum(1 for ch in "".join(body) if not ch.isspace())
+
+
 def content_hash(chapters: list[tuple[str, str]]) -> str:
     h = hashlib.sha256()
     for rel, _ in chapters:
@@ -247,16 +258,19 @@ def main() -> None:
     sections = []
     for rel, label in chapters:
         path = ROOT / rel
-        md_html = md_to_html(path.read_text(encoding="utf-8"))
+        md_text = path.read_text(encoding="utf-8")
+        md_html = md_to_html(md_text)
+        char_count = chapter_char_count(md_text)
         anchor = chapter_anchor(label)
-        sections.append((label, anchor, md_html))
+        sections.append((label, anchor, md_html, char_count))
         kind = "定稿" if rel.startswith("finalized/") else "初稿"
         sources.append(f"{label.split(' · ', 1)[0]}←{kind}")
 
     body = "\n".join(
         f'<section id="{html.escape(anchor)}" class="chapter-section">'
-        f'<h2 class="chapter">{html.escape(label)}</h2>{content}</section>'
-        for label, anchor, content in sections
+        f'<h2 class="chapter">{html.escape(label)}</h2>{content}'
+        f'<p class="chapter-wordcount">本章 {char_count} 字</p></section>'
+        for label, anchor, content, char_count in sections
     )
     toc = build_toc(chapters)
     built = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
@@ -335,6 +349,10 @@ def main() -> None:
     article h2 {{ font-size: 1.05rem; margin: 1.4em 0 .7em; font-weight: 600; }}
     article p {{ margin: 0 0 .9em; text-indent: 2em; }}
     article p.no-indent {{ text-indent: 0; text-align: center; color: var(--muted); }}
+    .chapter-wordcount {{
+      margin: 1.6em 0 0; text-indent: 0; text-align: center;
+      font-size: .72rem; color: var(--muted); letter-spacing: .04em;
+    }}
     hr.scene {{
       border: 0; border-top: 1px solid var(--scene);
       margin: 1.6em auto; width: 30%;
