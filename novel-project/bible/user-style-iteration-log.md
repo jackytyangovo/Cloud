@@ -2658,6 +2658,15 @@
 
 **入库**：结构同步（无新模仿卡）
 
+
+### #167 · 2026-07-21 · 发色恒定改白金色
+
+**用户指令**：发色是通用恒定人设，改为白金色。
+
+**操作**：`characters.md` 莉莉娅/莉安娜发色 → **白金色**；drafts/finalized 第一、二章铜镜、画像、车边对照同步；outline / writing-essentials 例句同步。白金 ≠ 米拉浅金。
+
+**入库**：人设同步（无新模仿卡）
+
 ## 汇总说明（序章 pass · 已归档）
 
 > **#1–#89** 序章定稿 pass 的规则已入库 [`writing-essentials.md`](writing-essentials.md)。  
