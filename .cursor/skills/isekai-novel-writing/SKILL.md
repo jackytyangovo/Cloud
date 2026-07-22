@@ -1,6 +1,6 @@
 ---
 name: isekai-novel-writing
-description: 异世界重生小说（莉莉娅·莱恩菲尔）的写作与润色规范。撰写或修改 novel-project/drafts/ 正文、插入【附】设定块、检查文风/维洛教/卷一边界、重建 preview 时使用。涵盖第一人称叙事、平直文风、附块规则、R18 边界、战力约束与教堂三级编制逻辑。
+description: 异世界重生小说（莉莉娅·莱恩菲尔）的写作与润色规范。撰写或修改 novel-project/drafts/ 正文、outline 章节纲要、bible 场次说明、插入【附】设定块、检查文风/维洛教/卷一边界、重建 preview 时使用。涵盖第一人称叙事、平直文风、附块规则、R18 边界、战力约束与教堂三级编制逻辑。
 paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 ---
 
@@ -11,14 +11,25 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 ## 何时启用
 
 - 撰写、润色、扩写 `novel-project/drafts/` 下章节
+- **撰写或修订** `outline.md` **章节纲要**、场次表、撰写约束（**同样严格参照写作规范**）
 - 用户要求检查文风、附块、剧透、维洛教表述
 - 修改正文后需重建 `preview/standalone.html`
 - **用户手改 / 定稿 pass**：用户逐条修改 → 只改点名部分 → **同轮**写入 `writing-essentials` **§〇 模仿卡** + `user-style-iteration-log.md`
 
-## 用户文风 · 高优先级
+## 写作规范 · 全局约束（✓ 用户确认 · 2026-07-19）
 
-> **模仿与学习对象**：[`finalized/prologue.md`](../../novel-project/finalized/prologue.md)——用户 **很满意的序章定稿**。写/改后续章节时 **先读这篇**，学语气、节奏、感官与收束；规则卡不能代替读正文。  
-> **辅助清单**：[`writing-essentials.md`](../../novel-project/bible/writing-essentials.md)（读完序章后再用：§一→§三→§三·附→§二→§〇→§四）。  
+> **所有小说写作相关产出**（**章节纲要** + **正文** + 定稿 pass）均须 **严格参考** 写作规范；**无「纲要可以随便写」的例外**。
+
+| 任务 | 必对照 |
+|------|--------|
+| 写/改正文 | `writing-essentials` §〇/红灯 · `style-guide` · `user-style-iteration-log` · `style-reference` §九·附 · 本 skill 自检表 · `outline` 情节边界 · `characters` 章区 |
+| 写/改纲要 | `style-guide` · `user-style-iteration-log` · `characters` 章区 · `WORKFLOW` **章节纲要检查清单** |
+| 冲突时 | **最新手改 / 模仿卡** > `style-guide` > `outline` 旧用语 |
+
+## 用户文风 · 高优先级（✓ 用户确认 · 序章 pass 已入库）
+
+> **模仿与学习对象**：[`finalized/chapter-001.md`](../../novel-project/finalized/chapter-001.md)——用户 **很满意的正叙开篇定稿（原序章）**。写/改后续章节时 **先读第一章定稿**，学语气、节奏、感官与收束；规则卡不能代替读正文。  
+> **辅助清单**：[`writing-essentials.md`](../../novel-project/bible/writing-essentials.md)（读完第一章定稿后再用：§一→§三→§三·附→§二→§〇→§四）。  
 > **档案**：[`user-style-iteration-log.md`](../../novel-project/bible/user-style-iteration-log.md)。  
 > **外部样章**（次于序章）：`style-reference`；**政策**：`style-guide`。
 
@@ -32,7 +43,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 | 路径 | 何时读 | 读什么 |
 |------|--------|--------|
-| **`finalized/prologue.md`** | **每次写/改之前** | **模仿对象**（满意定稿） |
+| **`finalized/chapter-001.md`** | **每次写/改之前** | **模仿对象**（满意定稿） |
 | `writing-essentials.md` | 读完序章后自检 | 宜学/勿学 · 红灯 · 模仿卡 |
 | `style-guide.md` | 视角/附块/R18 不确定时 | 政策硬规则 |
 | `style-reference.md` | 外部样章节奏参考时 | **次于**序章定稿 |
@@ -49,7 +60,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 
 0. `WORKFLOW`：目录边界、定稿/预览  
 1. 当次「全文」= 当前章  
-2. **读 `finalized/prologue.md`**（模仿对象）  
+2. **读 `finalized/chapter-001.md`**（模仿对象）  
 3. 再扫 `writing-essentials`（宜学/勿学 + 红灯）  
 4. `outline` 当前章：只取情节边界  
 5. 日常章 → `daily-growth-writing`；大转折 → `narrative-structure`  
