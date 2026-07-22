@@ -15,6 +15,7 @@ paths: novel-project/drafts/**,novel-project/bible/**,novel-project/preview/**
 - 用户要求检查文风、附块、剧透、维洛教表述
 - 修改正文后需重建 `preview/standalone.html`
 - **用户手改 / 定稿 pass**：用户逐条修改 → 只改点名部分 → **同轮**写入 `writing-essentials` **§〇 模仿卡** + `user-style-iteration-log.md`
+- **用户给情节简述**：先拆 **3–5 镜**（冲突／基调／心理感官／动作链），**确认后再写正文**（见 `WORKFLOW.md` ·「用户给情节 → 先拆画面」）
 
 ## 写作规范 · 全局约束（✓ 用户确认 · 2026-07-19）
 
