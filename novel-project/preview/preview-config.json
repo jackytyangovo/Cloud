@@ -1,5 +1,6 @@
 {
   "github_repo": "jackytyangovo/Cloud",
-  "preview_branch": "cursor/isekai-novel-outline-1688",
-  "refresh_interval_minutes": 5
+  "preview_branch": "preview",
+  "source_branch": "cursor/style-check-prologue-129b",
+  "refresh_interval_minutes": 2
 }

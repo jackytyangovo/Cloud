@@ -130,7 +130,8 @@
       <span class="dot" id="statusDot" title="自动刷新"></span>
       <span id="statusText">连接中</span>
       <select id="chapter" aria-label="选择章节">
-        <option value="drafts/prologue.md">序章 · 错位的清晨</option>
+        <option value="prologue.md">序章 · 错位的清晨</option>
+        <option value="chapter-001.md">第一章 · 两家莱恩菲尔</option>
       </select>
       <span id="updated"></span>
     </div>
@@ -195,20 +196,39 @@
       return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
     }
 
+    /* 定稿优先；无定稿则用初稿 */
+    async function fetchPreferred(name) {
+      const dirs = ["finalized", "drafts"];
+      let lastErr = null;
+      for (const dir of dirs) {
+        const path = dir + "/" + name;
+        try {
+          const res = await fetch("../" + path + "?t=" + Date.now(), { cache: "no-store" });
+          if (!res.ok) {
+            lastErr = new Error("HTTP " + res.status + " " + path);
+            continue;
+          }
+          return { md: await res.text(), path: path, source: dir };
+        } catch (e) {
+          lastErr = e;
+        }
+      }
+      throw lastErr || new Error("未找到 " + name);
+    }
+
     async function load() {
-      const path = chapterEl.value;
-      const url = "../" + path + "?t=" + Date.now();
+      const name = chapterEl.value;
       try {
-        const res = await fetch(url, { cache: "no-store" });
-        if (!res.ok) throw new Error("HTTP " + res.status);
-        const md = await res.text();
+        const { md, path, source } = await fetchPreferred(name);
         const hash = simpleHash(md);
         if (hash !== lastHash) {
           lastHash = hash;
           const m = md.match(/^#\s+(.+)/m);
           titleEl.textContent = m ? m[1] : "正文预览";
           contentEl.innerHTML = mdToHtml(md);
-          updatedEl.textContent = "更新 " + new Date().toLocaleTimeString("zh-CN");
+          updatedEl.textContent =
+            "更新 " + new Date().toLocaleTimeString("zh-CN") +
+            " · " + (source === "finalized" ? "定稿" : "初稿");
         }
         errEl.hidden = true;
         statusDot.classList.remove("off");
@@ -218,7 +238,7 @@
         statusText.textContent = "离线";
         errEl.hidden = false;
         errEl.innerHTML =
-          "无法加载 <code>" + path + "</code>。<br/>" +
+          "无法加载 <code>" + name + "</code>（定稿/初稿皆无）。<br/>" +
           "请在本机运行预览服务：<br/><code>python3 novel-project/preview/server.py</code><br/>" +
           "然后打开 <code>http://127.0.0.1:8765/preview/</code><br/>" +
           "或刷新 GitHub 上的 <code>preview/standalone.html</code>。";

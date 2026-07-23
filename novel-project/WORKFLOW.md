@@ -10,7 +10,7 @@
 |------|--------|-------------|--------------|
 | 大纲、设定、人物、时间线 | **设定修缮**（常为 Composer 2.5） | Plan → Agent | `novel-project/bible/` |
 | 正文撰写、文风润色 | **任意 Agent**（**不指定 Sonnet**） | Agent | `novel-project/drafts/` |
-| 正文预览 / 审阅 | 任意 | Ask / Agent | **只读** `novel-project/drafts/` · 手机见 `preview/standalone.html` |
+| 正文预览 / 审阅 | 任意 | Ask / Agent | **定稿优先**（`finalized/` → 否则 `drafts/`）· 手机见 `preview/standalone.html` |
 | 快速查设定、讨论剧情 | 任意 | Ask | 只读，不改文件 |
 
 **单一事实来源**：所有设定以 `bible/` 为准。正文不得擅自新增或改写世界观；发现设定缺口应停下，补 `bible/`（或请用户明确后同步）。
@@ -29,7 +29,7 @@
 
 ### 当前优先（用户确认 · 2026-07-17 更新）
 
-1. **正文撰写与润色**（`drafts/`）——**序章已定稿**（`finalized/prologue.md`）；**第一章工作稿**迭代中
+1. **正文撰写与润色**（`drafts/`）——**序章拟插叙、正文暂空**；**正叙自第一章**；**第一–三章已定稿**（`finalized/chapter-001.md`–`003.md`）；模仿对象为 **第一章定稿**（原序章）
 2. **样文文风分析**（用户发样章 → 更新 `style-reference.md` / `style-guide.md`）
 3. **大纲与设定补充**（`bible/`）——随正文审阅 **同步回 bible**（用户明确要求时）
 4. 用户已确认章节拍 **保留在 `outline.md`**，不删
@@ -58,15 +58,16 @@
 
 1. 写入 `worldbuilding.md`（完整条目）
 2. 更新 `outline.md` → **「世界观速查」**（摘要 + 关联章节）
-3. 若影响人物/行程 → 同步 `characters.md`、`timeline.md`、相关章节拍
+3. 若影响行程 → 同步 `timeline.md`、相关章节拍；**人物设定**见下条（勿因世界补丁擅自改 `characters.md`）
 
-用户**明确定名**的人物（姓名、称呼、专名）时，负责 bible 的 Agent **须自动**：
+用户**明确要求**写入/改人物设定，或**明确定名并吩咐入库**时，负责 bible 的 Agent 才可：
 
-1. 写入 `characters.md`（条目 + **按章区形象** + 出场记录表 + 必要时关系图）
+1. 写入/改 `characters.md`（条目 + **按章区形象** + 出场记录表 + 必要时关系图）
 2. 回填 `outline.md` 相关章节拍 / 首次出场表
 3. 若涉职官/机构 → 同步 `worldbuilding.md`（Western 对照）
 
-> **人设按章区**：`characters.md` 采用 **恒定设定 + 按章区形象表**；人物随章节变化时 **只增改对应章区行**，勿用后续章区状态写当前章。
+> **`characters.md` 只读默认**：写作、纠察、正文补细节时 **只查不改**。无用户点名 **禁止** 从正文回填形象、擅自增补容貌/性格行。  
+> **人设按章区**：采用 **恒定设定 + 按章区形象表**；写第 N 章只取对应章区行，勿用后续章区状态写当前章。
 
 ### 命名原则（硬规则 · 西方中世纪奇幻）
 
@@ -126,6 +127,7 @@
 - `novel-project/bible/worldbuilding.md`
 - `novel-project/bible/characters.md`
 - `novel-project/bible/style-guide.md`
+- `novel-project/bible/writing-essentials.md`（**纠察/写稿速查**）
 - `novel-project/bible/timeline.md`
 
 ---
@@ -158,7 +160,7 @@
 
 - [`WORKFLOW.md`](WORKFLOW.md)（流程与目录边界）
 - 当前章对应 `outline.md` 节拍（**只读情节边界，严禁照译**）
-- `style-guide.md`、`style-reference.md`
+- `writing-essentials.md`（**优先**）、`style-guide.md`、`style-reference.md`
 - [`.cursor/skills/isekai-novel-writing/SKILL.md`](../.cursor/skills/isekai-novel-writing/SKILL.md)（写前/交稿自检）
 - 必要时 `characters.md`、`worldbuilding.md`（只读参考）
 - 上一章正文（保持衔接）
@@ -171,12 +173,13 @@ git add novel-project/drafts/ novel-project/preview/standalone.html
 git commit && git push
 ```
 
-- **一次改稿 = rebuild + push** `standalone.html`（与正文同批；漏了 rebuild 时 **Actions 每 5 分钟**补推）
-- 预览页 **每 5 分钟自动刷新**；详见 `preview/README.md`
+- **一次改稿 = rebuild + push** `standalone.html`（与正文同批；漏了 rebuild 时 **Actions 约 2 分钟**补推，并发布到稳定分支 `preview`）
+- 手机书签请用 **`preview` 分支**（一书签长期有效）；页内有 **「立即检查更新」** 与热替换。详见 `preview/README.md`
 
 **「全文」范围**（✓ 用户确认）：用户说 **「全文」** 默认指 **当前章节**（当次任务正在写的 `drafts/chapter-NNN.md` 或指定那一章）。**未点名其他章节时，不得改其他章初稿**；序章/定稿同步须用户 **明确点名**。
 
-**用户序章定稿 pass**（✓ 用户确认）：用户以个人手法 **逐条** 修改序章；Agent **只改用户点名的部分**，每次记入 [`bible/user-style-iteration-log.md`](bible/user-style-iteration-log.md)（改前/改后/提炼）。pass 结束后 **汇总分析**，提取规则 **高优先级** 写入 `style-guide.md` / `style-reference.md` / 写作 skill，供后续章节模仿。
+**用户手改**（✓）：只改点名处；同轮写入 [`writing-essentials.md`](bible/writing-essentials.md) **§〇 模仿卡** + [`user-style-iteration-log.md`](bible/user-style-iteration-log.md) `#N`。  
+**模仿对象**：[`finalized/prologue.md`](finalized/prologue.md)（满意定稿）；essentials 是辅助自检，不能代替读序章。
 
 ---
 
@@ -213,6 +216,7 @@ novel-project/
 │   ├── characters.md
 │   ├── style-guide.md
 │   ├── style-reference.md
+│   ├── writing-essentials.md  ← 纠察/写稿速查
 │   └── timeline.md
 ├── drafts/         ← 正文撰写与改稿（任意 Agent）
 │   └── chapter-NNN.md
@@ -221,22 +225,62 @@ novel-project/
 └── chapters/       ← 遗留目录（旧稿；以 drafts/ 为准）
 ```
 
-- **bible/**：设定修缮默认可写；正文 Agent **只读**（除非用户要求同步回 bible）
+- **bible/**：设定修缮默认可写；正文 Agent **只读**（除非用户**明确要求**同步回 bible）
+- **`characters.md` 等参考设定**：**无用户点名不得改**（即使正文写了新形象细节，也**勿擅自回填**；等用户吩咐）
 - **drafts/**：正文 Agent 可写；**不限定模型**
 - **`finalized/`**：**禁止**日常修改；**仅**用户说 **「章节定稿」** 时复制 `drafts/` 快照入库
-- **预览正文**：读 `drafts/`；**不读** `finalized/`
+- **预览正文**：**定稿优先**——有 `finalized/` 用定稿，否则用 `drafts/` 初稿
+
+---
+
+## 用户给情节 → 先拆画面（硬 · ✓ 2026-07-22）
+
+> 用户交付**下一段情节简述**时，Agent **禁止立刻写正文**。须先输出 **3–5 个场景画面**（镜），等用户确认／改镜后再扩写。
+
+每镜固定四项：
+
+| 项 | 写什么 |
+|----|--------|
+| **主要冲突** | 这一镜里对立的两股力／两个选择 |
+| **情绪基调** | 一两个词定调（如：僵持、压迫、发冷的清醒） |
+| **人物心理／感官** | **第一人称镜**：以**主角「我」**的视→听嗅→触与内心为主；他人只写「我」看得见的神态／动作／对白，**勿**平摊配角内心。**第三人称镜**：限知视角人物的心理感官（文学式） |
+| **动作链** | 外物/他人先动 → **只写推动本镜情节的动作**；忌复读已亮过的装备／站位清单（如又写剑未入鞘、盾在手边、杖尖抵雪） |
+
+写法注意：
+
+- 镜数通常 **3–5**；过碎合并，过粗再拆  
+- **篇幅暗示时间**：长描写＝拉长时间感；快拍镜写短  
+- 确认后才写入 `drafts/`；拆镜要点可摘要进 `outline.md` 正文进度  
+- **人称分轨**：第一人称对标章一/二；第三人称文学式（见 `writing-essentials` **H50**）  
+- **第一人称**：心理／感官以「我」为主；他人戏份用**对白＋推进冲突的动作**带过，勿每镜给三人各贴一笔兵器/站姿  
+- **拆镜＝收素材**（✓ 2026-07-23）：不是情节节拍译文；按层给可选素材（环境／感官／动作画面等），用户圈选后再扩写  
+- **拟声（H53）**：镜内出现可听点时，从 `writing-essentials` **拟声库**按场面**自动附 2–4 个可选拟声+画面**；**勿**未经圈选写入已定素材或正文；声音不限于爆炸；**新拟声写完即入库，并去重、改掉生僻字**
 
 ---
 
 ## 正文写作检查清单（每章）
 
-写前读：`WORKFLOW.md` · `style-guide.md` · `style-reference.md` §九·附 · `user-style-iteration-log.md` §正例/§反例 · 写作 skill 自检表。
+写前读：① **`finalized/chapter-001.md`（模仿对象 · 正叙开篇定稿）** → ② `writing-essentials.md`（自检/红灯/卡）→ ③ 需要时再 `style-guide` / `style-reference` / `user-style-iteration-log`（外部样章 **次于** 第一章定稿）。
 
-- [ ] **WORKFLOW 目录边界**：只改 `drafts/`；`finalized/` 仅用户说「章节定稿」；预览读 `drafts/`
+### 用户手改入库（硬 · 便于 Agent 对照）
+
+用户对正文做手改（推送 / 粘贴 / 逐句点名）后，负责正文或纠察的 Agent **须同轮**：
+
+1. 写入 [`bible/writing-essentials.md`](bible/writing-essentials.md) **§〇 用户手改 · 模仿卡**（固定格式：`✗` 改前 / `✓` 改后 / `→` 以后怎么写）  
+2. 追加 [`bible/user-style-iteration-log.md`](bible/user-style-iteration-log.md) 一条（改前/改后/提炼；有原话则记「为什么」）  
+3. 若成硬规则 → 同步红灯表与 `style-guide.md`  
+4. **禁止**只改正文却不入库；**禁止**无用户点名改 `characters.md`
+
+### 读者看不懂的词（硬 · ✓）
+
+用户以 **读者视角** 问某个词/说法看不懂 → **视为反例**（读者也看不懂）→ 正文避免；同轮写入要领 **红灯 #20**、「看不懂词表」、模仿卡，并改掉已出现处。
+
+- [ ] **WORKFLOW 目录边界**：只改 `drafts/`；`finalized/` 仅用户说「章节定稿」；预览定稿优先、否则初稿
+- [ ] **用户给情节**：已先拆镜（冲突／基调／心理感官／动作链）并获确认，再写正文
 - [ ] **「全文」= 当前章**；未点名不改其他章
 - [ ] **初稿即正文**：**严禁照办纲要**（不照译场次表、技法行、bible 缩略语）
 - [ ] 与 `outline.md` **情节边界**一致（非照抄纲要句式）
-- [ ] 文风符合 `style-guide.md` + **序章 pass 已入库条目**（感官链、身魂、用语、场末落点等）
+- [ ] 文风：先过 **`writing-essentials.md` 红灯表**；细则符合 `style-guide.md` + 已入库条目（感官链、身魂、用语、场末落点等）
 - [ ] 交稿前 **陌生读者视角** 通读一遍
 - [ ] 战力未膨胀（孩童高净阶不碾压成人）
 - [ ] 未擅自定稿标有 `【随剧情补充】` 的设定
@@ -287,5 +331,5 @@ novel-project/
 | 自动改 `finalized/` | 定稿被覆盖 | **仅**用户说「章节定稿」时才复制入库 |
 | 设定对话里写正文 | 易忽略 preview / skill 自检 | 正文单独对话，@ style-guide + skill |
 | 预览正文去 chapters/ 找 | 目录已迁 | **优先** `drafts/chapter-NNN.md` |
-| 正文时未 @ style-guide | 文风漂移 | 每次写章都 @ style-guide |
+| 正文时未 @ writing-essentials / style-guide | 文风漂移 | 每次写章都 @ 要领 + style-guide |
 | 用户说「全文」却改了别章 | 范围越界 | 默认只改**当前章**，他章须点名 |

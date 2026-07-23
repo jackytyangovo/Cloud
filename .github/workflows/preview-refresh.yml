@@ -2,16 +2,18 @@ name: Preview auto-rebuild
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: "*/2 * * * *"
   push:
     paths:
       - "novel-project/drafts/**"
+      - "novel-project/finalized/**"
       - "novel-project/preview/build_standalone.py"
       - "novel-project/preview/preview-config.json"
   workflow_dispatch:
 
 env:
-  PREVIEW_BRANCH: cursor/isekai-novel-outline-1688
+  SOURCE_BRANCH: cursor/style-check-prologue-129b
+  PREVIEW_BRANCH: preview
 
 permissions:
   contents: write
@@ -20,26 +22,59 @@ jobs:
   rebuild-standalone:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event_name == 'push' && github.ref || env.PREVIEW_BRANCH }}
+          ref: ${{ github.event_name == 'push' && github.ref || env.SOURCE_BRANCH }}
+          fetch-depth: 0
 
-      - name: Resolve push branch name
-        id: branch
-        run: echo "name=${{ github.event_name == 'push' && github.ref_name || env.PREVIEW_BRANCH }}" >> "$GITHUB_OUTPUT"
+      - id: branch
+        run: echo "name=${{ github.event_name == 'push' && github.ref_name || env.SOURCE_BRANCH }}" >> "$GITHUB_OUTPUT"
 
       - name: Rebuild standalone.html
-        run: python3 novel-project/preview/build_standalone.py
+        run: python3 novel-project/preview/build_standalone.py --force
 
-      - name: Commit and push if preview changed
+      - name: Commit on source branch if changed
         run: |
           if git diff --quiet -- novel-project/preview/standalone.html; then
-            echo "standalone.html unchanged, skip push"
-            exit 0
+            echo "unchanged"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add novel-project/preview/standalone.html
+            git commit -m "preview: auto-rebuild standalone.html [skip ci]"
+            git push origin "HEAD:${{ steps.branch.outputs.name }}"
           fi
+
+      - name: Publish to preview branch (Pages root)
+        run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add novel-project/preview/standalone.html
-          git commit -m "preview: auto-rebuild standalone.html [skip ci]"
-          git push origin "HEAD:${{ steps.branch.outputs.name }}"
+
+          SRC_FILE="novel-project/preview/standalone.html"
+          CFG_FILE="novel-project/preview/preview-config.json"
+          test -f "$SRC_FILE"
+          TMP_HTML="$(mktemp)"
+          TMP_CFG="$(mktemp)"
+          cp "$SRC_FILE" "$TMP_HTML"
+          cp "$CFG_FILE" "$TMP_CFG"
+
+          git fetch origin "${PREVIEW_BRANCH}"
+          git checkout -B "${PREVIEW_BRANCH}" "origin/${PREVIEW_BRANCH}"
+
+          mkdir -p novel-project/preview
+          cp "$TMP_HTML" novel-project/preview/standalone.html
+          cp "$TMP_CFG" novel-project/preview/preview-config.json
+          cp "$TMP_HTML" index.html
+          cp "$TMP_HTML" standalone.html
+
+          git add novel-project/preview/standalone.html \
+                  novel-project/preview/preview-config.json \
+                  index.html standalone.html
+          if git diff --cached --quiet; then
+            echo "preview branch up to date"
+          else
+            git commit -m "preview: publish latest standalone [skip ci]"
+            git push -u origin "${PREVIEW_BRANCH}"
+          fi
+          rm -f "$TMP_HTML" "$TMP_CFG"
